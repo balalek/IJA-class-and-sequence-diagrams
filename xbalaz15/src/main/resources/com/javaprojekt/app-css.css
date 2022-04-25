@@ -1,0 +1,8 @@
+.classBox{
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-min-height: 225;
+    -fx-min-width: 175;
+}
