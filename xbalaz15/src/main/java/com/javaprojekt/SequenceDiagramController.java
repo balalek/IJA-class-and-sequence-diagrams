@@ -21,7 +21,7 @@ public class SequenceDiagramController {
 
         stage = (Stage)((Node)event.getSource()).getScene().getWindow();
         scene = new Scene(root);
-        stage.setTitle("Sequence diagram");
+        stage.setTitle("Class diagram");
         stage.setScene(scene);
         stage.show();
 

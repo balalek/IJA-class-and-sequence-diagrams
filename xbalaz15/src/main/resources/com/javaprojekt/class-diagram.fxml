@@ -21,10 +21,10 @@
       <GridPane fx:id="Menu" prefHeight="46.0" prefWidth="1324.0" BorderPane.alignment="CENTER">
         <columnConstraints>
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="183.0" minWidth="10.0" prefWidth="183.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.0" minWidth="10.0" prefWidth="244.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="124.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="138.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="140.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.0" minWidth="10.0" prefWidth="213.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="157.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="154.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="126.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="238.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="143.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="108.0" />
@@ -54,6 +54,11 @@
                </font>
             </Button>
             <Button mnemonicParsing="false" onAction="#Undo" text="Undo" GridPane.columnIndex="4">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#showHelp" text="Help" GridPane.columnIndex="3">
                <font>
                   <Font size="15.0" />
                </font>

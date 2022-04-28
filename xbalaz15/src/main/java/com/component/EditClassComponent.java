@@ -19,7 +19,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class EditClassComponent {
-    //private List<String> content = new LinkedList<String>();
 
     public static List<String> display(ClassComponent classComponent){
         List<String> content = new LinkedList<String>();
@@ -34,8 +33,8 @@ public class EditClassComponent {
         Label attrs = new Label("Attributes:");
         Label methods = new Label("Methods:");
         TextField nameText = new TextField(classComponent.getName());
-        TextArea attrsText = new TextArea();
-        TextArea methodsText = new TextArea();
+        TextArea attrsText = new TextArea(classComponent.getAttributes());
+        TextArea operationText = new TextArea(classComponent.getOperations());
 
         // Font sizes
         confirm.setStyle("-fx-font-size:15");
@@ -49,7 +48,7 @@ public class EditClassComponent {
         layout.add(methods, 0, 2);
         layout.add(nameText, 1, 0);
         layout.add(attrsText, 1, 1);
-        layout.add(methodsText, 1, 2);
+        layout.add(operationText, 1, 2);
         layout.add(confirm, 1, 3);
 
         // Padding etc.
@@ -95,6 +94,8 @@ public class EditClassComponent {
         classWindow.showAndWait();
 
         content.add(nameText.getText());
+        content.add(attrsText.getText());
+        content.add(operationText.getText());
         return content;
     }
 }
