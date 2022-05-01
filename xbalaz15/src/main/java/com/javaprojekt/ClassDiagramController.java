@@ -2,12 +2,11 @@ package com.javaprojekt;
 
 import com.component.*;
 import com.component.ClassComponent;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.uml.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,15 +14,17 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import com.google.gson.Gson;
 
 enum operation{
     REMOVE,
@@ -344,7 +345,7 @@ public class ClassDiagramController{
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         try {
-            // create Gson instance
+            /*// create Gson instance
             //Gson gson = new Gson();
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
@@ -355,18 +356,64 @@ public class ClassDiagramController{
             // convert JSON string to User object
             System.out.println(reader);
             ClassComponent loadedBox = gson.fromJson(reader, ClassComponent.class);
-            reader.close();
             System.out.println(loadedBox.getName());
-            //ClassComponent box = new ClassComponent(loadedBox.getX(), loadedBox.getY(), loadedBox.getName(), loadedBox.getAttributes(), loadedBox.getOperations());
-            // print user object
+            reader.close();
+
             //System.out.println(loadedBox!=null);
             // close reader
 
-            rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
+            rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());*/
+
+            //Můj pokus
+            JSONParser jsonP = new JSONParser();
+            Reader reader = Files.newBufferedReader(Paths.get(selectedFile.getAbsolutePath()));
+            Object obj = jsonP.parse(reader);
+            JSONArray empList = (JSONArray) obj;
+            System.out.println(empList);
+            //Iterate over emp array
+
+            empList.forEach(emp -> parseEmpObj((JSONObject) emp));
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
+
+    }
+    private void parseEmpObj(JSONObject emp){
+        System.out.println("Vypis1: " + emp);
+        if(emp.get("class") != null){
+            JSONObject empObj = (JSONObject) emp.get("class");
+            System.out.println("Vypis2: " + empObj);
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+            ClassComponent loadedBox = gson.fromJson(empObj.toString(), ClassComponent.class);
+            rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
+        }else if(emp.get("messageArrow") != null)
+        {
+            JSONObject empObj = (JSONObject) emp.get("messageArrow");
+            System.out.println("Vypis2: " + empObj);
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+
+            //ClassComponent.positionInArea();
+            System.out.println(rootPane.getChildren().get(0));
+            //createArrow(rootPane.get(empObj.get("from"), rootPane.get(empObj.get("to")));
+            /*empObj.get("from")
+            empObj.get("to")
+            empObj.get("arrowType")*/
+
+            //Arrow loadedBox = gson.fromJson(empObj.toString(), Arrow.class);
+            //rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
+        }
+        //get emp firstname, lastname, website
+        /*String fname = (String) empObj.get("firstname");
+        String lname = (String) empObj.get("lastname");
+        String website = (String) empObj.get("website");
+        System.out.println("First Name: " + fname);
+        System.out.println("Last Name: " + lname);
+        System.out.println("Website: " + website);*/
 
     }
 
@@ -383,5 +430,6 @@ public class ClassDiagramController{
         Structure structure = new Structure(box, cls);
         return structure;
     }
+
 
 }

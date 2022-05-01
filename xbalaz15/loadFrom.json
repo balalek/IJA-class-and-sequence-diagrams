@@ -1,7 +1,21 @@
-{
-  "x":255.0,
-  "y":254.0,
-  "Name":"Třída jak vrata",
-  "Attributes":"+ int robot",
-  "Operations":"bla bla bla\nbla bla bla\nbla bla bla"
-}
+[
+  {"class":{
+    "x":255.0,
+    "y":254.0,
+    "Name":"Třída jak vrata",
+    "Attributes":"+ int robot",
+    "Operations":"bla bla bla\nbla bla bla\nbla bla bla"
+  }},
+  {"class": {
+    "x": 500.0,
+    "y": 254.0,
+    "Name": "Třída jak Brno",
+    "Attributes": "+ int kokot\n+ bool debil",
+    "Operations": "bla bla bla\nbla bla bla"
+    }},
+  {"messageArrow": {
+    "from": "Třída jak vrata",
+    "to": "Třída jak Brno",
+    "arrowType": "association"
+  }}
+]

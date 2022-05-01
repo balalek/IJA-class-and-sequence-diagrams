@@ -1,6 +1,7 @@
 package com.component;
 
 import com.google.gson.annotations.Expose;
+import com.uml.UMLClassifier;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -10,6 +11,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
+
+import java.util.LinkedList;
+import java.util.List;
 
 public class ClassComponent extends Button {
 
@@ -31,7 +35,7 @@ public class ClassComponent extends Button {
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
 
     // Getters and Setters
-
+    public List<ClassComponent>ListOfBox = new LinkedList<>();
     public double getX() {
         return x;
     }
@@ -89,7 +93,8 @@ public class ClassComponent extends Button {
     public void setNameProperty(String nameProperty) {
         this.nameProperty.set(nameProperty);
     }
-
+    public List GetListOfBox() { return this.ListOfBox; }
+    public ClassComponent FindBox(String Name) { return null; }
     // Constructor
     public ClassComponent(Double x, Double y){
         ID = count++;
@@ -130,6 +135,7 @@ public class ClassComponent extends Button {
         classContent.autosize();
         // Content create and update
         classNameUpdate(classContent);
+        ListOfBox.add(this);
     }
 
     public void classNameUpdate(GridPane classContent){
@@ -172,18 +178,17 @@ public class ClassComponent extends Button {
     }
 
     public void classOperationsUpdate(GridPane classContent) {
-        if(Operations.equals("")) setOperations("");
+        if (Operations.equals("")) setOperations("");
 
         // Updatable lable inside Vbox
         Label myLabel = new Label();
         operationProperty.setValue(Operations);
         myLabel.textProperty().bind(operationProperty);
-        myLabel.setPadding(new Insets(8,0,8,0));
+        myLabel.setPadding(new Insets(8, 0, 8, 0));
 
         classContent.setConstraints(myLabel, 0, 4);
         classContent.getChildren().add(myLabel);
         setGraphic(classContent);
         getStyleClass().add("classBox");
     }
-
 }
