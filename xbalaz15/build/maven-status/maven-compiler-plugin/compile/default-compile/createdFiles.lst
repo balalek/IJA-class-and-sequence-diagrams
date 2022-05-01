@@ -9,6 +9,7 @@ com/component/ClassComponent.class
 com/javaprojekt/ClassDiagramController.class
 com/javaprojekt/SequenceDiagramController.class
 com/uml/Relation.class
+com/component/Structure.class
 com/uml/UMLOperation.class
 com/component/Arrow.class
 com/uml/SequenceDiagram.class

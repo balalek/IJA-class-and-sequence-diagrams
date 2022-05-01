@@ -46,6 +46,13 @@ public class UMLClass extends UMLClassifier{
     }
 
     /**
+     * Odstrani polozky ze seznamu
+     */
+    public void removeAttributes(){
+        listOfAttr.clear();
+    }
+
+    /**
      * Vrací pozici atributu v seznamu atributů. Pozice se indexuje od hodnoty 0. Pokud třída daný atribut neobsahuje, vrací -1.
      * @param attr Hledaný atribut
      * @return Pozice atributu.

@@ -21,3 +21,11 @@
 .mainLine{
     -fx-stroke-width: 3px;
 }
+
+.redBox{
+    -fx-border-color: red;
+}
+
+.blackBox{
+    -fx-border-color: black;
+}

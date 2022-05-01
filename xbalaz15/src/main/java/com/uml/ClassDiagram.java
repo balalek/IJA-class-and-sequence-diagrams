@@ -30,6 +30,17 @@ public class ClassDiagram extends Diagram{
     }
 
     /**
+     * Nahradí jméno třídy v listu novým názvem
+     * @param name Starý název třídy
+     * @param newName Nový název třídy
+     */
+    public void renameClass(String name, String newName){
+        if(listOfNames.contains(name)) {
+            listOfNames.set(listOfNames.indexOf(name), newName);
+        }
+    }
+
+    /**
      * Odstraní instanci UML třídy z diagramu. Pokud taková třída neexistuje, nedělá nic.
      * @param name Název odstraňované třídy.
      * @param object Objekt odstraňované třídy.

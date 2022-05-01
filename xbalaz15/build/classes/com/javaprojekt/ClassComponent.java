@@ -1,4 +1,4 @@
-package com.component;
+package com.javaprojekt;
 
 import com.google.gson.annotations.Expose;
 import javafx.beans.property.SimpleStringProperty;
@@ -10,6 +10,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.Separator;
 import javafx.scene.layout.GridPane;
+import com.google.gson.Gson;
 
 public class ClassComponent extends Button {
 
@@ -17,12 +18,9 @@ public class ClassComponent extends Button {
     public Double y;
     @Expose
     public Double x;
-    @Expose
-    public String Name = "";
-    @Expose
-    public String Attributes = "";
-    @Expose
-    public String Operations = "";
+    private String Name = "";
+    private String Attributes = "";
+    private String Operations = "";
     private StringProperty nameProperty = new SimpleStringProperty();
     private StringProperty attrProperty = new SimpleStringProperty();
     private StringProperty operationProperty = new SimpleStringProperty();
@@ -31,19 +29,6 @@ public class ClassComponent extends Button {
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
 
     // Getters and Setters
-
-    public double getX() {
-        return x;
-    }
-    public void setX(double x) {
-        this.x = x;
-    }
-    public double getY() {
-        return y;
-    }
-    public void setY(double y) {
-        this.y = y;
-    }
     public void setName(String name) {
         Name = name;
     }
@@ -92,32 +77,9 @@ public class ClassComponent extends Button {
 
     // Constructor
     public ClassComponent(Double x, Double y){
-        ID = count++;
-        this.x = x;
-        this.y = y;
         // Position of button
-        setLayoutX(this.x);
-        setLayoutY(this.y);
-
-        // Appear in the cursor spike
-        translateXProperty().bind(widthProperty().divide(-2));
-        translateYProperty().bind(widthProperty().divide(-2));
-
-        // Vytvoření Gridpanu
-        GridPane classContent = new GridPane();
-        classContent.autosize();
-        // Content create and update
-        classNameUpdate(classContent);
-    }
-
-    // Constructor for file loading
-    public ClassComponent(Double x, Double y, String Name, String Attributes, String Operations){
-        ID = count++;
         this.x = x;
         this.y = y;
-        this.Name = Name;
-        this.Attributes = Attributes;
-        this.Operations = Operations;
         setLayoutX(this.x);
         setLayoutY(this.y);
 
@@ -125,16 +87,17 @@ public class ClassComponent extends Button {
         translateXProperty().bind(widthProperty().divide(-2));
         translateYProperty().bind(widthProperty().divide(-2));
 
-        // Vytvoření Gridpanu
+        // Vbox create
         GridPane classContent = new GridPane();
+        //classContent.setMinSize(175,175);
         classContent.autosize();
         // Content create and update
         classNameUpdate(classContent);
     }
 
     public void classNameUpdate(GridPane classContent){
-
-        if(Name.equals("")) setName("Class" + ID);
+        ID = count++;
+        setName("Class" + ID);
 
         // Updatable lable inside Vbox
         Label myLabel = new Label();
@@ -154,7 +117,7 @@ public class ClassComponent extends Button {
     }
 
     public void classAttributesUpdate(GridPane classContent) {
-        if(Attributes.equals("")) setAttributes("");
+        setAttributes("");
 
         // Updatable lable inside Vbox
         Label myLabel = new Label();
@@ -172,7 +135,7 @@ public class ClassComponent extends Button {
     }
 
     public void classOperationsUpdate(GridPane classContent) {
-        if(Operations.equals("")) setOperations("");
+        setOperations("");
 
         // Updatable lable inside Vbox
         Label myLabel = new Label();

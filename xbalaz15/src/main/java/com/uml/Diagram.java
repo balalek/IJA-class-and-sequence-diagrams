@@ -40,7 +40,7 @@ public class Diagram extends Element{
      * @return Nalezený klasifikátor. Pokud v diagramu neexistuje klasifikátor daného jména, vrací null.
      */
     public UMLClassifier findClassifier(String name){
-        int index; 
+        int index;
         if((index = listOfNames.indexOf(name)) != -1){
             return listOfClassif.get(index);
         }
