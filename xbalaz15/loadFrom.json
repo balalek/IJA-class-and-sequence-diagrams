@@ -14,10 +14,23 @@
     "Attributes": "+ int kokot\n+ bool debil",
     "Operations": "bla bla bla\nbla bla bla",
     "ClassType": ""
+    }},
+  {"class": {
+    "x": 500.0,
+    "y": 500.0,
+    "Name": "Hokuse pokuse",
+    "Attributes": "+ int makkak",
+    "Operations": "bla bla bla\nJen Bla",
+    "ClassType": "<<Abstract>>"
   }},
   {"messageArrow": {
     "from": "Třída jak vrata",
     "to": "Třída jak Brno",
     "arrowType": "composition"
+  }},
+  {"messageArrow": {
+    "from": "Hokuse pokuse",
+    "to": "Třída jak Brno",
+    "arrowType": "generalization"
   }}
 ]
