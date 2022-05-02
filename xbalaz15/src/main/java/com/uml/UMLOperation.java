@@ -33,7 +33,7 @@ public class UMLOperation extends UMLAttribute{
      * Tovární metoda pro vytvoření instance operace.
      * @param name Název operace.
      * @param type Návratový typ operace.
-     * @param args Seznam argumentů operace.
+     * @param list Seznam argumentů operace.
      * @return Objekt reprezentující operaci v diagramu UML.
      */
     public static UMLOperation create(String name, UMLClassifier type, List<UMLAttribute> list){
@@ -48,7 +48,7 @@ public class UMLOperation extends UMLAttribute{
     /**
      * Tovární metoda pro vytvoření instance konstruktoru.
      * @param name Název operace.
-     * @param args Seznam argumentů operace.
+     * @param list Seznam argumentů operace.
      * @return Objekt reprezentující operaci v diagramu UML.
      */
     public static UMLOperation create(String name, List<UMLAttribute> list){
@@ -78,4 +78,5 @@ public class UMLOperation extends UMLAttribute{
     public List<UMLAttribute> getArguments(){
         return Collections.unmodifiableList(listOfArg);
     }
+
 }
