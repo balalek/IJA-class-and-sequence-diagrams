@@ -2,7 +2,7 @@ package com.javaprojekt;
 
 import com.component.*;
 import com.component.ClassComponent;
-import com.google.gson.GsonBuilder;
+import com.google.gson.*;
 import com.uml.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,13 +14,15 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
-import com.google.gson.Gson;
 
 enum operation{
     REMOVE,
@@ -37,6 +39,8 @@ public class ClassDiagramController{
     private Parent root;
     @FXML
     private AnchorPane rootPane;
+    private static List<ClassComponent> ListofBoxes = new LinkedList<>();
+    private static List<String> ListofBoxNames = new LinkedList<>();
     private List<String> content = new LinkedList<>();
     private List<String> duplicateAttr = new LinkedList<>();
     private List<UMLAttribute> listOfDuplicateAttr = new LinkedList<>();
@@ -476,7 +480,7 @@ public class ClassDiagramController{
         File selectedFile = fileChooser.showOpenDialog(stage);
 
         try {
-            // create Gson instance
+            /*// create Gson instance
             //Gson gson = new Gson();
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
@@ -490,23 +494,90 @@ public class ClassDiagramController{
             Arrow arrow = gson.fromJson(reader, Arrow.class);
             reader.close();
             System.out.println(loadedBox.getName());
-            //ClassComponent box = new ClassComponent(loadedBox.getX(), loadedBox.getY(), loadedBox.getName(), loadedBox.getAttributes(), loadedBox.getOperations());
-            // print user object
+            reader.close();
+
             //System.out.println(loadedBox!=null);
             // close reader
-
             //createArrow();
             rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
+            rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());*/
+
+            //Můj pokus
+            JSONParser jsonP = new JSONParser();
+            Reader reader = Files.newBufferedReader(Paths.get(selectedFile.getAbsolutePath()));
+            Object obj = jsonP.parse(reader);
+            JSONArray empList = (JSONArray) obj;
+            System.out.println(empList);
+            //Iterate over emp array
+
+            empList.forEach(emp -> parseEmpObj((JSONObject) emp));
 
         } catch (Exception ex) {
             ex.printStackTrace();
         }
 
     }
+    private void parseEmpObj(JSONObject emp){
+        System.out.println("Vypis1: " + emp);
+        if(emp.get("class") != null){
+            JSONObject empObj = (JSONObject) emp.get("class");
+            System.out.println("Vypis2: " + empObj);
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+            ClassComponent loadedBox = gson.fromJson(empObj.toString(), ClassComponent.class);
+            rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
+        }else if(emp.get("messageArrow") != null)
+        {
+            JSONObject empObj = (JSONObject) emp.get("messageArrow");
+            System.out.println("Vypis2: " + empObj);
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+
+            HelpLoadArrow arrow = gson.fromJson(empObj.toString(), HelpLoadArrow.class);
+            loadArrow(arrow);
+            /*empObj.get("from")
+            empObj.get("to")
+            empObj.get("arrowType")*/
+
+            //Arrow loadedBox = gson.fromJson(empObj.toString(), Arrow.class);
+            //rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
+        }
+        //get emp firstname, lastname, website
+        /*String fname = (String) empObj.get("firstname");
+        String lname = (String) empObj.get("lastname");
+        String website = (String) empObj.get("website");
+        System.out.println("First Name: " + fname);
+        System.out.println("Last Name: " + lname);
+        System.out.println("Website: " + website);*/
+
+    }
+
+    public void loadArrow(HelpLoadArrow arrow){
+        if(ListofBoxNames.contains(arrow.getFrom()) && ListofBoxNames.contains(arrow.getTo())) {
+            int index = ListofBoxNames.indexOf(arrow.getFrom());
+            ClassComponent b1 = ListofBoxes.get(index);
+            int index2 = ListofBoxNames.indexOf(arrow.getTo());
+            ClassComponent b2 = ListofBoxes.get(index2);
+            Arrow finalArrow = new Arrow(b1.getLayoutX(), b1.getLayoutY(), b2.getLayoutX(), b2.getLayoutY(), arrow.getArrowType());
+            finalArrow.x1Property().bind(b1.layoutXProperty());
+            finalArrow.y1Property().bind(b1.layoutYProperty());
+            finalArrow.x2Property().bind(b2.layoutXProperty());
+            finalArrow.y2Property().bind(b2.layoutYProperty());
+
+            finalArrow.setOnMousePressed(e -> handleMouseArrow(e, finalArrow));
+
+            b1.edges.add(finalArrow);
+            b2.edges.add(finalArrow);
+            rootPane.getChildren().addAll(finalArrow);
+        }
+    }
 
     private Structure loadClassBox(ClassComponent loadedBox){
         ClassComponent box = new ClassComponent(loadedBox.getX(), loadedBox.getY(), loadedBox.getName(), loadedBox.getAttributes(), loadedBox.getOperations());
-        //ClassComponent box = new ClassComponent(250.0,250.0, "třída do potoka", "+ int železo", " bla bla bla\nbla bla bla");
+        ListofBoxes.add(box);
+        ListofBoxNames.add(box.getName());
         UMLClass cls = d.createClass(box.getName());
 
         box.setOnDragDetected(e -> onBoxDragDetected(e, box));
@@ -517,5 +588,6 @@ public class ClassDiagramController{
         Structure structure = new Structure(box, cls);
         return structure;
     }
+
 
 }

@@ -79,6 +79,22 @@ public class Arrow extends Group {
         update();
     }
 
+    // Constructor for file loading
+    public Arrow(double x1, double y1, double x2, double y2, String arrowType){
+        this.arrowType = arrowType;
+
+        setX1(x1);
+        setY1(y1);
+        setX2(x2);
+        setY2(y2);
+
+        for (SimpleDoubleProperty s : new SimpleDoubleProperty[]{x1Property(), y1Property(), x2Property(), y2Property()}) {
+            s.addListener((l, o, n) -> update());
+        }
+        arrowHeadStyles();
+        update();
+    }
+
     private void arrowHeadStyles() {
         mainLine.getStyleClass().setAll("mainLine");
         headInher.getStyleClass().setAll("whiteArrowHead");

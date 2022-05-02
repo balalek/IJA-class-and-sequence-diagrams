@@ -10,6 +10,7 @@ module com.javaprojekt {
     requires org.kordamp.bootstrapfx.core;
     requires eu.hansolo.tilesfx;
     requires com.google.gson;
+    requires json.simple;
 
     opens com.javaprojekt to javafx.fxml;
     exports com.javaprojekt;
