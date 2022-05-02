@@ -389,7 +389,9 @@ public class ClassDiagramController{
         if(!rootPane.getChildren().isEmpty()){
             if(!objectStack.isEmpty() && !operationStack.isEmpty()) {
                 if(operationStack.peekFirst() == operation.CREATE) {
-                    rootPane.getChildren().remove(objectStack.pop());
+                    ClassComponent tmp =  (ClassComponent) objectStack.pop();
+                    ListofBoxes.remove(tmp);
+                    rootPane.getChildren().remove(tmp);
                     operationStack.pop();
                 } else if(operationStack.peekFirst() == operation.RENAME){
                     ClassComponent box = (ClassComponent) objectStack.pop();
@@ -411,8 +413,8 @@ public class ClassDiagramController{
         } else {
             if(!objectStack.isEmpty() && !operationStack.isEmpty()) {
                 if(operationStack.peekFirst() == operation.REMOVE){
-                rootPane.getChildren().add((Node) objectStack.pop());
-                operationStack.pop();
+                    rootPane.getChildren().add((Node) objectStack.pop());
+                    operationStack.pop();
                 }
             }
         }
@@ -441,6 +443,7 @@ public class ClassDiagramController{
         box.setLayoutX(box.getLayoutX()+10);
     }
     public void delete(ClassComponent box, UMLClass cls){
+        ListofBoxes.remove(box);
         //System.out.println(cls.getAttributes());
         //System.out.println("Klasifikator s nazvem " + cls.getName() + " je v diagramu " + d.findClassifier(cls.getName()));
         d.removeClass(box.getName(), cls);
