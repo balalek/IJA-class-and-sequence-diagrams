@@ -1,0 +1,31 @@
+.classBox{
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-min-height: 175;
+    -fx-min-width: 175;
+    -fx-text-alignment: center;
+}
+
+.whiteArrowHead{
+    -fx-stroke-width: 3px;
+    -fx-fill: white;
+}
+
+.blackDiamondHead{
+    -fx-border-color: black;
+    -fx-fill: black;
+}
+
+.mainLine{
+    -fx-stroke-width: 3px;
+}
+
+.redBox{
+    -fx-border-color: red;
+}
+
+.blackBox{
+    -fx-border-color: black;
+}
