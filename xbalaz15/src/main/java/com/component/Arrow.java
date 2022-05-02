@@ -4,6 +4,9 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.shape.Polyline;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class Arrow extends Group {
     private Polyline mainLine = new Polyline();
     private Polyline headInher = new Polyline();
@@ -19,7 +22,9 @@ public class Arrow extends Group {
     private final double ARROWHEAD_ANGLE = Math.toRadians(31);
     private final double ARROWHEAD_LENGTH = 25;
     private String arrowType = "association";
-
+    private String from;
+    private String to;
+    public static List <Arrow> ListOfArrows = new LinkedList<>();
 
     // Getters and setters
     public String getArrowType() {
@@ -64,9 +69,25 @@ public class Arrow extends Group {
     public void setY2(double y2) {
         this.y2.set(y2);
     }
+    public void setFrom(String from) {
+        this.from = from;
+    }
+    public void setTo(String to) {
+        this.to = to;
+    }
+    public static List<Arrow> getListOfArrows() {
+        return ListOfArrows;
+    }
+    public String getFrom() {
+        return from;
+    }
+    public String getTo() {
+        return to;
+    }
 
     // Constructor
     public Arrow(double x1, double y1, double x2, double y2) {
+        ListOfArrows.add(this);
         setX1(x1);
         setY1(y1);
         setX2(x2);
@@ -81,6 +102,7 @@ public class Arrow extends Group {
 
     // Constructor for file loading
     public Arrow(double x1, double y1, double x2, double y2, String arrowType){
+        ListOfArrows.add(this);
         this.arrowType = arrowType;
 
         setX1(x1);

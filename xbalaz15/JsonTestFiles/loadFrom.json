@@ -4,21 +4,24 @@
     "y":254.0,
     "Name":"Třída jak vrata",
     "Attributes":"+ int robot",
-    "Operations":"bla bla bla\nbla bla bla\nbla bla bla"
+    "Operations":"bla bla bla\nbla bla bla\nbla bla bla",
+    "ClassType": "<<Interface>>"
   }},
   {"class": {
     "x": 500.0,
     "y": 254.0,
     "Name": "Třída jak Brno",
     "Attributes": "+ int kokot\n+ bool debil",
-    "Operations": "bla bla bla\nbla bla bla"
+    "Operations": "bla bla bla\nbla bla bla",
+    "ClassType": ""
     }},
   {"class": {
     "x": 500.0,
     "y": 500.0,
     "Name": "Hokuse pokuse",
     "Attributes": "+ int makkak",
-    "Operations": "bla bla bla\nJen Bla"
+    "Operations": "bla bla bla\nJen Bla",
+    "ClassType": "<<Abstract>>"
   }},
   {"messageArrow": {
     "from": "Třída jak vrata",

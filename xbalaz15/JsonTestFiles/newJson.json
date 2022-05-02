@@ -1,1 +1,1 @@
-[]
+[{"class":{"x":459.0,"Attributes":"+ int makkak","y":514.0,"ClassType":"<<Abstract>>","Operations":"bla bla bla\nJen Bla","Name":"Hokuse pokuse"}},{"class":{"x":214.0,"Attributes":"+ int kokot\n+ bool debil","y":212.0,"ClassType":"","Operations":"bla bla bla\nbla bla bla","Name":"Třída jak Brno"}},{"messageArrow":{"from":"Třída jak Brno","arrowType":"association","to":"Hokuse pokuse"}}]
