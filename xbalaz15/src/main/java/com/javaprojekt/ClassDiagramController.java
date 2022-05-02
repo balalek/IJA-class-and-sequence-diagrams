@@ -18,8 +18,10 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
+import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -73,6 +75,7 @@ public class ClassDiagramController{
 
     private Structure createClassBox(MouseEvent mouseEvent){
         ClassComponent box = new ClassComponent(mouseEvent.getX(), mouseEvent.getY());
+        ListofBoxes.add(box);
         //ClassComponent box = new ClassComponent(250.0,250.0, "třída do potoka", "+ int železo", " bla bla bla\nbla bla bla");
         UMLClass cls = d.createClass(box.getName());
 
@@ -468,11 +471,43 @@ public class ClassDiagramController{
     public void showHelp(ActionEvent event){
         ShowHelp.display();
     }
-    public void SaveJson(ActionEvent event){
+    public void SaveJson(ActionEvent event) throws IOException {
+        serializeObject();
+    }
+    public void serializeObject() throws IOException {
+        System.out.println("Serialize objfunct");
+        JSONArray List = new JSONArray();
 
+        //Serializace
+        //ClassComponent box = ListofBoxes.get(0);
+        //empList.forEach(emp -> parseEmpObj((JSONObject) emp));
+        System.out.println("ListOfBoxes: " + ListofBoxes);
+        ListofBoxes.forEach(ClassBox -> AddClassesToJson(List, (ClassComponent) ClassBox));
+
+
+        System.out.println(List);
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        FileWriter writer = new FileWriter(selectedFile, false);
+        //FileWriter writer = new FileWriter("D:\\Vskola\\4Sem\\IJA\\Projekt\\IJA---project\\xbalaz15\\newJson.json", false);
+        writer.write(List.toJSONString());
+        writer.close();
+    }
+    public void AddClassesToJson(JSONArray List, ClassComponent box)
+    {
+        JSONObject obj = new JSONObject();
+        obj.put("x", box.x);
+        obj.put("y", box.y);
+        obj.put("Name", box.Name);
+        obj.put("Attributes", box.Attributes);
+        obj.put("Operations", box.getOperations());
+        JSONObject packaging = new JSONObject();
+        packaging.put("class", obj);
+        List.add(0, packaging);
     }
     public void LoadJson(ActionEvent event){
-         deserializeObject();
+
+        deserializeObject();
     }
 
     public void deserializeObject(){
@@ -509,7 +544,6 @@ public class ClassDiagramController{
             JSONArray empList = (JSONArray) obj;
             System.out.println(empList);
             //Iterate over emp array
-
             empList.forEach(emp -> parseEmpObj((JSONObject) emp));
 
         } catch (Exception ex) {
@@ -537,21 +571,7 @@ public class ClassDiagramController{
 
             HelpLoadArrow arrow = gson.fromJson(empObj.toString(), HelpLoadArrow.class);
             loadArrow(arrow);
-            /*empObj.get("from")
-            empObj.get("to")
-            empObj.get("arrowType")*/
-
-            //Arrow loadedBox = gson.fromJson(empObj.toString(), Arrow.class);
-            //rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
         }
-        //get emp firstname, lastname, website
-        /*String fname = (String) empObj.get("firstname");
-        String lname = (String) empObj.get("lastname");
-        String website = (String) empObj.get("website");
-        System.out.println("First Name: " + fname);
-        System.out.println("Last Name: " + lname);
-        System.out.println("Website: " + website);*/
-
     }
 
     public void loadArrow(HelpLoadArrow arrow){
