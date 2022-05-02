@@ -8,6 +8,8 @@ public class UMLClass extends UMLClassifier{
 
     private boolean abstractClass;
     private List<UMLAttribute> listOfAttr = new LinkedList<>();
+    private List<UMLOperation> listOfOper = new LinkedList<>();
+
 
     /**
      * Vytvoří instanci reprezentující model třídy z jazyka UML. Třída není abstraktní.
@@ -32,6 +34,24 @@ public class UMLClass extends UMLClassifier{
      */
     public void setAbstract(boolean isAbstract){
         abstractClass = isAbstract;
+    }
+
+    /**
+     * Vloží operaci do modelu UML třídy. Operace se vloží na konec seznamu (poslední položka). Pokud již třída obsahuje operaci stejného jména, nedělá nic.
+     * @param operation Vkládaná operace
+     * @return Úspěch akce (pokud se podařilo vložit, vrací true, jinak false).
+     */
+    public boolean addOperation(UMLOperation operation){
+        if(!listOfOper.contains(operation)) listOfOper.add(operation);
+        else return false;
+        return true;
+    }
+
+    /**
+     * Odstrani operace ze seznamu
+     */
+    public void removeOperations(){
+        listOfOper.clear();
     }
 
     /**
@@ -85,5 +105,13 @@ public class UMLClass extends UMLClassifier{
      */
     public List<UMLAttribute> getAttributes(){
         return Collections.unmodifiableList(listOfAttr);
+    }
+
+    /**
+     * Vrací nemodifikovatelný seznam operací. Lze využít pro zobrazení operací třídy.
+     * @return Nemodifikovatelný seznam operací.
+     */
+    public List<UMLOperation> getOperations(){
+        return Collections.unmodifiableList(listOfOper);
     }
 }

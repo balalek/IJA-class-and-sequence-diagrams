@@ -7,7 +7,6 @@ import com.uml.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -15,11 +14,9 @@ import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -42,6 +39,8 @@ public class ClassDiagramController{
     private AnchorPane rootPane;
     private List<String> content = new LinkedList<>();
     private List<String> duplicateAttr = new LinkedList<>();
+    private List<UMLAttribute> listOfDuplicateAttr = new LinkedList<>();
+    private List<UMLOperation> listOfDuplicateOper = new LinkedList<>();
     private Deque<Object> objectStack = new ArrayDeque<>();
     private Deque<String> nameStack = new ArrayDeque<>();
     private Deque<Enum<operation>> operationStack = new ArrayDeque<>();
@@ -77,6 +76,8 @@ public class ClassDiagramController{
         box.setOnMouseDragged(e -> onBoxDragged(e, box));
         box.setOnKeyPressed(e -> handleKeyboard(e, box, cls));
         box.setOnMousePressed(e -> handleMouse(e, box, cls));
+
+        rootPane.getChildren();
 
         Structure structure = new Structure(box, cls);
         return structure;
@@ -117,19 +118,21 @@ public class ClassDiagramController{
                 duplicateAttr.clear();
                 cls.removeAttributes();
                 box.setAttributes(content.get(1));
-                // Rozdělení atributů do pole podle nových řádků a poté podle mezer
+
+
+                // Rozdělení atributů do 2D pole podle nových řádků a poté podle mezer
                 String[] lines = content.get(1).split("\\r?\\n");
                 String[][] attrLine = new String[lines.length][];
-
-
-                // Parse operations
+                // Parsování metod
+                cls.removeOperations();
                 box.setOperations(content.get(2));
-                /*UMLOperation op1 = UMLOperation.create("method1", d.classifierForName("void"),
-                        new UMLAttribute("arg1", d.classifierForName("C1")),
-                        new UMLAttribute("arg2", d.classifierForName("String")));*/
+                // Rozdělení operací do 2D pole podle nových řádků a poté podle mezer
+                String[] Lines = content.get(2).split("\\r?\\n");
+                String[][] opLine = new String[Lines.length][];
+
                 content.removeAll(content);
                 box.setNameProperty(box.getName());
-
+                /*---------------------------------------------------------------ATRIBUTY----------------------------------------------------------*/
                 int i = 0;
                 for (String row : lines) attrLine[i++] = row.split("\\s+");
                 // Procházení polem
@@ -189,6 +192,135 @@ public class ClassDiagramController{
                 box.setAttrProperty(box.getAttributes());
 
 
+                /*---------------------------------------------------------------OPERACE----------------------------------------------------------*/
+                i = 0;
+                Boolean bracket = false;
+                for (String Row : Lines) {
+                    StringBuffer sb = new StringBuffer(Row);
+                    if (sb.charAt(sb.length()-1) != ')'){
+                        box.getStyleClass().add("redBox");
+                        bracket = true;
+                        break;
+                    } else {
+                        box.getStyleClass().remove("redBox");
+                        // Rozdělení argumentů od operace
+                        opLine[i++] = Row.split("\\(");
+                    }
+                }
+                // Procházení polem
+                outerLoop:
+                for (String[] Strings : opLine) {
+                    if(bracket) break;
+                    else if(Strings[1].equals(")")) break;
+                    // Řádek pro metodu musí obsahovat 3 prvky
+                    else if (Strings.length == 2) {
+                        // Rozparsování argumentů metody
+                        String[] beforeArg = Strings[0].split("\\s+");
+                        String[] arg = Strings[1].split("(,[\\s]*)");
+                        //System.out.println(arg.length);
+                        String[][] argLine = new String[arg.length][10];
+                        int m = 0;
+                        for (String argument : arg) {
+                            //argLine[m++] = argument.split("\\s+");
+                            argLine[m] = argument.split("\\s+");
+                            if(d.findClassifier(argLine[m][0]) != null) {
+                                String storedClassifier = d.findClassifier(argLine[m][0]).getName();
+                                if (argLine[m][0].matches("([void]|[i|I]nt|[s|S]tring|[B|b]oolean|[b|B]ool|[d|D]ouble|[f|F]loat|[L|l]ong|[s|S]hort|[b|B]yte|[c|C]har|" + storedClassifier + ")")) {
+                                    box.getStyleClass().remove("redBox");
+                                    UMLAttribute attr = new UMLAttribute(argLine[m][1], d.classifierForName(argLine[m][0]));
+                                    listOfDuplicateAttr.add(attr);
+                                    cls.addAttribute(attr);
+                                } else {
+                                    box.getStyleClass().add("redBox");
+                                    listOfDuplicateAttr.clear();
+                                    cls.removeAttributes();
+                                    break outerLoop;
+                                }
+                            } else {
+                                if (argLine[m][0].matches("([void]|[i|I]nt|[s|S]tring|[B|b]oolean|[b|B]ool|[d|D]ouble|[f|F]loat|[L|l]ong|[s|S]hort|[b|B]yte|[c|C]har)")) {
+                                    box.getStyleClass().remove("redBox");
+                                    UMLAttribute attr = new UMLAttribute(argLine[m][1], d.classifierForName(argLine[m][0]));
+                                    listOfDuplicateAttr.add(attr);
+                                    cls.addAttribute(attr);
+                                } else {
+                                    box.getStyleClass().add("redBox");
+                                    listOfDuplicateAttr.clear();
+                                    cls.removeAttributes();
+                                    break outerLoop;
+                                }
+                            }
+                            m++;
+                        }
+
+                        // Odstranění závorky na konci
+                        StringBuffer sb = new StringBuffer(argLine[arg.length-1][1]);
+                        argLine[arg.length-1][1] = sb.deleteCharAt(sb.length()-1).toString();
+
+                        //System.out.println(argLine[2][0] + " " + argLine[2][1]);
+
+                        // Žadné duplikátní názvy a regex pro modifikátoru přístupu
+                        if (beforeArg[0].matches("[+|\\-|#|~]")){
+                            // Konstruktor -> nemá navrátový typ
+                            if(beforeArg[1].equals(box.getName())){
+                                UMLOperation op = UMLOperation.create(beforeArg[2], listOfDuplicateAttr);
+                                listOfDuplicateOper.add(op);
+                                cls.addOperation(op);
+                                break;
+                            }
+                            // Metoda může vrátit null a proto tato podmínka
+                            if(d.findClassifier(beforeArg[1]) != null){
+                                String storedClassifier = d.findClassifier(beforeArg[1]).getName();
+                                if((beforeArg[1].matches("([void]|[i|I]nt|[s|S]tring|[B|b]oolean|[b|B]ool|[d|D]ouble|[f|F]loat|[L|l]ong|[s|S]hort|[b|B]yte|[c|C]har|" + storedClassifier + ")"))){
+                                    //if(){};
+                                    box.getStyleClass().remove("redBox");
+                                    //UMLAttribute attr = new UMLAttribute(name[0], d.classifierForName(Strings[1]));
+                                    UMLOperation op = UMLOperation.create(beforeArg[2], d.classifierForName(beforeArg[1]), listOfDuplicateAttr);
+                                    /*if(!listOfDuplicateOper.contains(op)) {
+                                        listOfDuplicateOper.add(op);
+                                        System.out.println(listOfDuplicateOper.toString());
+                                    }
+                                    else System.out.println("broken");*/
+                                    cls.addOperation(op);
+                                } else {
+                                    cls.removeOperations();
+                                    box.getStyleClass().add("redBox");
+                                    break;
+                                }
+                            }else{
+                                if(beforeArg[1].matches("([void]|[i|I]nt|[s|S]tring|[B|b]oolean|[b|B]ool|[d|D]ouble|[f|F]loat|[L|l]ong|[s|S]hort|[b|B]yte|[c|C]har)")) {
+                                    box.getStyleClass().remove("redBox");
+                                    //UMLAttribute attr = new UMLAttribute(name[0], d.classifierForName(Strings[1]));
+                                    UMLOperation op = UMLOperation.create(beforeArg[2], d.classifierForName(beforeArg[1]), listOfDuplicateAttr);
+                                    /*if(!listOfDuplicateOper.contains(op)) {
+                                        listOfDuplicateOper.add(op);
+                                        System.out.println(listOfDuplicateOper.toString());
+                                    }
+                                    else System.out.println("broken");*/
+                                    cls.addOperation(op);
+                                } else {
+                                    cls.removeOperations();
+                                    box.getStyleClass().add("redBox");
+                                    break;
+                                }
+                            }
+                            // Název metody již existuje
+                        } else {
+                            cls.removeOperations();
+                            box.getStyleClass().add("redBox");
+                            break;
+                        }
+                        // Jestli okno metod je prázdné, je to v pořádku
+                        //content.get(1)
+                    } else if (box.getOperations().isEmpty()){
+                        box.getStyleClass().remove("redBox");
+                        break;
+                        // Špatný počet prvků pro danou metodu
+                    } else {
+                        cls.removeOperations();
+                        box.getStyleClass().add("redBox");
+                        break;
+                    }
+                }
                 box.setOperationProperty(box.getOperations());
 
                 // Rename name in backend
@@ -355,6 +487,7 @@ public class ClassDiagramController{
             // convert JSON string to User object
             System.out.println(reader);
             ClassComponent loadedBox = gson.fromJson(reader, ClassComponent.class);
+            Arrow arrow = gson.fromJson(reader, Arrow.class);
             reader.close();
             System.out.println(loadedBox.getName());
             //ClassComponent box = new ClassComponent(loadedBox.getX(), loadedBox.getY(), loadedBox.getName(), loadedBox.getAttributes(), loadedBox.getOperations());
@@ -362,6 +495,7 @@ public class ClassDiagramController{
             //System.out.println(loadedBox!=null);
             // close reader
 
+            //createArrow();
             rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
 
         } catch (Exception ex) {

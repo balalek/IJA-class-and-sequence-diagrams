@@ -22,17 +22,41 @@ public class UMLOperation extends UMLAttribute{
     }
 
     /**
+     * Konstruktor pro vytvoření konstruktoru s názvem třídy.
+     * @param name Název operace.
+     */
+    public UMLOperation(String name){
+        super(name);
+    }
+
+    /**
      * Tovární metoda pro vytvoření instance operace.
      * @param name Název operace.
      * @param type Návratový typ operace.
      * @param args Seznam argumentů operace.
      * @return Objekt reprezentující operaci v diagramu UML.
      */
-    public static UMLOperation create(String name, UMLClassifier type, UMLAttribute... args){
+    public static UMLOperation create(String name, UMLClassifier type, List<UMLAttribute> list){
         UMLOperation objOfOper = new UMLOperation(name, type);
-        for(UMLAttribute arg : args){
+        /*for(UMLAttribute arg : args){
             listOfArg.add(arg);   
-        }
+        }*/
+        listOfArg.addAll(list);
+        return objOfOper;
+    }
+
+    /**
+     * Tovární metoda pro vytvoření instance konstruktoru.
+     * @param name Název operace.
+     * @param args Seznam argumentů operace.
+     * @return Objekt reprezentující operaci v diagramu UML.
+     */
+    public static UMLOperation create(String name, List<UMLAttribute> list){
+        UMLOperation objOfOper = new UMLOperation(name);
+        /*for(UMLAttribute arg : args){
+            listOfArg.add(arg);
+        }*/
+        listOfArg.addAll(list);
         return objOfOper;
     }
 

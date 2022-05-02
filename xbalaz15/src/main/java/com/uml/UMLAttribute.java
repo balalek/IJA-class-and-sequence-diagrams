@@ -19,6 +19,14 @@ public class UMLAttribute extends Element{
     }
 
     /**
+     * Vytvoří instanci atributu. Tento konstroktor slouží jen k vytváření konstruktorů
+     * @param name Název atributu.
+     */
+    public UMLAttribute(String name){
+        super(name);
+    }
+
+    /**
      * Poskytuje informaci o typu atributu.
      * @return Typ atributu.
      */
