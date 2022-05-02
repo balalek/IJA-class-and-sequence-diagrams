@@ -77,7 +77,7 @@ public class ClassDiagramController{
     private Structure createClassBox(MouseEvent mouseEvent){
         ClassComponent box = new ClassComponent(mouseEvent.getX(), mouseEvent.getY());
         ListofBoxes.add(box);
-        //ClassComponent box = new ClassComponent(250.0,250.0, "třída do potoka", "+ int železo", " bla bla bla\nbla bla bla");
+        ListofBoxNames.add(box.getName());
         UMLClass cls = d.createClass(box.getName());
 
         box.setOnDragDetected(e -> onBoxDragDetected(e, box));
@@ -371,7 +371,6 @@ public class ClassDiagramController{
                             } else {
                                 if (beforeArg[1].matches("([void]|[i|I]nt|[s|S]tring|[B|b]oolean|[b|B]ool|[d|D]ouble|[f|F]loat|[L|l]ong|[s|S]hort|[b|B]yte|[c|C]har)")) {
                                     box.getStyleClass().remove("redBox");
-                                    //UMLAttribute attr = new UMLAttribute(name[0], d.classifierForName(Strings[1]));
                                     UMLOperation op = UMLOperation.create(beforeArg[2], d.classifierForName(beforeArg[1]), listOfAttrForOper);
                                     if (!listOfDuplicateOper.contains(op)) {
                                         listOfDuplicateOper.add(op);
@@ -463,12 +462,17 @@ public class ClassDiagramController{
         if(!rootPane.getChildren().isEmpty()){
             if(!objectStack.isEmpty() && !operationStack.isEmpty()) {
                 if(operationStack.peekFirst() == operation.CREATE) {
-                    ClassComponent tmp =  (ClassComponent) objectStack.pop();
-                    ListofBoxes.remove(tmp);
-                    ListofBoxNames.remove(tmp.getName());
-                    rootPane.getChildren().remove(tmp);
+                    if (objectStack.peekFirst() instanceof ClassComponent) {
+                        ClassComponent tmp = (ClassComponent) objectStack.peekFirst();
+                        ListofBoxes.remove(tmp);
+                        ListofBoxNames.remove(tmp.getName());
+                    }
+                    rootPane.getChildren().remove((Node) objectStack.pop());
                     operationStack.pop();
-                } else if(operationStack.peekFirst() == operation.RENAME){
+                }else if(operationStack.peekFirst() == operation.REMOVE){
+                    rootPane.getChildren().add((Node) objectStack.pop());
+                    operationStack.pop();
+                }else if(operationStack.peekFirst() == operation.RENAME){
                     ClassComponent box = (ClassComponent) objectStack.pop();
                     box.setName(nameStack.pop());
                     box.setNameProperty(box.getName());
@@ -559,14 +563,8 @@ public class ClassDiagramController{
     public void serializeObject() throws IOException {
         JSONArray List = new JSONArray();
 
-        //Serializace
-        //ClassComponent box = ListofBoxes.get(0);
-        //empList.forEach(emp -> parseEmpObj((JSONObject) emp));
-        //System.out.println("ListOfBoxes: " + ListofBoxes);
-
         Arrow.getListOfArrows().forEach(arrow -> AddArrowsToJson(List, (Arrow) arrow));
         ListofBoxes.forEach(ClassBox -> AddClassesToJson(List, (ClassComponent) ClassBox));
-
 
         System.out.println(List);
         FileChooser fileChooser = new FileChooser();
@@ -599,13 +597,6 @@ public class ClassDiagramController{
         List.add(0, packaging);
     }
     public void LoadJson(ActionEvent event){
-        System.out.println("Nacitani: ");
-        System.out.println(ListofBoxes);
-        System.out.println(Arrow.getListOfArrows());
-        System.out.println(rootPane.getChildren());
-        System.out.println(ListofBoxNames);
-        System.out.println(content);
-        //System.out.println(objectStack);
         deserializeObject();
     }
 
@@ -619,7 +610,6 @@ public class ClassDiagramController{
                 Reader reader = Files.newBufferedReader(Paths.get(selectedFile.getAbsolutePath()));
                 Object obj = jsonP.parse(reader);
                 JSONArray empList = (JSONArray) obj;
-                //System.out.println(empList);
                 // Iterate over emp array
                 try{
                     empList.forEach(emp -> parseEmpObj((JSONObject) emp));
@@ -676,7 +666,6 @@ public class ClassDiagramController{
     }
 
     private Structure loadClassBox(ClassComponent loadedBox){
-        //System.out.println(loadedBox.getName());
         ClassComponent box = new ClassComponent(loadedBox.getX(), loadedBox.getY(), loadedBox.getName(), loadedBox.getAttributes(), loadedBox.getOperations(), loadedBox.getClassType());
         ListofBoxes.add(box);
         ListofBoxNames.add(box.getName());
@@ -690,6 +679,4 @@ public class ClassDiagramController{
         Structure structure = new Structure(box, cls);
         return structure;
     }
-
-
 }
