@@ -465,6 +465,7 @@ public class ClassDiagramController{
                 if(operationStack.peekFirst() == operation.CREATE) {
                     ClassComponent tmp =  (ClassComponent) objectStack.pop();
                     ListofBoxes.remove(tmp);
+                    ListofBoxNames.remove(tmp.getName());
                     rootPane.getChildren().remove(tmp);
                     operationStack.pop();
                 } else if(operationStack.peekFirst() == operation.RENAME){
@@ -481,6 +482,8 @@ public class ClassDiagramController{
                     ClassComponent box = (ClassComponent) objectStack.pop();
                     box.setLayoutX(coorX.pop());
                     box.setLayoutY(coorY.pop());
+                    box.setX(box.getLayoutX());
+                    box.setY(box.getLayoutY());
                     operationStack.pop();
                 }
             }
@@ -518,6 +521,7 @@ public class ClassDiagramController{
     }
     public void delete(ClassComponent box, UMLClass cls){
         ListofBoxes.remove(box);
+        ListofBoxNames.remove(box.getName());
         //System.out.println(cls.getAttributes());
         //System.out.println("Klasifikator s nazvem " + cls.getName() + " je v diagramu " + d.findClassifier(cls.getName()));
         d.removeClass(box.getName(), cls);
@@ -595,7 +599,13 @@ public class ClassDiagramController{
         List.add(0, packaging);
     }
     public void LoadJson(ActionEvent event){
-
+        System.out.println("Nacitani: ");
+        System.out.println(ListofBoxes);
+        System.out.println(Arrow.getListOfArrows());
+        System.out.println(rootPane.getChildren());
+        System.out.println(ListofBoxNames);
+        System.out.println(content);
+        //System.out.println(objectStack);
         deserializeObject();
     }
 
@@ -616,7 +626,7 @@ public class ClassDiagramController{
                 }catch (IndexOutOfBoundsException exception)
                 {
                     System.out.println("Index chyba");
-                    System.out.println(empList);
+                    ListofBoxNames.clear();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
