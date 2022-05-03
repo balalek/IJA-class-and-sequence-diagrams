@@ -144,7 +144,7 @@ public class ClassComponent extends Button {
 
         // Appear in the cursor spike
         translateXProperty().bind(widthProperty().divide(-2));
-        translateYProperty().bind(widthProperty().divide(-2));
+        translateYProperty().bind(heightProperty().divide(-2));
 
         // Vytvoření Gridpanu
         GridPane classContent = new GridPane();
@@ -187,7 +187,7 @@ public class ClassComponent extends Button {
 
         // Appear in the cursor spike
         translateXProperty().bind(widthProperty().divide(-2));
-        translateYProperty().bind(widthProperty().divide(-2));
+        translateYProperty().bind(heightProperty().divide(-2));
 
         // Vytvoření Gridpanu
         GridPane classContent = new GridPane();
