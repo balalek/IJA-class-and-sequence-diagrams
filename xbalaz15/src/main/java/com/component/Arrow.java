@@ -3,7 +3,6 @@ package com.component;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.shape.Polyline;
-
 import java.util.LinkedList;
 import java.util.List;
 

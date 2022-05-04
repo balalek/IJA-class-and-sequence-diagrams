@@ -12,7 +12,13 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Třída pro vyvolání nápovědy
+ */
 public class ShowHelp {
+    /**
+     *
+     */
     public static void display(){
         Stage helpWindow = new Stage();
         helpWindow.initModality(Modality.APPLICATION_MODAL);

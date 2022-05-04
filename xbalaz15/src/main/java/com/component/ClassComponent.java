@@ -1,6 +1,7 @@
 package com.component;
 
 import com.google.gson.annotations.Expose;
+import com.javaprojekt.ClassDiagramController;
 import com.uml.UMLClassifier;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -144,7 +145,7 @@ public class ClassComponent extends Button {
 
         // Appear in the cursor spike
         translateXProperty().bind(widthProperty().divide(-2));
-        translateYProperty().bind(widthProperty().divide(-2));
+        translateYProperty().bind(heightProperty().divide(-2));
 
         // Vytvoření Gridpanu
         GridPane classContent = new GridPane();
@@ -187,7 +188,7 @@ public class ClassComponent extends Button {
 
         // Appear in the cursor spike
         translateXProperty().bind(widthProperty().divide(-2));
-        translateYProperty().bind(widthProperty().divide(-2));
+        translateYProperty().bind(heightProperty().divide(-2));
 
         // Vytvoření Gridpanu
         GridPane classContent = new GridPane();
@@ -212,7 +213,10 @@ public class ClassComponent extends Button {
 
     public void classNameUpdate(GridPane classContent){
 
-        if(Name.equals("")) setName("Class" + ID);
+        if(Name.equals("")) {
+            setName("Class" + ID);
+            ClassDiagramController.d.addName(getName());
+        }
 
         // Updatable lable inside Vbox
         Label myLabel = new Label();

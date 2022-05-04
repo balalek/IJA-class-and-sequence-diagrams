@@ -1,5 +1,7 @@
 package com.uml;
 
+import java.util.List;
+
 /**
  * Třída reprezentuje diagram tříd. Je odvozen od třídy Element (má název). Obsahuje seznam tříd (instance třídy UMLClass) 
  * příp. klasifikátorů pro uživatelsky nedefinované typy (instance třídy UMLClassifier).
@@ -55,4 +57,6 @@ public class ClassDiagram extends Diagram{
         }
         return object;
     }
+
+
 }
