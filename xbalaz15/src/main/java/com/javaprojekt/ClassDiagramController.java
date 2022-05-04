@@ -111,6 +111,7 @@ public class ClassDiagramController{
     // Update content of class
     public void handleMouse(MouseEvent evt, ClassComponent box, UMLClass cls){
         d.addName("Main");
+        //System.out.println(evt.getX() + "\n" + evt.getY());
         if(evt.getButton().equals(MouseButton.PRIMARY)){
             if(evt.getClickCount() == 2){
                 String oldName = box.getName();
@@ -437,7 +438,7 @@ public class ClassDiagramController{
     }
 
     public Arrow createArrow(ClassComponent b1, ClassComponent b2){
-        Arrow arrow = new Arrow(b1.getLayoutX(), b1.getLayoutY(), b2.getLayoutX(), b2.getLayoutY());
+        Arrow arrow = new Arrow(b1, b2);
         arrow.x1Property().bind(b1.layoutXProperty());
         arrow.y1Property().bind(b1.layoutYProperty());
         arrow.x2Property().bind(b2.layoutXProperty());
@@ -669,7 +670,7 @@ public class ClassDiagramController{
             ClassComponent b1 = ListofBoxes.get(index);
             int index2 = ListofBoxNames.indexOf(arrow.getTo());
             ClassComponent b2 = ListofBoxes.get(index2);
-            Arrow finalArrow = new Arrow(b1.getLayoutX(), b1.getLayoutY(), b2.getLayoutX(), b2.getLayoutY(), arrow.getArrowType());
+            Arrow finalArrow = new Arrow(b1, b2, arrow.getArrowType());
             finalArrow.x1Property().bind(b1.layoutXProperty());
             finalArrow.y1Property().bind(b1.layoutYProperty());
             finalArrow.x2Property().bind(b2.layoutXProperty());
