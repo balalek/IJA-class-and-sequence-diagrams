@@ -24,74 +24,96 @@ public class Arrow extends Group {
     private String arrowType = "association";
     private String from;
     private String to;
-    public static List <Arrow> ListOfArrows = new LinkedList<>();
+    public static List<Arrow> ListOfArrows = new LinkedList<>();
+    private ClassComponent FromBox;
+    private ClassComponent ToBox;
 
     // Getters and setters
     public String getArrowType() {
         return arrowType;
     }
+
     public void setArrowType(String arrowType) {
         this.arrowType = arrowType;
     }
+
     public double getX1() {
         return x1.get();
     }
+
     public SimpleDoubleProperty x1Property() {
         return x1;
     }
+
     public void setX1(double x1) {
         this.x1.set(x1);
     }
+
     public double getY1() {
         return y1.get();
     }
+
     public SimpleDoubleProperty y1Property() {
         return y1;
     }
+
     public void setY1(double y1) {
         this.y1.set(y1);
     }
+
     public double getX2() {
         return x2.get();
     }
+
     public SimpleDoubleProperty x2Property() {
         return x2;
     }
+
     public void setX2(double x2) {
         this.x2.set(x2);
     }
+
     public double getY2() {
         return y2.get();
     }
+
     public SimpleDoubleProperty y2Property() {
         return y2;
     }
+
     public void setY2(double y2) {
         this.y2.set(y2);
     }
+
     public void setFrom(String from) {
         this.from = from;
     }
+
     public void setTo(String to) {
         this.to = to;
     }
+
     public static List<Arrow> getListOfArrows() {
         return ListOfArrows;
     }
+
     public String getFrom() {
         return from;
     }
+
     public String getTo() {
         return to;
     }
 
     // Constructor
-    public Arrow(double x1, double y1, double x2, double y2) {
+    public Arrow(ClassComponent From, ClassComponent To) {
         ListOfArrows.add(this);
-        setX1(x1);
-        setY1(y1);
-        setX2(x2);
-        setY2(y2);
+        this.FromBox = From;
+        this.ToBox = To;
+        setX1(From.getX());
+        setY1(From.getY());
+        setX2(To.getX());
+        setY2(To.getY());
 
         for (SimpleDoubleProperty s : new SimpleDoubleProperty[]{x1Property(), y1Property(), x2Property(), y2Property()}) {
             s.addListener((l, o, n) -> update());
@@ -101,14 +123,15 @@ public class Arrow extends Group {
     }
 
     // Constructor for file loading
-    public Arrow(double x1, double y1, double x2, double y2, String arrowType){
+    public Arrow(ClassComponent From, ClassComponent To, String arrowType) {
         ListOfArrows.add(this);
         this.arrowType = arrowType;
-
-        setX1(x1);
-        setY1(y1);
-        setX2(x2);
-        setY2(y2);
+        this.FromBox = From;
+        this.ToBox = To;
+        setX1(From.getX());
+        setY1(From.getY());
+        setX2(To.getX());
+        setY2(To.getY());
 
         for (SimpleDoubleProperty s : new SimpleDoubleProperty[]{x1Property(), y1Property(), x2Property(), y2Property()}) {
             s.addListener((l, o, n) -> update());
@@ -129,8 +152,10 @@ public class Arrow extends Group {
 
     public void update() {
         getChildren().setAll(mainLine, headInher, headInher2, headAggr, headAggr2, headComp, headComp2);
-        double[] start = scale(getX1(), getY1(), getX2(), getY2(), 50, 50);
-        double[] end = scale(getX2(), getY2(), getX1(), getY1(), 50, 50);
+        //double[] start = scale(this.FromBox, this.ToBox, 50, 50);
+        //double[] end = scale(this.ToBox, this.FromBox, 50, 50);
+        double[] start = scale(this.FromBox, this.ToBox);
+        double[] end = scale(this.ToBox, this.FromBox);
         double x1 = start[0];
         double y1 = start[1];
         double x2 = end[0];
@@ -153,7 +178,8 @@ public class Arrow extends Group {
                 getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2);
 
                 // Hide end line behind box
-                end = scale(getX2(), getY2(), getX1(), getY1(), 110, 110);
+                //end = scale(this.ToBox, this.FromBox, 110, 110);
+                end = scale(this.ToBox, this.FromBox);
                 x2 = end[0];
                 y2 = end[1];
                 theta = Math.atan2(y2 - y1, x2 - x1);
@@ -180,7 +206,8 @@ public class Arrow extends Group {
                 getChildren().removeAll(headInher, headInher2, headAggr, headAggr2, headComp, headComp2);
 
                 // Hide end line behind box
-                end = scale(getX2(), getY2(), getX1(), getY1(), 150, 150);
+                //end = scale(this.ToBox, this.FromBox, 150, 150);
+                end = scale(this.ToBox, this.FromBox);
                 x2 = end[0];
                 y2 = end[1];
                 theta = Math.atan2(y2 - y1, x2 - x1);
@@ -207,7 +234,8 @@ public class Arrow extends Group {
                 getChildren().removeAll(headInher, headInher2, headComp, headComp2, headAggr, headAggr2);
 
                 // Hide end line behind box
-                end = scale(getX2(), getY2(), getX1(), getY1(), 150, 150);
+                //end = scale(this.ToBox, this.FromBox, 150, 150);
+                end = scale(this.ToBox, this.FromBox);
                 x2 = end[0];
                 y2 = end[1];
                 theta = Math.atan2(y2 - y1, x2 - x1);
@@ -232,11 +260,79 @@ public class Arrow extends Group {
         }
     }
 
-    private double[] scale ( double x1, double y1, double x2, double y2, int angle, int length){
-        double theta = Math.atan2(y2 - y1, x2 - x1);
+    private double[] scale2(ClassComponent box1, ClassComponent box2, int angle, int length) {
+        //double theta = Math.atan2(y2 - y1, x2 - x1);
+        double theta = Math.atan2(box2.getY() - box1.getY(), box2.getX() - box1.getX());
+        //scale2(box1, box2);
         return new double[]{
-                x1 + Math.cos(theta) * angle,
-                y1 + Math.sin(theta) * length
+                box1.getX() + Math.cos(theta) * angle,
+                box1.getY() + Math.sin(theta) * length
+        };
+    }
+
+    private double[] scale(ClassComponent box1, ClassComponent box2) {
+        double beta = Math.atan2(box1.getX() - box2.getX(), box1.getY() - box2.getY());
+        System.out.println(box1.getName());
+        System.out.println(Math.toDegrees(beta));
+        //FromBox
+        double len1 = (box1.getWidth() / 2) / Math.sin(beta);
+        double len2 = (box1.getHeight() / 2) / Math.cos(beta);
+        double finalX = 0;
+        double finalY = 0;
+        if(Math.abs(len1) < Math.abs(len2)) {
+            //System.out.println("levo / pravo");
+            if(Math.toDegrees(beta) >= 0){
+                System.out.println("levo");
+                finalX = box1.getX() - (box1.getWidth() / 2);
+                if(Math.toDegrees(beta) <= 90) finalY = box1.getY() - Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
+                else finalY = box1.getY() + Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
+            }else{
+                System.out.println("pravo");
+                finalX = box1.getX() + (box1.getWidth() / 2);
+                if(Math.toDegrees(beta) <= -90) finalY = box1.getY() + Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
+                else finalY = box1.getY() - Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
+            }
+        }else {
+            //System.out.println("vršek / spodek");
+            if(Math.abs(Math.toDegrees(beta)) <= 90){
+                System.out.println("vrsek");
+                finalY = box1.getY() - (box1.getHeight() / 2);
+                finalX = box1.getX() - box1.getHeight()/2 * (Math.tan(beta));
+            }else {
+                System.out.println("spodek");
+                finalY = box1.getY() + (box1.getHeight() / 2);
+                finalX = box1.getX() + box1.getHeight()/2 * Math.tan(beta);
+            }
+            //finalX = box1.getX() + box1.getHeight()/2 * (Math.abs(Math.tan(beta)) - 90);
+
+        }
+        System.out.println(len1 + " " + len2);
+        System.out.println("Final x,y: " + finalX +"  "+ finalY);
+        System.out.println("Box1 x,y: " + box1.getX() +"  "+ box1.getY() + "  Width, Height: " + box1.getWidth() + "  " + box1.getHeight());
+        /*finalX = finalX - Math.cos(beta) * 150;
+        finalY = finalY - Math.sin(beta) * 150;*/
+        return new double[]{
+                finalX,
+                finalY
+        };
+    }
+
+    private double[] scale9(ClassComponent box1, ClassComponent box2) {
+        double theta = Math.atan2(box2.getY() - box1.getY(), box2.getX() - box1.getX());
+        //scale2();
+        double len1 = (box1.getWidth() / 2) / Math.sin(theta);
+        double len2 = (box1.getHeight() / 2) / Math.cos(theta);
+        double len = 1;
+        double finalX = 0;
+        double finalY = 0;
+        if (Math.abs(len1) < Math.abs(len2)) {
+
+        }
+        else{
+        }
+        return new double[]{
+                box1.getX() + Math.cos(theta) * Math.abs(len),
+                box1.getY() + Math.sin(theta) * Math.abs(len)
         };
     }
 }
