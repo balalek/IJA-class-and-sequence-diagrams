@@ -26,14 +26,6 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-enum operation{
-    REMOVE,
-    CREATE,
-    RENAME,
-    CHANGE,
-    DRAG
-}
-
 public class ClassDiagramController{
 
     private Stage stage;
@@ -128,21 +120,21 @@ public class ClassDiagramController{
                 // Udržování aktuálního typu třídy
                 box.setClassType((String) content.get(3));
                 switch (box.getClassType()) {
-                    case "" -> {
+                    case "":
                         box.setNormal(true);
                         box.setAbstractClass(false);
                         box.setInterface(false);
-                    }
-                    case "<<Abstract>>" -> {
+                        break;
+                    case "<<Abstract>>":
                         box.setAbstractClass(true);
                         box.setInterface(false);
                         box.setNormal(false);
-                    }
-                    case "<<Interface>>" -> {
+                        break;
+                    case "<<Interface>>":
                         box.setInterface(true);
                         box.setAbstractClass(false);
                         box.setNormal(false);
-                    }
+                        break;
                 }
 
                 box.setName((String)content.get(0));
@@ -527,11 +519,21 @@ public class ClassDiagramController{
     public void handleKeyboard(KeyEvent evt, ClassComponent box, UMLClass cls){
         KeyCode k = evt.getCode();
         switch (k) {
-            case W -> moveUp(box);
-            case S -> moveDown(box);
-            case A -> moveLeft(box);
-            case D -> moveRight(box);
-            case DELETE -> delete(box, cls);
+            case W:
+                moveUp(box);
+                break;
+            case S:
+                moveDown(box);
+                break;
+            case A:
+                moveLeft(box);
+                break;
+            case D:
+                moveRight(box);
+                break;
+            case DELETE:
+                delete(box, cls);
+                break;
         }
     }
     public void moveUp(ClassComponent box){

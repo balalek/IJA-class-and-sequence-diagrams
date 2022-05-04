@@ -93,8 +93,13 @@ public class SequenceDiagramController{
     private void handleKeyboardTimeLine(KeyEvent e, Button timeBox){
         KeyCode k = e.getCode();
         switch (k) {
-            case W -> expand(timeBox);
-            case S -> reduce(timeBox);
+            case W:
+                expand(timeBox);
+                break;
+            case S:
+                reduce(timeBox);
+                break;
+
             //case DELETE -> delete(box, cls);
         }
     }

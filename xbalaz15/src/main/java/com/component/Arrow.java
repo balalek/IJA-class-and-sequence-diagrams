@@ -167,7 +167,7 @@ public class Arrow extends Group {
         // Draw line with arrowhead by arrow type
         switch (getArrowType()) {
             // ASSOCIATION ARROWHEAD
-            case "association" -> {
+            case "association": {
                 getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2, headAssoc, headAssoc2);
 
                 // Drawing arrowhead
@@ -182,7 +182,7 @@ public class Arrow extends Group {
                 break;
             }
             // GENERALIZATION ARROWHEAD
-            case "generalization" -> {
+            case "generalization": {
                 getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2, headAssoc, headAssoc2);
 
                 // Drawing arrowhead
@@ -203,7 +203,7 @@ public class Arrow extends Group {
                 break;
             }
             // BLACK DIAMOND ARROWHEAD
-            case "composition" -> {
+            case "composition": {
                 getChildren().removeAll(headInher, headInher2, headAggr, headAggr2, headComp, headComp2, headAssoc, headAssoc2);
 
                 // Drawing arrowhead
@@ -224,7 +224,7 @@ public class Arrow extends Group {
                 break;
             }
             // WHITE DIAMOND ARROWHEAD
-            case "aggregation" -> {
+            case "aggregation": {
                 getChildren().removeAll(headInher, headInher2, headComp, headComp2, headAggr, headAggr2, headAssoc, headAssoc2);
 
                 // Drawing arrowhead

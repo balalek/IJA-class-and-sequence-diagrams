@@ -71,19 +71,21 @@ public class ShowHelp {
     }
 
     private static String textBlocks() {
-        return """
-        Note: Clicking with mouse works only for left mouse button, unless its stated otherwise.
-        Usage: To create a class, you must click on button called Insert Class
-        and then click somewhere on panel. That will create an empty class box.
-        You can move with classes by clicking on them and dragging them to desired position.
-        You can also use following keys: W, A, S, D, but first select class box by clicking on it.
-        For class to be deleted use key: DELETE. To update a class content you must double click on class.
-        Next step is creating relation between classes, and that is achieved by clicking right mouse button
-        on two separate classes. Default relation is association, if you want to change relation type,
-        double click on line and pick one of these: aggregation, composition or generalization.
-        For line (relation) to be deleted, right click on it.
-        If you wish to undo your move, simply click on Undo button.
-        For saving to a file and loading from a file, you may use Save and Load buttons.
-        And lastly, if you want to see Sequence diagram for this class diagram, click on Sequence diagram button.""";
+        String help = " Note: Clicking with mouse works only for left mouse button, unless its stated otherwise.\n" +
+        "Note: Clicking with mouse works only for left mouse button, unless its stated otherwise.\n" +
+        "Usage: To create a class, you must click on button called Insert Class\n" +
+        "and then click somewhere on panel. That will create an empty class box.\n" +
+        "You can move with classes by clicking on them and dragging them to desired position.\n" +
+        "You can also use following keys: W, A, S, D, but first select class box by clicking on it.\n" +
+        "For class to be deleted use key: DELETE. To update a class content you must double click on class.\n" +
+        "Next step is creating relation between classes, and that is achieved by clicking right mouse button\n" +
+        "on two separate classes. Default relation is association, if you want to change relation type,\n" +
+        "double click on line and pick one of these: aggregation, composition or generalization.\n" +
+        "For line (relation) to be deleted, right click on it.\n" +
+        "If you wish to undo your move, simply click on Undo button.\n" +
+        "For saving to a file and loading from a file, you may use Save and Load buttons.\n" +
+        "And lastly, if you want to see Sequence diagram for this class diagram, click on Sequence diagram button.";
+        return help;
+
     }
 }

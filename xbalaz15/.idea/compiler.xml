@@ -15,7 +15,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="xbalaz15" target="17" />
+      <module name="xbalaz15" target="11" />
     </bytecodeTargetLevel>
   </component>
 </project>
