@@ -1,0 +1,19 @@
+.sqClassBox{
+    -fx-font-size: 15;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-min-height: 40;
+    -fx-min-width: 100;
+    -fx-text-alignment: center;
+}
+.sqLifeLine{
+    -fx-stroke-dash-array: 20 20;
+    -fx-stroke-dash-offset: 100;
+}
+.sqTimeLineButton{
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-min-height: 20;
+    -fx-min-width: 20;
+}

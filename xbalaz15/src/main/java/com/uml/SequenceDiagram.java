@@ -1,5 +1,7 @@
 package com.uml;
 
+import java.util.List;
+
 public class SequenceDiagram extends Diagram{
     
     /**
@@ -9,5 +11,6 @@ public class SequenceDiagram extends Diagram{
     public SequenceDiagram(String name){
         super(name);
      }
+
 
 }

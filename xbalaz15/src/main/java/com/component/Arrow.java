@@ -3,7 +3,6 @@ package com.component;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.scene.Group;
 import javafx.scene.shape.Polyline;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -15,6 +14,8 @@ public class Arrow extends Group {
     private Polyline headAggr2 = new Polyline();
     private Polyline headComp = new Polyline();
     private Polyline headComp2 = new Polyline();
+    private Polyline headAssoc = new Polyline();
+    private Polyline headAssoc2 = new Polyline();
     private SimpleDoubleProperty x1 = new SimpleDoubleProperty();
     private SimpleDoubleProperty y1 = new SimpleDoubleProperty();
     private SimpleDoubleProperty x2 = new SimpleDoubleProperty();
@@ -148,41 +149,41 @@ public class Arrow extends Group {
         headAggr2.getStyleClass().setAll("whiteArrowHead");
         headComp.getStyleClass().setAll("blackDiamondHead");
         headComp2.getStyleClass().setAll("blackDiamondHead");
+        headAssoc.getStyleClass().setAll("arrowHead");
+        headAssoc2.getStyleClass().setAll("arrowHead");
     }
 
     public void update() {
-        getChildren().setAll(mainLine, headInher, headInher2, headAggr, headAggr2, headComp, headComp2);
-        //double[] start = scale(this.FromBox, this.ToBox, 50, 50);
-        //double[] end = scale(this.ToBox, this.FromBox, 50, 50);
+        getChildren().setAll(mainLine, headInher, headInher2, headAggr, headAggr2, headComp, headComp2, headAssoc, headAssoc2);
         double[] start = scale(this.FromBox, this.ToBox);
         double[] end = scale(this.ToBox, this.FromBox);
         double x1 = start[0];
         double y1 = start[1];
         double x2 = end[0];
         double y2 = end[1];
-        double theta;
-
-        // NORMAL LINE -> ASSOCIATION
-        mainLine.getPoints().setAll(x1, y1, x2, y2);
+        double theta = Math.atan2(y2 - y1, x2 - x1);
         toBack();
 
         // Draw line with arrowhead by arrow type
         switch (getArrowType()) {
-            // NORMAL LINE -> ASSOCIATION
-            case "association" -> {
-                getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2);
+            // ASSOCIATION ARROWHEAD
+            case "association": {
+                getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2, headAssoc, headAssoc2);
+
+                // Drawing arrowhead
+                mainLine.getPoints().setAll(x1, y1, x2, y2);
+                double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headAssoc.getPoints().setAll(x, y, x2, y2);
+                x = x2 - Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                y = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headAssoc.getPoints().addAll(x, y);
+                getChildren().addAll(headAssoc, headAssoc2);
                 break;
             }
             // GENERALIZATION ARROWHEAD
-            case "generalization" -> {
-                getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2);
-
-                // Hide end line behind box
-                //end = scale(this.ToBox, this.FromBox, 110, 110);
-                end = scale(this.ToBox, this.FromBox);
-                x2 = end[0];
-                y2 = end[1];
-                theta = Math.atan2(y2 - y1, x2 - x1);
+            case "generalization": {
+                getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2, headAssoc, headAssoc2);
 
                 // Drawing arrowhead
                 mainLine.getPoints().setAll(x1, y1, x2, y2);
@@ -202,137 +203,84 @@ public class Arrow extends Group {
                 break;
             }
             // BLACK DIAMOND ARROWHEAD
-            case "composition" -> {
-                getChildren().removeAll(headInher, headInher2, headAggr, headAggr2, headComp, headComp2);
-
-                // Hide end line behind box
-                //end = scale(this.ToBox, this.FromBox, 150, 150);
-                end = scale(this.ToBox, this.FromBox);
-                x2 = end[0];
-                y2 = end[1];
-                theta = Math.atan2(y2 - y1, x2 - x1);
+            case "composition": {
+                getChildren().removeAll(headInher, headInher2, headAggr, headAggr2, headComp, headComp2, headAssoc, headAssoc2);
 
                 // Drawing arrowhead
                 mainLine.getPoints().setAll(x1, y1, x2, y2);
-                double x4 = x2 + Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                double y4 = y2 + Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                headComp.getPoints().setAll(x4, y4, x2, y2);
-                double x = x2 + Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                double y = y2 + Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                headComp.getPoints().addAll(x, y);
+                double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headComp.getPoints().setAll(x, y, x2, y2);
+                double x3 = x2 - Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                double y3 = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headComp.getPoints().addAll(x3, y3);
 
-                // Join arrow to reverse arrow
+                // Join reverse arrow to arrow
                 theta = Math.atan2(y2 - y, x2 - x);
-                double x3 = x - Math.cos(theta - 45) * 27;
-                double y3 = y - Math.sin(theta - 45) * 27;
+                double x4 = x - Math.cos(theta - 45) * 27;
+                double y4 = y - Math.sin(theta - 45) * 27;
                 headComp2.getPoints().setAll(x, y, x3, y3, x4, y4);
                 getChildren().addAll(headComp, headComp2);
                 break;
             }
             // WHITE DIAMOND ARROWHEAD
-            case "aggregation" -> {
-                getChildren().removeAll(headInher, headInher2, headComp, headComp2, headAggr, headAggr2);
-
-                // Hide end line behind box
-                //end = scale(this.ToBox, this.FromBox, 150, 150);
-                end = scale(this.ToBox, this.FromBox);
-                x2 = end[0];
-                y2 = end[1];
-                theta = Math.atan2(y2 - y1, x2 - x1);
+            case "aggregation": {
+                getChildren().removeAll(headInher, headInher2, headComp, headComp2, headAggr, headAggr2, headAssoc, headAssoc2);
 
                 // Drawing arrowhead
                 mainLine.getPoints().setAll(x1, y1, x2, y2);
-                double x4 = x2 + Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                double y4 = y2 + Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                headAggr.getPoints().setAll(x4, y4, x2, y2);
-                double x = x2 + Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                double y = y2 + Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
-                headAggr.getPoints().addAll(x, y);
+                double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headAggr.getPoints().setAll(x, y, x2, y2);
+                double x3 = x2 - Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                double y3 = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headAggr.getPoints().addAll(x3, y3);
 
-                // Join arrow to reverse arrow
+                // Join reverse arrow to arrow
                 theta = Math.atan2(y2 - y, x2 - x);
-                double x3 = x - Math.cos(theta - 45) * 27;
-                double y3 = y - Math.sin(theta - 45) * 27;
-                headAggr2.getPoints().setAll(x, y, x3, y3, x4, y4);
+                double x4 = x - Math.cos(theta - 45) * 27;
+                double y4 = y - Math.sin(theta - 45) * 27;
+                headAggr2.getPoints().setAll(x, y, x4, y4, x3, y3);
                 getChildren().addAll(headAggr, headAggr2);
                 break;
             }
         }
     }
 
-    private double[] scale2(ClassComponent box1, ClassComponent box2, int angle, int length) {
-        //double theta = Math.atan2(y2 - y1, x2 - x1);
-        double theta = Math.atan2(box2.getY() - box1.getY(), box2.getX() - box1.getX());
-        //scale2(box1, box2);
-        return new double[]{
-                box1.getX() + Math.cos(theta) * angle,
-                box1.getY() + Math.sin(theta) * length
-        };
-    }
-
     private double[] scale(ClassComponent box1, ClassComponent box2) {
         double beta = Math.atan2(box1.getX() - box2.getX(), box1.getY() - box2.getY());
-        System.out.println(box1.getName());
-        System.out.println(Math.toDegrees(beta));
-        //FromBox
         double len1 = (box1.getWidth() / 2) / Math.sin(beta);
         double len2 = (box1.getHeight() / 2) / Math.cos(beta);
         double finalX = 0;
         double finalY = 0;
+
         if(Math.abs(len1) < Math.abs(len2)) {
-            //System.out.println("levo / pravo");
             if(Math.toDegrees(beta) >= 0){
-                System.out.println("levo");
+                // Levá strana
                 finalX = box1.getX() - (box1.getWidth() / 2);
                 if(Math.toDegrees(beta) <= 90) finalY = box1.getY() - Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
                 else finalY = box1.getY() + Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
             }else{
-                System.out.println("pravo");
+                // Pravá strana
                 finalX = box1.getX() + (box1.getWidth() / 2);
                 if(Math.toDegrees(beta) <= -90) finalY = box1.getY() + Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
                 else finalY = box1.getY() - Math.sqrt(Math.pow(len1, 2) - Math.pow(box1.getWidth()/2, 2));
             }
         }else {
-            //System.out.println("vršek / spodek");
             if(Math.abs(Math.toDegrees(beta)) <= 90){
-                System.out.println("vrsek");
+                // Vršek
                 finalY = box1.getY() - (box1.getHeight() / 2);
                 finalX = box1.getX() - box1.getHeight()/2 * (Math.tan(beta));
             }else {
-                System.out.println("spodek");
+               // Spodek
                 finalY = box1.getY() + (box1.getHeight() / 2);
                 finalX = box1.getX() + box1.getHeight()/2 * Math.tan(beta);
             }
-            //finalX = box1.getX() + box1.getHeight()/2 * (Math.abs(Math.tan(beta)) - 90);
 
         }
-        System.out.println(len1 + " " + len2);
-        System.out.println("Final x,y: " + finalX +"  "+ finalY);
-        System.out.println("Box1 x,y: " + box1.getX() +"  "+ box1.getY() + "  Width, Height: " + box1.getWidth() + "  " + box1.getHeight());
-        /*finalX = finalX - Math.cos(beta) * 150;
-        finalY = finalY - Math.sin(beta) * 150;*/
         return new double[]{
                 finalX,
                 finalY
-        };
-    }
-
-    private double[] scale9(ClassComponent box1, ClassComponent box2) {
-        double theta = Math.atan2(box2.getY() - box1.getY(), box2.getX() - box1.getX());
-        //scale2();
-        double len1 = (box1.getWidth() / 2) / Math.sin(theta);
-        double len2 = (box1.getHeight() / 2) / Math.cos(theta);
-        double len = 1;
-        double finalX = 0;
-        double finalY = 0;
-        if (Math.abs(len1) < Math.abs(len2)) {
-
-        }
-        else{
-        }
-        return new double[]{
-                box1.getX() + Math.cos(theta) * Math.abs(len),
-                box1.getY() + Math.sin(theta) * Math.abs(len)
         };
     }
 }

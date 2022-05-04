@@ -1,6 +1,7 @@
 package com.component;
 
 import com.google.gson.annotations.Expose;
+import com.javaprojekt.ClassDiagramController;
 import com.uml.UMLClassifier;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -168,21 +169,21 @@ public class ClassComponent extends Button {
 
         // Store radio button
         switch (this.ClassType) {
-            case "" -> {
+            case "":
                 setNormal(true);
                 setAbstractClass(false);
                 setInterface(false);
-            }
-            case "<<Abstract>>" -> {
+                break;
+            case "<<Abstract>>":
                 setAbstractClass(true);
                 setInterface(false);
                 setNormal(false);
-            }
-            case "<<Interface>>" -> {
+                break;
+            case "<<Interface>>":
                 setInterface(true);
                 setAbstractClass(false);
                 setNormal(false);
-            }
+                break;
         }
 
         // Appear in the cursor spike
@@ -212,7 +213,10 @@ public class ClassComponent extends Button {
 
     public void classNameUpdate(GridPane classContent){
 
-        if(Name.equals("")) setName("Class" + ID);
+        if(Name.equals("")) {
+            setName("Class" + ID);
+            ClassDiagramController.d.addName(getName());
+        }
 
         // Updatable lable inside Vbox
         Label myLabel = new Label();

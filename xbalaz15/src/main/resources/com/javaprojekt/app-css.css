@@ -8,6 +8,10 @@
     -fx-text-alignment: center;
 }
 
+.arrowHead{
+    -fx-stroke-width: 3px;
+}
+
 .whiteArrowHead{
     -fx-stroke-width: 3px;
     -fx-fill: white;

@@ -2,31 +2,38 @@ package com.uml;
 
 import java.util.*;
 
-public class Diagram extends Element{
+public class Diagram extends Element {
     protected List<String> listOfNames = new LinkedList<>();
     protected List<UMLClassifier> listOfClassif = new LinkedList<>();
-    
+    protected List<String> listOfClassNames = new LinkedList<>();
+
+    // Getter
+    public List<String> getListOfClassNames() {
+        return listOfClassNames;
+    }
+
     /**
      * Konstruktor pro vytvoření instance diagramu. Každý diagram má svůj název.
+     *
      * @param name Název diagramu.
      */
-    public Diagram(String name){
-       super(name);
+    public Diagram(String name) {
+        super(name);
     }
 
     /**
      * Vyhledá v diagramu klasifikátor podle názvu. Pokud neexistuje, vytvoří instanci třídy Classifier reprezentující klasifikátor,
      * který není v diagramu zachycen (viz UMLClassifier.forName(java.lang.String)); využito např. pro modelování typu proměnné, který v diagramu není.
      * Tato instance je zařazena do struktur diagramu, tzn. že při dalším pokusu o vyhledání se použije tato již vytvořená instance.
+     *
      * @param name Název klasifikátoru.
      * @return Nalezený, příp. vytvořený, klasifikátor.
      */
-    public UMLClassifier classifierForName(String name){
-        int index; 
-        if((index = listOfNames.indexOf(name)) != -1){
+    public UMLClassifier classifierForName(String name) {
+        int index;
+        if ((index = listOfNames.indexOf(name)) != -1) {
             return listOfClassif.get(index);
-        }
-        else{
+        } else {
             UMLClassifier objOfClassif = UMLClassifier.forName(name);
             listOfClassif.add(objOfClassif);
             listOfNames.add(name);
@@ -36,16 +43,32 @@ public class Diagram extends Element{
 
     /**
      * Vyhledá v diagramu klasifikátor podle názvu.
+     *
      * @param name Název klasifikátoru.
      * @return Nalezený klasifikátor. Pokud v diagramu neexistuje klasifikátor daného jména, vrací null.
      */
-    public UMLClassifier findClassifier(String name){
+    public UMLClassifier findClassifier(String name) {
         int index;
-        if((index = listOfNames.indexOf(name)) != -1){
+        if ((index = listOfNames.indexOf(name)) != -1) {
             return listOfClassif.get(index);
-        }
-        else{
+        } else {
             return null;
         }
+    }
+
+    public boolean addName(String name) {
+        if (!listOfClassNames.contains(name)) listOfClassNames.add(name);
+        else return false;
+        return true;
+    }
+
+    public void renameName(String oldName, String newName) {
+        if (listOfClassNames.contains(oldName)) {
+            listOfClassNames.set(listOfClassNames.indexOf(oldName), newName);
+        }
+    }
+
+    public void deleteName(String name) {
+        listOfClassNames.remove(name);
     }
 }
