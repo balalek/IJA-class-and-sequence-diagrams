@@ -6,7 +6,6 @@ import com.google.gson.*;
 import com.uml.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -21,7 +20,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.Reader;
-import java.nio.file.FileStore;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
@@ -618,8 +616,27 @@ public class ClassDiagramController{
         packaging.put("messageArrow", obj);
         List.add(0, packaging);
     }
-    public void LoadJson(ActionEvent event){
+    public void LoadJson(ActionEvent event) throws InterruptedException {
         deserializeObject();
+        fixArrows();
+        System.out.println("box width: " + ListofBoxes.get(0).getWidth());
+    }
+    public void fixArrows() {
+        TimerTask task = new TimerTask() {
+            public void run() {
+                /*for(ClassComponent box : ListofBoxes){
+                    box.setLayoutX(box.getLayoutX() + 5 + box.getTranslateX());
+                    box.setLayoutY(box.getLayoutY() + 5 + box.getTranslateY());
+                    box.setX(box.getLayoutX() + 5 + box.getTranslateX());
+                    box.setY(box.getLayoutY() + 5 + box.getTranslateY());
+                }*/
+                System.out.println("box width: " + ListofBoxes.get(0).getWidth());
+            }
+        };
+        Timer timer = new Timer("Timer");
+
+        long delay = 1000L;
+        timer.schedule(task, delay);
     }
 
     public void deserializeObject(){
@@ -702,4 +719,5 @@ public class ClassDiagramController{
         Structure structure = new Structure(box, cls);
         return structure;
     }
+
 }
