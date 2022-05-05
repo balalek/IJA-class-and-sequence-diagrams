@@ -94,7 +94,9 @@ public class ClassWithLine extends Group {
     }
 
     public void Update(){
-        setId("ID" + ID);
+        classButton.setId("ID" + ID);
+        ID = count ++;
+        timeLineButton.setId("ID" + ID);
         getChildren().setAll(line, classButton, timeLineButton);
     }
 }

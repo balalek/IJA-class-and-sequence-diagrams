@@ -520,7 +520,7 @@ public class ClassDiagramController{
     public void handleKeyboard(KeyEvent evt, ClassComponent box, UMLClass cls){
         KeyCode k = evt.getCode();
         switch (k) {
-            case W:
+            /*case W:
                 moveUp(box);
                 break;
             case S:
@@ -531,13 +531,13 @@ public class ClassDiagramController{
                 break;
             case D:
                 moveRight(box);
-                break;
+                break;*/
             case DELETE:
                 delete(box, cls);
                 break;
         }
     }
-    public void moveUp(ClassComponent box){
+    /*public void moveUp(ClassComponent box){
         box.setLayoutY(box.getLayoutY()-10);
     }
     public void moveDown(ClassComponent box){
@@ -548,7 +548,7 @@ public class ClassDiagramController{
     }
     public void moveRight(ClassComponent box){
         box.setLayoutX(box.getLayoutX()+10);
-    }
+    }*/
     public void delete(ClassComponent box, UMLClass cls){
         ListofBoxes.remove(box);
         ListofBoxNames.remove(box.getName());

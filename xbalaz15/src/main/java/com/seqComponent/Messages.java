@@ -84,11 +84,13 @@ public class Messages extends Group {
         setX1(x1);
         setY1(y1);
         setX2(x2);
-        setY2(y2);
+        //setY2(y1);
+        getChildren().setAll(mainLine);
+        mainLine.getPoints().setAll(x1, y1, x2, y1);
 
-        for (SimpleDoubleProperty s : new SimpleDoubleProperty[]{x1Property(), y1Property(), x2Property(), y2Property()}) {
+        /*for (SimpleDoubleProperty s : new SimpleDoubleProperty[]{x1Property(), y1Property(), x2Property(), y2Property()}) {
             s.addListener((l, o, n) -> update());
-        }
+        }*/
         arrowHeadStyles();
         update();
     }
@@ -97,7 +99,7 @@ public class Messages extends Group {
 
     }
     public void update(){
-        getChildren().setAll(mainLine);
+        /*getChildren().setAll(mainLine);
         double[] start = scale(getX1(), getY1(), getX2(), getY2(), 50);
         double[] end = scale(getX2(), getY2(), getX1(), getY1(), 50);
         double x1 = start[0];
@@ -108,15 +110,15 @@ public class Messages extends Group {
 
         // NORMAL LINE -> ASSOCIATION
         mainLine.getPoints().setAll(x1, y1, x2, y2);
-        toBack();
+        toBack();*/
     }
 
-    private double[] scale ( double x1, double y1, double x2, double y2, int arrow_scaler){
+    /*private double[] scale ( double x1, double y1, double x2, double y2, int arrow_scaler){
         double theta = Math.atan2(y2 - y1, x2 - x1);
         return new double[]{
                 x1 + Math.cos(theta) * arrow_scaler,
                 y1 + Math.sin(theta) * arrow_scaler
         };
-    }
+    }*/
 
 }
