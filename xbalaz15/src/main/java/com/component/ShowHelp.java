@@ -71,12 +71,10 @@ public class ShowHelp {
     }
 
     private static String textBlocks() {
-        String help = " Note: Clicking with mouse works only for left mouse button, unless its stated otherwise.\n" +
-        "Note: Clicking with mouse works only for left mouse button, unless its stated otherwise.\n" +
+        String help = " Note: Clicking with mouse is meant for left mouse button, unless its stated otherwise.\n" +
         "Usage: To create a class, you must click on button called Insert Class\n" +
         "and then click somewhere on panel. That will create an empty class box.\n" +
-        "You can move with classes by clicking on them and dragging them to desired position.\n" +
-        "You can also use following keys: W, A, S, D, but first select class box by clicking on it.\n" +
+        "You can move with classes by dragging them to desired position.\n" +
         "For class to be deleted use key: DELETE. To update a class content you must double click on class.\n" +
         "Next step is creating relation between classes, and that is achieved by clicking right mouse button\n" +
         "on two separate classes. Default relation is association, if you want to change relation type,\n" +
