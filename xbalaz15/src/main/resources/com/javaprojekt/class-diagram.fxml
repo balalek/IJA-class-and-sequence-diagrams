@@ -20,49 +20,57 @@
    <top>
       <GridPane fx:id="Menu" prefHeight="46.0" prefWidth="1324.0" BorderPane.alignment="CENTER">
         <columnConstraints>
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="183.0" minWidth="10.0" prefWidth="183.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.0" minWidth="10.0" prefWidth="213.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="157.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="154.0" />
-          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="126.0" />
-            <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="238.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="240.0" minWidth="10.0" prefWidth="240.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="249.0" minWidth="10.0" prefWidth="27.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="157.0" minWidth="10.0" prefWidth="58.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="161.0" minWidth="10.0" prefWidth="123.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="182.0" minWidth="10.0" prefWidth="112.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="93.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="64.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="200.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="74.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="143.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="108.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="108.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button fx:id="SeqDiagram" mnemonicParsing="false" onAction="#SwitchToSeqDiagram" text="Sequence diagram">
+            <Button fx:id="SeqDiagram" mnemonicParsing="false" onAction="#SwitchToSeqDiagram" prefHeight="30.0" prefWidth="178.0" text="Sequence diagram">
                <font>
                   <Font size="16.0" />
                </font>
             </Button>
-            <Button fx:id="Save" mnemonicParsing="false" onAction="#SaveJson" text="Save" GridPane.columnIndex="6">
+            <Button fx:id="Save" mnemonicParsing="false" onAction="#SaveJson" text="Save" GridPane.columnIndex="9">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="Load" mnemonicParsing="false" onAction="#LoadJson" text="Load" GridPane.columnIndex="7">
+            <Button fx:id="Load" mnemonicParsing="false" onAction="#LoadJson" text="Load" GridPane.columnIndex="10">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="btnInsertClass" mnemonicParsing="false" onAction="#InsertClass" text="Insert Class" GridPane.columnIndex="2">
+            <Button fx:id="btnInsertClass" mnemonicParsing="false" onAction="#InsertClass" text="Insert Class" GridPane.columnIndex="3">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#Undo" text="Undo" GridPane.columnIndex="4">
+            <Button mnemonicParsing="false" onAction="#Undo" text="Undo" GridPane.columnIndex="5">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button mnemonicParsing="false" onAction="#showHelp" text="Help" GridPane.columnIndex="3">
+            <Button mnemonicParsing="false" onAction="#showHelp" text="Help" GridPane.columnIndex="4">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
+            <Button mnemonicParsing="false" onAction="#refresh" text="Refresh" GridPane.columnIndex="7" GridPane.halignment="CENTER">
+               <font>
+                  <Font size="15.0" />
+               </font></Button>
          </children>
       </GridPane>
    </top>

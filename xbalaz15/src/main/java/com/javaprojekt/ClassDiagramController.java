@@ -500,6 +500,9 @@ public class ClassDiagramController{
                     box.setX(box.getLayoutX());
                     box.setY(box.getLayoutY());
                     operationStack.pop();
+                    // Refresh arrows
+                    box.setLayoutY(box.getLayoutY()+10);
+                    box.setLayoutY(box.getLayoutY()-10);
                 }
             }
         } else {
@@ -620,6 +623,13 @@ public class ClassDiagramController{
     }
     public void LoadJson(ActionEvent event){
         deserializeObject();
+        // Refresh arrows
+        /*for(ClassComponent box : ListofBoxes) {
+            box.setLayoutX(box.getLayoutX() + 5 + box.getTranslateX());
+            box.setLayoutY(box.getLayoutY() + 5 + box.getTranslateY());
+            box.setX(box.getLayoutX() + 5 + box.getTranslateX());
+            box.setY(box.getLayoutY() + 5 + box.getTranslateY());
+        }*/
     }
 
     public void deserializeObject(){
@@ -646,7 +656,7 @@ public class ClassDiagramController{
         }else System.out.println("Nebyla vybrana cesta");
 
     }
-    private void parseEmpObj(JSONObject emp){
+    private void parseEmpObj(JSONObject emp) {
         if(emp.get("class") != null){
             JSONObject empObj = (JSONObject) emp.get("class");
             Gson gson = new GsonBuilder()
@@ -654,15 +664,31 @@ public class ClassDiagramController{
                     .create();
             ClassComponent loadedBox = gson.fromJson(empObj.toString(), ClassComponent.class);
             rootPane.getChildren().addAll(loadClassBox(loadedBox).getBox());
+
+            //Thread.sleep(1000);
         }else if(emp.get("messageArrow") != null)
         {
             JSONObject empObj = (JSONObject) emp.get("messageArrow");
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
                     .create();
-
             HelpLoadArrow arrow = gson.fromJson(empObj.toString(), HelpLoadArrow.class);
             loadArrow(arrow);
+        }
+
+        /*for(Node box : rootPane.getChildren()){
+            // Refresh arrows
+            System.out.println(box);
+            (rootPane.getChildren().size() - 1)
+        }*/
+        //System.out.println(rootPane.getChildren());
+    }
+
+    @FXML
+    public void refresh(ActionEvent e) {
+        for (ClassComponent box : ListofBoxes) {
+            box.setLayoutY(box.getLayoutY() + 10);
+            box.setLayoutY(box.getLayoutY() - 10);
         }
     }
 

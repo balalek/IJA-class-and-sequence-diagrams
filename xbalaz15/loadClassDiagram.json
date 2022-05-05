@@ -1,39 +1,39 @@
 [
   {"class":{
-    "x":350.0,
-    "y":75.0,
+    "x":950.0,
+    "y":120.0,
     "Name":"Element",
     "Attributes":"+ String name",
     "Operations":"+ Element(String name)\n+ String getName()\n+ void rename(String name)",
     "ClassType": ""
   }},
   {"class": {
-    "x": 350.0,
-    "y": 250.0,
+    "x": 950.0,
+    "y": 503.0,
     "Name": "UMLClassifier",
     "Attributes": "",
     "Operations": "+ UMLClassifier(String name)\n+ boolean isUserDefined()",
     "ClassType": ""
   }},
   {"class": {
-    "x": 350.0,
-    "y": 500.0,
+    "x": 950.0,
+    "y": 894.0,
     "Name": "UMLClass",
     "Attributes": "+ List<UMLAttribute> attributes",
     "Operations": "+ boolean addAttribute(UMLAttribute attr)\n+ int getAttrPosition(UMLAttribute attr)",
     "ClassType": ""
   }},
   {"class": {
-    "x": 150.0,
-    "y": 250.0,
+    "x": 392.0,
+    "y": 503.0,
     "Name": "UMLAttribute",
     "Attributes": "+ UMLClassifier type",
     "Operations": "+ UMLClassifier getType()",
     "ClassType": ""
   }},
   {"class": {
-    "x": 550.0,
-    "y": 250.0,
+    "x": 1575.0,
+    "y": 503.0,
     "Name": "ClassDiagram",
     "Attributes": "+ List<UMLClassifier> classes",
     "Operations": "+ UMLClass createClass(String name)\n+ UMLClassifier classifierForName(String name)",
