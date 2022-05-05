@@ -13,7 +13,6 @@ import javafx.stage.Stage;
 
 /**
  * Třída pro změnu typu šipky.
- * Třída je podle mně úplně zbytečná a tato jediná metoda by se měla přesunout do Arrow.
  */
 public class EditArrowComponent {
 
