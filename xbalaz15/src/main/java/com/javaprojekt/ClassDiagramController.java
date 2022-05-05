@@ -39,6 +39,8 @@ public class ClassDiagramController{
     private List<String> listOfDuplicateAttr = new LinkedList<>();
     private List<UMLAttribute> listOfAttrForOper = new LinkedList<>();
     private List<UMLOperation> listOfDuplicateOper = new LinkedList<>();
+    private List<String> listOfOldClassName = new LinkedList<>();
+    private List<String> listOfNewClassName = new LinkedList<>();
     private Deque<Object> objectStack = new ArrayDeque<>();
     private Deque<String> nameStack = new ArrayDeque<>();
     private Deque<Enum<operation>> operationStack = new ArrayDeque<>();
@@ -106,6 +108,7 @@ public class ClassDiagramController{
             if(evt.getClickCount() == 2){
                 String oldName = box.getName();
                 d.addName(oldName);
+                listOfOldClassName.add(oldName);
 
                 // Pushování do stacku pro undo operace
                 objectStack.push(box);
@@ -405,7 +408,9 @@ public class ClassDiagramController{
                 box.setOperationProperty(box.getOperations());
 
                 // Rename name in backend
+                listOfNewClassName.add(cls.getName());
                 cls.rename(box.getName());
+                listOfNewClassName.add(cls.getName());
                 d.renameClass(oldName, cls.getName());
                 d.renameName(oldName, cls.getName());
                 // TODO nahradit klasifikator novym v seznamu klasifikatorů
@@ -482,6 +487,16 @@ public class ClassDiagramController{
                     rootPane.getChildren().add((Node) objectStack.pop());
                     operationStack.pop();
                 }else if(operationStack.peekFirst() == operation.RENAME){
+                    //System.out.println("cuss");
+                    //stackOfOldClassName.push(box.getName());
+                    //ClassComponent tmp = (ClassComponent) objectStack.peekFirst();
+                    /*System.out.println(listOfOldClassName);
+                    System.out.println(tmp.getName());
+                    if(listOfNewClassName.contains(tmp.getName())) {
+                        int index = listOfNewClassName.indexOf(tmp.getName());
+                        d.renameName(listOfOldClassName.get(index), tmp.getName());
+                        System.out.println("cuss");
+                    }*/
                     ClassComponent box = (ClassComponent) objectStack.pop();
                     box.setName(nameStack.pop());
                     box.setNameProperty(box.getName());

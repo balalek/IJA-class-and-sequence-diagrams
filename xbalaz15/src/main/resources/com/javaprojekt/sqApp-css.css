@@ -17,3 +17,32 @@
     -fx-min-height: 20;
     -fx-min-width: 20;
 }
+.mainLine{
+    -fx-stroke-width: 2px;
+}
+.blackArrowHead{
+    -fx-stroke-width: 2px;
+    -fx-border-color: black;
+    -fx-fill: black;
+}
+.normalArrowHead{
+    -fx-stroke-width: 2px;
+}
+.dashedLineArrow{
+    -fx-border-color: black;
+    -fx-fill: black;
+}
+.dashedMainLine{
+    -fx-stroke-width: 2px;
+    -fx-stroke-dash-array: 10 10;
+    -fx-stroke-dash-offset: 75;
+}
+.comboBox{
+    -fx-font-size: 13;
+    -fx-font-weight: bold;
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-min-height: 30;
+    -fx-min-width: 100;
+    -fx-text-alignment: center;
+}
