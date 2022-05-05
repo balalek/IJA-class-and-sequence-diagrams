@@ -498,6 +498,9 @@ public class ClassDiagramController{
                     box.setX(box.getLayoutX());
                     box.setY(box.getLayoutY());
                     operationStack.pop();
+                    // Refresh arrows
+                    box.setLayoutY(box.getLayoutY()+10);
+                    box.setLayoutY(box.getLayoutY()-10);
                 }
             }
         } else {
@@ -618,25 +621,6 @@ public class ClassDiagramController{
     }
     public void LoadJson(ActionEvent event) throws InterruptedException {
         deserializeObject();
-        fixArrows();
-        System.out.println("box width: " + ListofBoxes.get(0).getWidth());
-    }
-    public void fixArrows() {
-        TimerTask task = new TimerTask() {
-            public void run() {
-                /*for(ClassComponent box : ListofBoxes){
-                    box.setLayoutX(box.getLayoutX() + 5 + box.getTranslateX());
-                    box.setLayoutY(box.getLayoutY() + 5 + box.getTranslateY());
-                    box.setX(box.getLayoutX() + 5 + box.getTranslateX());
-                    box.setY(box.getLayoutY() + 5 + box.getTranslateY());
-                }*/
-                System.out.println("box width: " + ListofBoxes.get(0).getWidth());
-            }
-        };
-        Timer timer = new Timer("Timer");
-
-        long delay = 1000L;
-        timer.schedule(task, delay);
     }
 
     public void deserializeObject(){
@@ -663,7 +647,7 @@ public class ClassDiagramController{
         }else System.out.println("Nebyla vybrana cesta");
 
     }
-    private void parseEmpObj(JSONObject emp){
+    private void parseEmpObj(JSONObject emp) {
         if(emp.get("class") != null){
             JSONObject empObj = (JSONObject) emp.get("class");
             Gson gson = new GsonBuilder()
@@ -677,9 +661,16 @@ public class ClassDiagramController{
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
                     .create();
-
             HelpLoadArrow arrow = gson.fromJson(empObj.toString(), HelpLoadArrow.class);
             loadArrow(arrow);
+        }
+    }
+
+    @FXML
+    public void refresh(ActionEvent e) {
+        for (ClassComponent box : ListofBoxes) {
+            box.setLayoutY(box.getLayoutY() + 10);
+            box.setLayoutY(box.getLayoutY() - 10);
         }
     }
 
