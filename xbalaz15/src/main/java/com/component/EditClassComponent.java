@@ -11,16 +11,25 @@ import javafx.stage.Stage;
 
 import java.util.LinkedList;
 import java.util.List;
-
+/**
+ * Třída pro zobrazení a editaci tříd.
+ * Třída je podle mně úplně zbytečná a tato jediná metoda by se měla přesunout do ClassComponent.
+ */
 public class EditClassComponent {
 
+    /**
+     * Tato metoda zobrazí okno pro editaci třídy (zobrazí editovatelný aktuální stav)
+     * a po stisknutí tlačítka vrátí obsah.
+     * @param classComponent Odkaz na třídu kterou editujeme
+     * @return Vrací Název třídy, Atributy, metody a typ třídy(obsah oken a radiobutonu)
+     */
     public static List<Object> display(ClassComponent classComponent){
         List<Object> content = new LinkedList<>();
         Stage classWindow = new Stage();
         classWindow.initModality(Modality.APPLICATION_MODAL);
         classWindow.setTitle("Class window");
 
-        // Init components
+        // Inicializace komponent
         GridPane layout = new GridPane();
         GridPane radioLayout = new GridPane();
         Button confirm = new Button("Confirm");
@@ -35,23 +44,23 @@ public class EditClassComponent {
         RadioButton abstractClass = new RadioButton("Abstract");
         RadioButton interfaceClass = new RadioButton("Interface");
 
-        // Add radio buttons to toggle group
+        // Přidání radio buttonů do skupiny
         normal.setToggleGroup(tg);
         abstractClass.setToggleGroup(tg);
         interfaceClass.setToggleGroup(tg);
 
-        // Default is normal class
+        // Defaultně je nastavení normal
         normal.setSelected(classComponent.getNormal());
         abstractClass.setSelected(classComponent.getAbstractClass());
         interfaceClass.setSelected(classComponent.getInterface());
 
-        // Font sizes
+        // Velikost fontu
         confirm.setStyle("-fx-font-size:15");
         name.setStyle(("-fx-font-size:15"));
         attrs.setStyle(("-fx-font-size:15"));
         methods.setStyle(("-fx-font-size:15"));
 
-        // Add components to a specific gridpane rows and columns
+        // Přidání komponent do gridpane
         layout.add(name, 0, 0);
         layout.add(attrs, 0, 1);
         layout.add(methods, 0, 2);
@@ -73,7 +82,7 @@ public class EditClassComponent {
         radioLayout.setVgap(10);
 
 
-        // New row a column objects
+        // Nové řádky a sloupce
         ColumnConstraints column1 = new ColumnConstraints();
         ColumnConstraints column2 = new ColumnConstraints();
         RowConstraints row1 = new RowConstraints();
@@ -87,7 +96,7 @@ public class EditClassComponent {
         ColumnConstraints columnRadio4 = new ColumnConstraints();
         RowConstraints rowRadio1 = new RowConstraints();
 
-        // Set height and width
+        // Nastavení výšky a šířky
         column1.setPrefWidth(100);
         column2.setPrefWidth(500);
         columnRadio1.setPrefWidth(125);
@@ -99,7 +108,7 @@ public class EditClassComponent {
 
         rowRadio1.setPrefHeight(25);
 
-        // Positioning in rows and columns
+        // Pozicování v řádcích a sloupcích
         row1.setValignment(VPos.TOP);
         row2.setValignment(VPos.TOP);
         row3.setValignment(VPos.TOP);
@@ -108,16 +117,16 @@ public class EditClassComponent {
 
         columnRadio4.setHalignment(HPos.RIGHT);
 
-        // Horizontal stretch by window size
+        // Horizontální roztažení
         column2.setHgrow(Priority.ALWAYS);
 
-        // Add to layout
+        // Přidá do layoutu
         layout.getColumnConstraints().addAll(column1, column2);
         layout.getRowConstraints().addAll(row1, row2, row3);
         radioLayout.getColumnConstraints().addAll(columnRadio1, columnRadio2, columnRadio3, columnRadio4);
         radioLayout.getRowConstraints().add(rowRadio1);
 
-        // Button action
+        // Tlačítko pro potvrzení a odeslání dat (zavře okno)
         confirm.setOnAction(e->{
             classWindow.close();
         });

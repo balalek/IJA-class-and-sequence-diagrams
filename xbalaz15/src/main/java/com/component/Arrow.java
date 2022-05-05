@@ -6,6 +6,13 @@ import javafx.scene.shape.Polyline;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Třída reprezentuje vstahy (šipky) mezi třídami a rozšiřuje třídu Group.
+ * Má seznam všech šipek, odkaz na počáteční, cílový box (reprezentující třídu), název počáteční
+ * a cílové třídy, typ vstahu (asociace, agregace, kompozice a generalizace), souřadnice počátku a konce.
+ * Lze využít na vyznačení vztahů v diagramu tříd.
+ */
+
 public class Arrow extends Group {
     private Polyline mainLine = new Polyline();
     private Polyline headInher = new Polyline();
@@ -29,84 +36,62 @@ public class Arrow extends Group {
     private ClassComponent FromBox;
     private ClassComponent ToBox;
 
-    // Getters and setters
+    // GETry a SETry
     public String getArrowType() {
         return arrowType;
     }
-
     public void setArrowType(String arrowType) {
         this.arrowType = arrowType;
-    }
-
-    public double getX1() {
-        return x1.get();
     }
 
     public SimpleDoubleProperty x1Property() {
         return x1;
     }
-
     public void setX1(double x1) {
         this.x1.set(x1);
-    }
-
-    public double getY1() {
-        return y1.get();
     }
 
     public SimpleDoubleProperty y1Property() {
         return y1;
     }
-
     public void setY1(double y1) {
         this.y1.set(y1);
-    }
-
-    public double getX2() {
-        return x2.get();
     }
 
     public SimpleDoubleProperty x2Property() {
         return x2;
     }
-
     public void setX2(double x2) {
         this.x2.set(x2);
-    }
-
-    public double getY2() {
-        return y2.get();
     }
 
     public SimpleDoubleProperty y2Property() {
         return y2;
     }
-
     public void setY2(double y2) {
         this.y2.set(y2);
     }
-
     public void setFrom(String from) {
         this.from = from;
     }
-
     public void setTo(String to) {
         this.to = to;
     }
-
     public static List<Arrow> getListOfArrows() {
         return ListOfArrows;
     }
-
     public String getFrom() {
         return from;
     }
-
     public String getTo() {
         return to;
     }
 
-    // Constructor
+    /**
+     * Konstruktor pro vytvoření vztahu mezi třídami
+     * @param From Odkaz na třídu od kud povede šipka
+     * @param To Odkaz na třídu kam povede šipka
+     */
     public Arrow(ClassComponent From, ClassComponent To) {
         ListOfArrows.add(this);
         this.FromBox = From;
@@ -123,7 +108,12 @@ public class Arrow extends Group {
         update();
     }
 
-    // Constructor for file loading
+    /**
+     * Konstruktor pro vytvoření vztahu mezi třídami pro načítání ze souboru
+     * @param From Odkaz na třídu od kud povede šipka
+     * @param To Odkaz na třídu kam povede šipka
+     * @param arrowType Typ vztahu mezi třídami
+     */
     public Arrow(ClassComponent From, ClassComponent To, String arrowType) {
         ListOfArrows.add(this);
         this.arrowType = arrowType;
@@ -141,6 +131,9 @@ public class Arrow extends Group {
         update();
     }
 
+    /**
+     * Nastavení css stylů
+     */
     private void arrowHeadStyles() {
         mainLine.getStyleClass().setAll("mainLine");
         headInher.getStyleClass().setAll("whiteArrowHead");
@@ -153,6 +146,9 @@ public class Arrow extends Group {
         headAssoc2.getStyleClass().setAll("arrowHead");
     }
 
+    /**
+     * Vykreslí danou šipku při vytvoření nebo pohybu objektu na který je připojena
+     */
     public void update() {
         getChildren().setAll(mainLine, headInher, headInher2, headAggr, headAggr2, headComp, headComp2, headAssoc, headAssoc2);
         double[] start = scale(this.FromBox, this.ToBox);
@@ -164,9 +160,9 @@ public class Arrow extends Group {
         double theta = Math.atan2(y2 - y1, x2 - x1);
         toBack();
 
-        // Draw line with arrowhead by arrow type
+        // Zakreslí úsečku s zakončením/šipkou podle typu vztahu (arrowType)
         switch (getArrowType()) {
-            // ASSOCIATION ARROWHEAD
+            // Zakončení asociace
             case "association": {
                 getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2, headAssoc, headAssoc2);
 
@@ -181,11 +177,11 @@ public class Arrow extends Group {
                 getChildren().addAll(headAssoc, headAssoc2);
                 break;
             }
-            // GENERALIZATION ARROWHEAD
+            // Zakončení generalizace
             case "generalization": {
                 getChildren().removeAll(headAggr, headAggr2, headComp, headComp2, headInher, headInher2, headAssoc, headAssoc2);
 
-                // Drawing arrowhead
+                // Zakreslení šipky
                 mainLine.getPoints().setAll(x1, y1, x2, y2);
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
@@ -194,7 +190,7 @@ public class Arrow extends Group {
                 y = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headInher.getPoints().addAll(x, y);
 
-                // Arrow joining line
+                // Připojení šipky
                 theta = Math.atan2(y2 - y, x2 - x);
                 double x3 = x2 + Math.cos(theta - 90) * 26;
                 double y3 = y2 + Math.sin(theta - 90) * 26;
@@ -202,11 +198,11 @@ public class Arrow extends Group {
                 getChildren().addAll(headInher, headInher2);
                 break;
             }
-            // BLACK DIAMOND ARROWHEAD
+            // Zakončení kompozice (plný diamant)
             case "composition": {
                 getChildren().removeAll(headInher, headInher2, headAggr, headAggr2, headComp, headComp2, headAssoc, headAssoc2);
 
-                // Drawing arrowhead
+                // Zakreslení šipky
                 mainLine.getPoints().setAll(x1, y1, x2, y2);
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
@@ -215,7 +211,7 @@ public class Arrow extends Group {
                 double y3 = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headComp.getPoints().addAll(x3, y3);
 
-                // Join reverse arrow to arrow
+                // Připojení opačné šipky k šipce
                 theta = Math.atan2(y2 - y, x2 - x);
                 double x4 = x - Math.cos(theta - 45) * 27;
                 double y4 = y - Math.sin(theta - 45) * 27;
@@ -223,11 +219,11 @@ public class Arrow extends Group {
                 getChildren().addAll(headComp, headComp2);
                 break;
             }
-            // WHITE DIAMOND ARROWHEAD
+            // Zakončení agregace (Prázdný diamant)
             case "aggregation": {
                 getChildren().removeAll(headInher, headInher2, headComp, headComp2, headAggr, headAggr2, headAssoc, headAssoc2);
 
-                // Drawing arrowhead
+                // Zakreslení šipky
                 mainLine.getPoints().setAll(x1, y1, x2, y2);
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
@@ -236,7 +232,7 @@ public class Arrow extends Group {
                 double y3 = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headAggr.getPoints().addAll(x3, y3);
 
-                // Join reverse arrow to arrow
+                // Připojení opačné šipky k šipce
                 theta = Math.atan2(y2 - y, x2 - x);
                 double x4 = x - Math.cos(theta - 45) * 27;
                 double y4 = y - Math.sin(theta - 45) * 27;
@@ -247,6 +243,12 @@ public class Arrow extends Group {
         }
     }
 
+    /**
+     * Metoda scale se používá k získání souřadnic (x,y) kde šipka začíná
+     * @param box1 Odkaz na třídu1
+     * @param box2 Odkaz na třídu2
+     * @return Vrací souřadnice průsečíku nejbližší hrany třídy1 a spojnice středů třídy1 a třídy2
+     */
     private double[] scale(ClassComponent box1, ClassComponent box2) {
         double beta = Math.atan2(box1.getX() - box2.getX(), box1.getY() - box2.getY());
         double len1 = (box1.getWidth() / 2) / Math.sin(beta);
