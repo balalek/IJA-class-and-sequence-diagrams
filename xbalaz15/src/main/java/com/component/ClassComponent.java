@@ -16,6 +16,12 @@ import javafx.scene.layout.GridPane;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Třída reprezentuje třídu v diagramu tříd a rozšiřuje třídu Button.
+ * Obsahuje unikátní název, seznam atributů, seznam metod, typ třídy a souřadnice (x,y).
+ * Používá se pro reprezentaci třídy v diagramu tříd a zaznamenání atributů a metod.
+ */
+
 public class ClassComponent extends Button {
 
     @Expose
@@ -41,18 +47,12 @@ public class ClassComponent extends Button {
     private int ID;
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
 
-    // Getters and setters
+    // GETry a SETry
     public String getClassType() {
         return ClassType;
     }
     public void setClassType(String classType) {
         this.ClassType = classType;
-    }
-    public String getClassTypeProperty() {
-        return classTypeProperty.get();
-    }
-    public StringProperty classTypePropertyProperty() {
-        return classTypeProperty;
     }
     public void setClassTypeProperty(String classTypeProperty) {
         this.classTypeProperty.set(classTypeProperty);
@@ -102,60 +102,56 @@ public class ClassComponent extends Button {
     public void setOperations(String operations) {
         Operations = operations;
     }
-    public String getOperationProperty() {
-        return operationProperty.get();
-    }
-    public StringProperty operationPropertyProperty() {
-        return operationProperty;
-    }
     public void setOperationProperty(String operationProperty) {
         this.operationProperty.set(operationProperty);
     }
-    public String getAttrProperty() {
-        return attrProperty.get();
-    }
-    public StringProperty attrPropertyProperty() {
-        return attrProperty;
-    }
+
     public String getAttributes() {
         return Attributes;
     }
     public void setAttributes(String attributes) {
         Attributes = attributes;
     }
-    public String getNameProperty() {
-        return nameProperty.get();
-    }
-    public StringProperty nameProperty() {
-        return nameProperty;
-    }
     public void setNameProperty(String nameProperty) {
         this.nameProperty.set(nameProperty);
     }
 
 
-    // Constructor
+    /**
+     * Konstruktor
+     * @param x X souřadnice třídy
+     * @param y Y souřadnice třídy
+     */
     public ClassComponent(Double x, Double y){
         ID = count++;
         this.x = x;
         this.y = y;
-        // Position of button
+        // Pozice tlačítka
         setLayoutX(this.x);
         setLayoutY(this.y);
 
-        // Appear in the cursor spike
+        // Vykreslí se tak aby získané souřadnice byly ve středu
         translateXProperty().bind(widthProperty().divide(-2));
         translateYProperty().bind(heightProperty().divide(-2));
 
         // Vytvoření Gridpanu
         GridPane classContent = new GridPane();
         classContent.autosize();
-        // Content create and update
+        // Vytvoření a aktualizace obsahu
         //classNameUpdate(classContent);
         classType(classContent);
     }
 
-    // Constructor for file loading
+
+    /**
+     * Konstruktor pro načítání ze souboru
+     * @param x X souřadnice třídy
+     * @param y Y souřadnice třídy
+     * @param Name Název třídy
+     * @param Attributes Řetězec atributů oddělených odřádkováním
+     * @param Operations Řetězec metod oddělených odřádkováním
+     * @param ClassType Typ třídy (normální, abstraktní a interface)
+     */
     public ClassComponent(Double x, Double y, String Name, String Attributes, String Operations, String ClassType){
         ID = count++;
         this.x = x;
@@ -186,7 +182,7 @@ public class ClassComponent extends Button {
                 break;
         }
 
-        // Appear in the cursor spike
+        // Vykreslí se tak aby získané souřadnice byly ve středu
         translateXProperty().bind(widthProperty().divide(-2));
         translateYProperty().bind(heightProperty().divide(-2));
 
@@ -197,6 +193,10 @@ public class ClassComponent extends Button {
         classType(classContent);
     }
 
+    /**
+     * Metoda aktualizuje obsah horního popisku (typ třídy) a volá classNameUpdate
+     * @param classContent Odkaz na objekt který upravujeme
+     */
     public void classType(GridPane classContent){
 
         Label myLabel = new Label();
@@ -211,6 +211,10 @@ public class ClassComponent extends Button {
         classNameUpdate(classContent);
     }
 
+    /**
+     * Metoda aktualizuje jméno třídy, kterou upravujeme (vykreslený obsah)
+     * @param classContent Odkaz na objekt který upravujeme
+     */
     public void classNameUpdate(GridPane classContent){
 
         if(Name.equals("")) {
@@ -218,7 +222,7 @@ public class ClassComponent extends Button {
             ClassDiagramController.d.addName(getName());
         }
 
-        // Updatable lable inside Vbox
+        // Upravovatelný nápis v boxu
         Label myLabel = new Label();
         nameProperty.setValue(getName());
         myLabel.textProperty().bind(nameProperty);
@@ -236,10 +240,14 @@ public class ClassComponent extends Button {
         classAttributesUpdate(classContent);
     }
 
+    /**
+     * Metoda aktualizuje atributy třídy, kterou upravujeme (vykreslený obsah)
+     * @param classContent Odkaz na objekt který upravujeme
+     */
     public void classAttributesUpdate(GridPane classContent) {
         if(Attributes.equals("")) setAttributes("");
 
-        // Updatable lable inside Vbox
+        // Upravovatelný nápis v boxu
         Label myLabel = new Label();
         attrProperty.setValue(Attributes);
         myLabel.textProperty().bind(attrProperty);
@@ -254,10 +262,14 @@ public class ClassComponent extends Button {
         classOperationsUpdate(classContent);
     }
 
+    /**
+     * Metoda aktualizuje metody třídy, kterou upravujeme (vykreslený obsah)
+     * @param classContent Odkaz na objekt který upravujeme
+     */
     public void classOperationsUpdate(GridPane classContent) {
         if (Operations.equals("")) setOperations("");
 
-        // Updatable lable inside Vbox
+        // Upravovatelný nápis v boxu
         Label myLabel = new Label();
         operationProperty.setValue(Operations);
         myLabel.textProperty().bind(operationProperty);

@@ -11,14 +11,23 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Třída pro změnu typu šipky.
+ * Třída je podle mně úplně zbytečná a tato jediná metoda by se měla přesunout do Arrow.
+ */
 public class EditArrowComponent {
 
+    /**
+     * Tato metoda zobrazí okno s výběrem typu třídy pro předanou šipku
+     * @param arrow Šipka které chceme změnit typ
+     * @return vrací vybraný typ
+     */
     public static String display(Arrow arrow){
         Stage arrowWindow = new Stage();
         arrowWindow.initModality(Modality.APPLICATION_MODAL);
         arrowWindow.setTitle("Arrow window");
 
-        // Init components
+        // Inicializace komponent
         GridPane layout = new GridPane();
         Button confirm = new Button("Confirm");
         Label name = new Label("Arrow type:");
@@ -27,43 +36,43 @@ public class EditArrowComponent {
         choiceBox.setValue(arrow.getArrowType());
         choiceBox.getItems().addAll(arrows);
 
-        // Font sizes
+        // Velikost fontu
         confirm.setStyle("-fx-font-size:15");
         name.setStyle(("-fx-font-size:15"));
 
-        // Add components to a specific gridpane rows and columns
+        // Přidá komponenty do gridpane řádky a sloupce
         layout.add(name, 0, 0);
         layout.add(choiceBox, 1, 0);
         layout.add(confirm, 2, 0);
 
-        // Padding etc.
+        // Padding
         layout.setPadding(new Insets(15,15,15,15));
         layout.setHgap(10);
         layout.setVgap(10);
 
-        // New row a column objects
+        // Vytvoření řádků a sloupců
         ColumnConstraints column1 = new ColumnConstraints();
         ColumnConstraints column2 = new ColumnConstraints();
         ColumnConstraints column3 = new ColumnConstraints();
         RowConstraints row1 = new RowConstraints();
 
-        // Set height and width
+        // Nastavení výšky a šířky
         column1.setPrefWidth(100);
         column2.setPrefWidth(125);
         column3.setPrefWidth(100);
         row1.setPrefHeight(25);
 
-        // Positioning in rows and columns
+        // Pozicování v řádcích a sloupcích
         row1.setValignment(VPos.CENTER);
         column1.setHalignment(HPos.CENTER);
         column2.setHalignment(HPos.CENTER);
         column3.setHalignment(HPos.CENTER);
 
-        // Add to layout
+        // Přidání do layoutu
         layout.getColumnConstraints().addAll(column1, column2, column3);
         layout.getRowConstraints().addAll(row1);
 
-        // Button action
+        // Tlačítko pro potvrzení výběru
         confirm.setOnAction(e->{
             arrowWindow.close();
         });

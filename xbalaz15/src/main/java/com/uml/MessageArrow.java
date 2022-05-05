@@ -1,7 +1,7 @@
 package com.uml;
 
 /**
- * Třída reprezentuje komunikaci (šipku) v sekvenčním diagramu. Má své jméno, typ, zprávu, odesílatele a příjemce.
+ * Třída reprezentuje komunikaci (šipku) v sekvenčním diagramu a rozšiřuje třídu Element. Má své jméno, typ, zprávu, odesílatele a příjemce.
  * Je odvozena (rozšiřuje) od třídy Element. Příjemce a odesílatel je reprezentován třidou UMLClass. Typ komunikace
  * je definován jako enum.
  * Lze použít jako atribut UML třídy nebo argument operace.

@@ -9,7 +9,7 @@ public final class Structure {
     private final ClassComponent box;
     private final UMLClass cls;
 
-    // Getters and Setters
+    // GETry a SETry
     public ClassComponent getBox() {
         return box;
     }

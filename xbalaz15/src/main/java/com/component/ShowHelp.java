@@ -17,50 +17,50 @@ import javafx.stage.Stage;
  */
 public class ShowHelp {
     /**
-     *
+     * Metoda zobrazí nápovědu.
      */
     public static void display(){
         Stage helpWindow = new Stage();
         helpWindow.initModality(Modality.APPLICATION_MODAL);
         helpWindow.setTitle("Help window");
 
-        // Init components
+        // Inicializace komponent
         GridPane layout = new GridPane();
         Button confirm = new Button("Understood");
         Label help = new Label(textBlocks());
 
-        // Font sizes
+        // Velikost fontu
         confirm.setStyle("-fx-font-size:15");
         help.setStyle(("-fx-font-size:15"));
 
-        // Add components to a specific gridpane rows and columns
+        // Přidání komponent do gridpane
         layout.add(help, 0, 0);
         layout.add(confirm, 0, 1);
 
-        // Padding etc.
+        // Padding
         layout.setPadding(new Insets(15,15,15,15));
         layout.setHgap(10);
         layout.setVgap(10);
 
-        // New row a column objects
+        // Nový sloupec a řádky
         ColumnConstraints column1 = new ColumnConstraints();
         RowConstraints row1 = new RowConstraints();
         RowConstraints row2 = new RowConstraints();
 
-        // Set height and width
+        // Nastavení výšky a šířky
         column1.setPrefWidth(810);
         row2.setPrefHeight(25);
 
-        // Positioning in rows and columns
+        // Pozicování v řádcích a sloupcích
         row1.setValignment(VPos.CENTER);
         row2.setValignment(VPos.CENTER);
         column1.setHalignment(HPos.CENTER);
 
-        // Add to layout
+        // Přidání do layout
         layout.getColumnConstraints().addAll(column1);
         layout.getRowConstraints().addAll(row1, row2);
 
-        // Button action
+        // Tlačítko které zavře okno nápovědy
         confirm.setOnAction(e->{
             helpWindow.close();
         });
