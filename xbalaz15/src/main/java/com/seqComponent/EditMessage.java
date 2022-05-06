@@ -26,7 +26,7 @@ public class EditMessage {
         Button confirm = new Button("Confirm");
         Label name = new Label("Arrow type:");
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        String[] arrows = {"Synchronous", "Asynchronous", "Return"};
+        String[] arrows = {"Synchronous", "Asynchronous", "Return", "Create"};
         choiceBox.setValue(arrow.getArrowType().toString());
         choiceBox.getItems().addAll(arrows);
 

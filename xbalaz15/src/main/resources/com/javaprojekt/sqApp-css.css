@@ -33,7 +33,6 @@
     -fx-fill: black;
 }
 .dashedMainLine{
-    -fx-stroke-width: 2px;
     -fx-stroke-dash-array: 10 10;
     -fx-stroke-dash-offset: 75;
 }
@@ -45,4 +44,7 @@
     -fx-min-height: 30;
     -fx-min-width: 100;
     -fx-text-alignment: center;
+}
+.inconsitentClass{
+    -fx-border-color: red;
 }

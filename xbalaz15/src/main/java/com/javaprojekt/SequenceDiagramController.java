@@ -7,6 +7,7 @@ import com.seqComponent.EditMessage;
 import com.seqComponent.Messages;
 import com.seqComponent.sqShowHelp;
 import com.uml.arrType;
+import javafx.animation.Timeline;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,6 +20,8 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.shape.Line;
+
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
@@ -34,6 +37,7 @@ public class SequenceDiagramController{
     private TabPane tabPane;
     private static int count = 0;
     Button firstBox;
+    Line firstLine;
     static Double x1;
     Double y1;
     Messages arrow;
@@ -84,14 +88,15 @@ public class SequenceDiagramController{
     }
 
     public void onTimeLineHover(MouseEvent evt, ClassWithLine timeBox){
-        //System.out.println("heylo");
-        timeBox.getTimeLineButton().setOnMousePressed(e -> handleMouseArrow(e, timeBox, true));
-        timeBox.getClassButton().setOnMousePressed(e -> handleMouseArrow(e, timeBox, false));
+        timeBox.getTimeLineButton().setOnMousePressed(e -> handleMouseArrow(e, timeBox, true, false));
+        timeBox.getClassButton().setOnMousePressed(e -> handleMouseArrow(e, timeBox, false, false));
+        timeBox.getLine().setOnMousePressed(e -> handleMouseArrow(e, timeBox, false, true));
     }
 
-    public void handleMouseArrow(MouseEvent evt, ClassWithLine box, Boolean isTimeBox){
+    public void handleMouseArrow(MouseEvent evt, ClassWithLine box, Boolean isTimeBox, Boolean isTimeLine){
+        // Kliknutí na objektový box
         if (evt.getButton().equals(MouseButton.PRIMARY)) {
-            if(!isTimeBox) {
+            if(!isTimeBox && !isTimeLine) {
                 ClassDiagramController.d.addName("Main");
                 ObjectNames = ClassDiagramController.d.getListOfClassNames();
                 System.out.println(ObjectNames);
@@ -100,31 +105,56 @@ public class SequenceDiagramController{
             }
         }
 
-        // Create arrow between two classes
+        // Vytvoření zprávy mezi objekty, čárami a aktivačními boxy
         if(evt.getButton().equals(MouseButton.SECONDARY)){
             count++;
             if(count == 1){
-                if(!isTimeBox) count = 0;
-                // Přesné souřadnice
-                Bounds boundsInScene = box.getTimeLineButton().localToScene(box.getTimeLineButton().getBoundsInLocal());
-                // Odečítání z důvodu, že na scéně na levo a nahoře je menu a nepatří do kreslící plochy
-                x1 = (boundsInScene.getMinX()-157 + evt.getX());
-                y1 = (boundsInScene.getMinY()-28 + evt.getY());
-                firstBox = box.getTimeLineButton();
+                // První může být časová osa, nebo call-box
+                if(!isTimeBox && !isTimeLine) count = 0;
+                if(isTimeBox) {
+                    // Přesné souřadnice
+                    Bounds boundsInScene = box.getTimeLineButton().localToScene(box.getTimeLineButton().getBoundsInLocal());
+                    // Odečítání z důvodu, že na scéně na levo a nahoře je menu a nepatří do kreslící plochy
+                    x1 = (boundsInScene.getMinX() - 157 + evt.getX());
+                    y1 = (boundsInScene.getMinY() - 28 + evt.getY());
+                    firstBox = box.getTimeLineButton();
+                    firstLine = null;
+                // první je časová čára
+                } else if(isTimeLine){
+                    Bounds boundsInScene = box.getLine().localToScene(box.getLine().getBoundsInLocal());
+                    x1 = (boundsInScene.getMinX() - 157);
+                    firstLine = box.getLine();
+                    firstBox = null;
+                }
             }else if(count == 2){
-                if(firstBox != box.getTimeLineButton()) {
+                // Když první byl aktivační box, můžes spojit s čímkoli
+                if(firstBox != box.getTimeLineButton() && firstBox != null) {
                     if(isTimeBox) {
                         Bounds boundsInScene = box.getTimeLineButton().localToScene(box.getTimeLineButton().getBoundsInLocal());
                         Double x2 = (boundsInScene.getMinX() - 157 + evt.getX());
                         arrow = createMessage(firstBox, box.getTimeLineButton(), x1, y1, x2);
+                    } else if(isTimeLine) {
+                        Bounds boundsInScene = box.getLine().localToScene(box.getLine().getBoundsInLocal());
+                        Double x2 = (boundsInScene.getMinX() - 157);
+                        arrow = createMessageToLine(firstBox, box.getLine(), x1, y1, x2);
                     }
                     else {
                         Bounds boundsInScene = box.getClassButton().localToScene(box.getTimeLineButton().getBoundsInLocal());
                         Double x2 = (boundsInScene.getMinX() - 157 + evt.getX());
                         arrow = CreateMessageToClass(firstBox, box.getClassButton(), x1, y1, x2);
                     }
+
                     //objectStack.push(rootPane.getChildren().get(rootPane.getChildren().size() - 1));
                     //operationStack.push(operation.CREATE);
+
+                // Z čáry na call-box
+                } else if(firstLine != box.getLine() && firstLine != null){
+                    if(isTimeBox) {
+                        Bounds boundsInScene = box.getTimeLineButton().localToScene(box.getTimeLineButton().getBoundsInLocal());
+                        Double x2 = (boundsInScene.getMinX() - 157 + evt.getX());
+                        Double y2 = (boundsInScene.getMinY() - 28 + evt.getY());
+                        arrow = createMessageWithLineFirst(firstLine, box.getTimeLineButton(), x1, y2, x2);
+                    }
                 }
                 count = 0;
             }
@@ -165,6 +195,7 @@ public class SequenceDiagramController{
     }
     private void onBoxDragged(MouseEvent e, ClassWithLine box) {
         if(e.getButton().equals(MouseButton.MIDDLE)) {
+            //box.Inconsistencies();
             box.setLayoutX(box.getLayoutX() + e.getX() + box.getClassButton().getTranslateX());
             box.setLayoutY(box.getLayoutY() + e.getY() + box.getClassButton().getTranslateY());
             box.setX(box.getLayoutX() + e.getX() + box.getTranslateX());
@@ -186,16 +217,27 @@ public class SequenceDiagramController{
     }*/
 
     public Messages createMessage(Button b1, Button b2, Double x1, Double y1, Double x2){
-        //Arrow arrow = new Arrow(b1.getLayoutX(), b1.getLayoutY(), b2.getLayoutX(), b2.getLayoutY());
         Messages arrow = new Messages(x1, y1, x2);
-        //arrow.x1Property().bind(b1.getTimeLineButton().layoutXProperty());
-        //arrow.y1Property().bind(b1.getTimeLineButton().layoutYProperty());
-        arrow.x2Property().bind(b2.layoutXProperty());
-        //arrow.y2Property().bind(b2.getTimeLineButton().layoutYProperty());
         arrow.setFrom(b1.getId());
         arrow.setTo(b2.getId());
         arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
-        arrow.getComboBox().setOnMouseDragged((e -> onMessageDragged(e, arrow.getComboBox())));
+        arrow.getReturnButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getReturnButton())));
+        arrow.getAsynAndSynClassButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getAsynAndSynClassButton())));
+
+        //b1.edges.add(arrow);
+        //b2.edges.add(arrow);
+        ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(arrow);
+        //rootPane.getChildren().addAll(arrow);
+        return arrow;
+    }
+
+    public Messages createMessageWithLineFirst(Line l1, Button b2, Double x1, Double y1, Double x2){
+        Messages arrow = new Messages(x1, y1, x2);
+        arrow.setFrom(l1.getId());
+        arrow.setTo(b2.getId());
+        arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
+        arrow.getReturnButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getReturnButton())));
+        arrow.getAsynAndSynClassButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getAsynAndSynClassButton())));
 
         //b1.edges.add(arrow);
         //b2.edges.add(arrow);
@@ -208,6 +250,20 @@ public class SequenceDiagramController{
         Messages arrow = new Messages(x1, y1, x2);
         arrow.setFrom(b1.getId());
         arrow.setTo(b2.getId());
+        arrow.setArrowType("Create");
+        arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
+        arrow.getCreateObjectButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getCreateObjectButton())));
+        //b1.edges.add(arrow);
+        //b2.edges.add(arrow);
+        ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(arrow);
+        //rootPane.getChildren().addAll(arrow);
+        return arrow;
+    }
+
+    public Messages createMessageToLine(Button b1, Line l2, Double x1, Double y1, Double x2){
+        Messages arrow = new Messages(x1, y1, x2);
+        arrow.setFrom(b1.getId());
+        arrow.setTo(l2.getId());
         arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
 
         //b1.edges.add(arrow);
