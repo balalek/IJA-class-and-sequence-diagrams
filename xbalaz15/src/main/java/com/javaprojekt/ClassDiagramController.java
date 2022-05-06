@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
+
 public class ClassDiagramController{
 
     private Stage stage;
@@ -453,6 +454,7 @@ public class ClassDiagramController{
             Arrow.ListOfArrows.remove(arrow);
             objectStack.push(arrow);
             operationStack.push(operation.REMOVE);
+            arrow.getFromBox().getOpLabel().setStyle("");
             rootPane.getChildren().remove(arrow);
         }
         if(e.getButton().equals(MouseButton.PRIMARY)) {
@@ -462,9 +464,34 @@ public class ClassDiagramController{
                 nameStack.push(arrow.getArrowType());
                 arrowType = EditArrowComponent.display(arrow);
                 arrow.setArrowType(arrowType);
+                Highlight(arrow);
+
                 arrow.update();
             }
         }
+    }
+    public void Highlight(Arrow arrow){
+        if(!Objects.equals(arrow.getArrowType(), "generalization")) {
+            arrow.getFromBox().getOpLabel().setStyle("");
+            return;
+        }
+        ClassComponent from = arrow.getFromBox();
+        ClassComponent to = arrow.getToBox();
+        String[] FromMethodList = from.getOperations().split("\n");
+        String[] ToMethodList = to.getOperations().split("\n");
+        boolean Found = false;
+        for(int i = 0; (i < FromMethodList.length) && !Found; i++){
+            for(int j = 0; (j < ToMethodList.length) && !Found ; j++){
+                if(Objects.equals(FromMethodList[i], ToMethodList[j])){
+                    //FromMethodList[i] je třeba zvýraznit
+                    Found = true;
+                    //System.out.println(FromMethodList[i] + " je třeba zvýraznit");
+
+                }
+            }
+        }
+        if(Found) from.getOpLabel().setStyle("-fx-border-style: solid;" + "-fx-border-width: 0 0 1 0;" + "-fx-border-color: blue;");
+        else from.getOpLabel().setStyle("");
     }
 
     public void Undo(){
@@ -687,6 +714,7 @@ public class ClassDiagramController{
             box.setLayoutY(box.getLayoutY() + 10);
             box.setLayoutY(box.getLayoutY() - 10);
         }
+        Arrow.getListOfArrows().forEach(arrow1 -> Highlight((Arrow) arrow1));
     }
 
     public void loadArrow(HelpLoadArrow arrow){

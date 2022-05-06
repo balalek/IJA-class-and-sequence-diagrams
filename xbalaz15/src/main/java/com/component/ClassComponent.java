@@ -46,7 +46,7 @@ public class ClassComponent extends Button {
     private static int count = 1;
     private int ID;
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
-
+    private Label opLabel = new Label();
     // GETry a SETry
     public String getClassType() {
         return ClassType;
@@ -116,6 +116,13 @@ public class ClassComponent extends Button {
         this.nameProperty.set(nameProperty);
     }
 
+    public Label getOpLabel() {
+        return opLabel;
+    }
+
+    public void setOpLabel(Label opLabel) {
+        this.opLabel = opLabel;
+    }
 
     /**
      * Konstruktor
@@ -270,13 +277,12 @@ public class ClassComponent extends Button {
         if (Operations.equals("")) setOperations("");
 
         // Upravovatelný nápis v boxu
-        Label myLabel = new Label();
         operationProperty.setValue(Operations);
-        myLabel.textProperty().bind(operationProperty);
-        myLabel.setPadding(new Insets(8, 0, 8, 0));
+        opLabel.textProperty().bind(operationProperty);
+        opLabel.setPadding(new Insets(8, 0, 8, 0));
 
-        classContent.setConstraints(myLabel, 0, 5);
-        classContent.getChildren().add(myLabel);
+        classContent.setConstraints(opLabel, 0, 5);
+        classContent.getChildren().add(opLabel);
         setGraphic(classContent);
         getStyleClass().add("classBox");
     }

@@ -87,6 +87,14 @@ public class Arrow extends Group {
         return to;
     }
 
+    public ClassComponent getFromBox() {
+        return FromBox;
+    }
+
+    public ClassComponent getToBox() {
+        return ToBox;
+    }
+
     /**
      * Konstruktor pro vytvoření vztahu mezi třídami
      * @param From Odkaz na třídu od kud povede šipka
