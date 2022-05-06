@@ -39,9 +39,8 @@
 .comboBox{
     -fx-font-size: 13;
     -fx-font-weight: bold;
-    -fx-background-color: white;
-    -fx-border-color: black;
-    -fx-min-height: 30;
+    -fx-background-color: #f1ecec;
+    -fx-min-height: 20;
     -fx-min-width: 100;
     -fx-text-alignment: center;
 }

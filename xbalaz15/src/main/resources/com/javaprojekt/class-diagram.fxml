@@ -29,9 +29,9 @@
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="64.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="350.0" minWidth="10.0" prefWidth="200.0" />
             <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="74.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="143.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="108.0" />
-            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="108.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="160.0" minWidth="10.0" prefWidth="89.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="133.0" minWidth="10.0" prefWidth="133.0" />
+            <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="132.0" minWidth="10.0" prefWidth="130.0" />
         </columnConstraints>
         <rowConstraints>
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -42,12 +42,12 @@
                   <Font size="16.0" />
                </font>
             </Button>
-            <Button fx:id="Save" mnemonicParsing="false" onAction="#SaveJson" text="Save" GridPane.columnIndex="9">
+            <Button fx:id="Save" mnemonicParsing="false" onAction="#SaveJson" text="Save" GridPane.columnIndex="10">
                <font>
                   <Font size="15.0" />
                </font>
             </Button>
-            <Button fx:id="Load" mnemonicParsing="false" onAction="#LoadJson" text="Load" GridPane.columnIndex="10">
+            <Button fx:id="Load" mnemonicParsing="false" onAction="#LoadJson" text="Load" GridPane.columnIndex="11">
                <font>
                   <Font size="15.0" />
                </font>
@@ -71,6 +71,11 @@
                <font>
                   <Font size="15.0" />
                </font></Button>
+            <Button mnemonicParsing="false" onAction="#Clear" text="Clear" GridPane.columnIndex="8">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Button>
          </children>
       </GridPane>
    </top>

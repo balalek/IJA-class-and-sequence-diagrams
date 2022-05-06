@@ -482,12 +482,7 @@ public class ClassDiagramController{
         boolean Found = false;
         for(int i = 0; (i < FromMethodList.length) && !Found; i++){
             for(int j = 0; (j < ToMethodList.length) && !Found ; j++){
-                if(Objects.equals(FromMethodList[i], ToMethodList[j])){
-                    //FromMethodList[i] je třeba zvýraznit
-                    Found = true;
-                    //System.out.println(FromMethodList[i] + " je třeba zvýraznit");
-
-                }
+                if(Objects.equals(FromMethodList[i], ToMethodList[j])) Found = true;
             }
         }
         if(Found) from.getOpLabel().setStyle("-fx-border-style: solid;" + "-fx-border-width: 0 0 1 0;" + "-fx-border-color: blue;");
@@ -562,18 +557,6 @@ public class ClassDiagramController{
     public void handleKeyboard(KeyEvent evt, ClassComponent box, UMLClass cls){
         KeyCode k = evt.getCode();
         switch (k) {
-            /*case W:
-                moveUp(box);
-                break;
-            case S:
-                moveDown(box);
-                break;
-            case A:
-                moveLeft(box);
-                break;
-            case D:
-                moveRight(box);
-                break;*/
             case DELETE:
                 delete(box, cls);
                 break;
@@ -754,6 +737,15 @@ public class ClassDiagramController{
 
         Structure structure = new Structure(box, cls);
         return structure;
+    }
+
+    /**
+     * Po stlačení tlačítka Clear metoda odstraní všechny komponenty z obrazovky i z paměti
+     * @param e Stisknutí tlačítka
+     */
+    @FXML
+    public void Clear(ActionEvent e){
+
     }
 
 }

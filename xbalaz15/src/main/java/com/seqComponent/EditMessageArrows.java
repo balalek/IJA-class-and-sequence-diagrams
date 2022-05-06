@@ -1,6 +1,5 @@
 package com.seqComponent;
 
-import com.component.Arrow;
 import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.VPos;
@@ -14,7 +13,7 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
-public class EditMessage {
+public class EditMessageArrows {
 
     public static String display(Messages arrow){
         Stage arrowWindow = new Stage();
@@ -26,7 +25,7 @@ public class EditMessage {
         Button confirm = new Button("Confirm");
         Label name = new Label("Arrow type:");
         ChoiceBox<String> choiceBox = new ChoiceBox<>();
-        String[] arrows = {"Synchronous", "Asynchronous", "Return", "Create"};
+        String[] arrows = {"Synchronous", "Asynchronous", "Return"};
         choiceBox.setValue(arrow.getArrowType().toString());
         choiceBox.getItems().addAll(arrows);
 

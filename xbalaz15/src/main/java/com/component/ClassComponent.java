@@ -21,7 +21,6 @@ import java.util.List;
  * Obsahuje unikátní název, seznam atributů, seznam metod, typ třídy a souřadnice (x,y).
  * Používá se pro reprezentaci třídy v diagramu tříd a zaznamenání atributů a metod.
  */
-
 public class ClassComponent extends Button {
 
     @Expose
@@ -47,6 +46,8 @@ public class ClassComponent extends Button {
     private int ID;
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
     private Label opLabel = new Label();
+
+
     // GETry a SETry
     public String getClassType() {
         return ClassType;
@@ -254,7 +255,7 @@ public class ClassComponent extends Button {
     public void classAttributesUpdate(GridPane classContent) {
         if(Attributes.equals("")) setAttributes("");
 
-        // Upravovatelný nápis v boxu
+        // Aktualizovatelný nápis v boxu
         Label myLabel = new Label();
         attrProperty.setValue(Attributes);
         myLabel.textProperty().bind(attrProperty);

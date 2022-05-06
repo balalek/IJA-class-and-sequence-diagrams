@@ -3,11 +3,15 @@ package com.seqComponent;
 import com.component.Arrow;
 import com.google.gson.annotations.Expose;
 import com.javaprojekt.ClassDiagramController;
+import javafx.beans.property.SimpleDoubleProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.shape.Line;
 
@@ -17,8 +21,12 @@ public class ClassWithLine extends Group {
     public Double x;
     @Expose
     public Double y;
-    private Double yTime;
-    private ComboBox classButton = new ComboBox();
+    @Expose
+    public String nameObject = "";
+    @Expose
+    public String nameClass = "";
+    private SimpleStringProperty nameAndObjectProperty = new SimpleStringProperty();
+    private Button classButton = new Button();
     private Button timeLineButton = new Button();
     private Line line = new Line();
     private String className;
@@ -39,10 +47,10 @@ public class ClassWithLine extends Group {
     public void setY(Double y) {
         this.y = y;
     }
-    public ComboBox getClassButton() {
+    public Button getClassButton() {
         return classButton;
     }
-    public void setClassButton(ComboBox classButton) {
+    public void setClassButton(Button classButton) {
         this.classButton = classButton;
     }
     public Button getTimeLineButton() {
@@ -57,8 +65,33 @@ public class ClassWithLine extends Group {
     public void setLine(Line line) {
         this.line = line;
     }
+    public String getNameObject() {
+        return nameObject;
+    }
+    public void setNameObject(String nameObject) {
+        this.nameObject = nameObject;
+    }
+    public String getNameClass() {
+        return nameClass;
+    }
+    public void setNameClass(String nameClass) {
+        this.nameClass = nameClass;
+    }
+    public String getNameAndObjectProperty() {
+        return nameAndObjectProperty.get();
+    }
+    public SimpleStringProperty nameAndObjectPropertyProperty() {
+        return nameAndObjectProperty;
+    }
+    public void setNameAndObjectProperty(String nameAndObjectProperty) {
+        this.nameAndObjectProperty.set(nameAndObjectProperty);
+    }
 
-    // Constructor
+    /**
+     * Konstruktor
+     * @param x
+     * @param y
+     */
     public ClassWithLine(Double x, Double y) {
         ID = count++;
         this.x = x;
@@ -68,17 +101,14 @@ public class ClassWithLine extends Group {
         classButton.setLayoutX(x);
         classButton.setLayoutY(y);
 
-        //timeLineButton.setLayoutX(x);
-        //timeLineButton.setLayoutY(y - 50);
-
-        // Appear in the cursor spike
+        // Při posunu, je kurzor vždy umístěn uprostřed
         classButton.translateXProperty().bind(classButton.widthProperty().divide(-2));
         classButton.translateYProperty().bind(classButton.heightProperty().divide(-2));
 
         timeLineButton.setLayoutX(classButton.getLayoutX());
         timeLineButton.setLayoutY(classButton.getLayoutY() + 50);
 
-        // Appear in the cursor spike
+        // Při posunu, je kurzor vždy umístěn uprostřed
         timeLineButton.translateXProperty().bind(timeLineButton.widthProperty().divide(-2));
         timeLineButton.translateYProperty().bind(timeLineButton.heightProperty().divide(-2));
 
@@ -101,19 +131,27 @@ public class ClassWithLine extends Group {
     }
 
     public void Update(){
-        classButton.setId("ID" + ID);
+        /*classButton.setId("ID" + ID);
         ID = count ++;
         timeLineButton.setId("ID" + ID);
         ID = count ++;
-        line.setId("ID" + ID);
+        line.setId("ID" + ID);*/
+        setId("ID" + ID);
+
+        Label myLabel = new Label();
+        myLabel.setPadding(new Insets(8,8,8,8));
+        nameAndObjectProperty.setValue(nameObject + ":" + nameClass);
+        myLabel.textProperty().bind(nameAndObjectProperty);
+        classButton.setGraphic(myLabel);
+
         getChildren().setAll(line, classButton, timeLineButton);
     }
 
-    public void Inconsistencies(){
+    /*public void Inconsistencies(){
         for(String names : ClassDiagramController.d.getListOfClassNames()) {
             if (!classButton.getItems().contains(names)){
                 classButton.getStyleClass().setAll("inconsitentClass");
             }
         }
-    }
+    }*/
 }
