@@ -21,7 +21,9 @@ public class Messages extends Group {
     private Polyline headAsynch2 = new Polyline();
     private Polyline headReturn = new Polyline();
     private Polyline headReturn2 = new Polyline();
-    private ComboBox comboBox = new ComboBox();
+    private ComboBox CreateObjectButton = new ComboBox();
+    private ComboBox AsynAndSynClassButton = new ComboBox();
+    private ComboBox ReturnButton = new ComboBox();
     private String arrowType = "Synchronous";
     private SimpleDoubleProperty x1 = new SimpleDoubleProperty();
     private SimpleDoubleProperty y1 = new SimpleDoubleProperty();
@@ -96,19 +98,27 @@ public class Messages extends Group {
     public void setTo(String to) {
         this.to = to;
     }
-
-    public ComboBox getComboBox() {
-        return comboBox;
+    public ComboBox getCreateObjectButton() {
+        return CreateObjectButton;
     }
-
-    public void setComboBox(ComboBox comboBox) {
-        this.comboBox = comboBox;
+    public void setCreateObjectButton(ComboBox createObjectButton) {
+        CreateObjectButton = createObjectButton;
     }
-
+    public ComboBox getAsynAndSynClassButton() {
+        return AsynAndSynClassButton;
+    }
+    public void setAsynAndSynClassButton(ComboBox asynAndSynClassButton) {
+        AsynAndSynClassButton = asynAndSynClassButton;
+    }
+    public ComboBox getReturnButton() {
+        return ReturnButton;
+    }
+    public void setReturnButton(ComboBox returnButton) {
+        ReturnButton = returnButton;
+    }
     public String getArrowType() {
         return arrowType;
     }
-
     public void setArrowType(String arrowType) {
         this.arrowType = arrowType;
     }
@@ -120,33 +130,49 @@ public class Messages extends Group {
         setY1(y1);
         setX2(x2);
         setY2(y1);
-        getChildren().setAll(mainLine, comboBox, headAsynch, headAsynch2, headReturn, headReturn2, headSynch, headSynch2);
+        //getChildren().setAll(mainLine, AsynAndSynClassButton, headAsynch, headAsynch2, headReturn, headReturn2, headSynch, headSynch2);
         mainLine.getPoints().setAll(getX1(), getY1(), getX2(), getY2());
         // Jaktaž prostředek čáry
-        comboBox.setLayoutX(((x2 + x1) / 2));
+        AsynAndSynClassButton.setLayoutX(((x2 + x1) / 2));
         // Trochu nad čáru
-        comboBox.setLayoutY(y1 - 25);
-
+        AsynAndSynClassButton.setLayoutY(y1 - 25);
         // Appear in the cursor spike
-        comboBox.translateXProperty().bind(comboBox.widthProperty().divide(-2));
-        comboBox.translateYProperty().bind(comboBox.heightProperty().divide(-2));
+        AsynAndSynClassButton.translateXProperty().bind(AsynAndSynClassButton.widthProperty().divide(-2));
+        AsynAndSynClassButton.translateYProperty().bind(AsynAndSynClassButton.heightProperty().divide(-2));
 
-        /*for (SimpleDoubleProperty s : new SimpleDoubleProperty[]{x1Property(), y1Property(), x2Property(), y2Property()}) {
-            s.addListener((l, o, n) -> update());
-        }*/
+        // Jaktaž prostředek čáry
+        CreateObjectButton.setLayoutX(((x2 + x1) / 2));
+        // Trochu nad čáru
+        CreateObjectButton.setLayoutY(y1 - 25);
+        // Appear in the cursor spike
+        CreateObjectButton.translateXProperty().bind(CreateObjectButton.widthProperty().divide(-2));
+        CreateObjectButton.translateYProperty().bind(CreateObjectButton.heightProperty().divide(-2));
+
+        // Jaktaž prostředek čáry
+        ReturnButton.setLayoutX(((x2 + x1) / 2));
+        // Trochu nad čáru
+        ReturnButton.setLayoutY(y1 - 25);
+        // Appear in the cursor spike
+        ReturnButton.translateXProperty().bind(ReturnButton.widthProperty().divide(-2));
+        ReturnButton.translateYProperty().bind(ReturnButton.heightProperty().divide(-2));
+
+        toFront();
         arrowHeadAndBoxStyles();
         update();
     }
 
     public void arrowHeadAndBoxStyles() {
         mainLine.getStyleClass().setAll("mainLine");
-        comboBox.getStyleClass().setAll("comboBox");
+        AsynAndSynClassButton.getStyleClass().setAll("comboBox");
+        ReturnButton.getStyleClass().setAll("comboBox");
+        CreateObjectButton.getStyleClass().setAll("comboBox");
         headSynch.getStyleClass().setAll("blackArrowHead");
         headAsynch.getStyleClass().setAll("normalArrowHead");
         headReturn.getStyleClass().setAll("dashedLineArrow");
     }
 
     public void update() {
+        mainLine.getPoints().setAll(getX1(), getY1(), getX2(), getY2());
         double[] start = scale(getX1(), getY1(), getX2(), getY2());
         double[] end = scale(getX2(), getY2(), getX1(), getY1());
         double x1 = start[0];
@@ -154,34 +180,30 @@ public class Messages extends Group {
         double x2 = end[0];
         double y2 = end[1];
         double theta = Math.atan2(y2 - y1, x2 - x1);
-        //double theta;
         toBack();
 
         // Draw line with arrowhead by arrow type
         switch (getArrowType()) {
             // Asynchronní zpráva
             case "Asynchronous": {
-                getChildren().removeAll(headAsynch, headReturn, headSynch);
+                getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
                 mainLine.getStyleClass().setAll("mainLine");
                 mainLine.getStyleClass().remove("dashedMainLine");
-
                 // Drawing arrowhead
-                //mainLine.getPoints().setAll(x1, y1, x2, y2);
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headAsynch.getPoints().setAll(x, y, x2, y2);
                 x = x2 - Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 y = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headAsynch.getPoints().addAll(x, y);
-                getChildren().addAll(headAsynch);
+                getChildren().setAll(mainLine,headAsynch, AsynAndSynClassButton);
                 break;
             }
             // Synchronní zpráva
             case "Synchronous": {
-                getChildren().removeAll(headAsynch, headReturn, headSynch);
+                getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
                 mainLine.getStyleClass().setAll("mainLine");
                 mainLine.getStyleClass().remove("dashedMainLine");
-
                 // Drawing arrowhead
                 //mainLine.getPoints().setAll(x1, y1, x2, y2);
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
@@ -190,16 +212,14 @@ public class Messages extends Group {
                 x = x2 - Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 y = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headSynch.getPoints().addAll(x, y);
-                getChildren().addAll(headSynch);
+                getChildren().setAll(mainLine, headSynch, AsynAndSynClassButton);
                 break;
             }
             // Návratová zpráva
             case "Return": {
-                getChildren().removeAll(headAsynch, headReturn, headSynch);
+                getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
                 mainLine.getStyleClass().setAll("dashedMainLine");
                 mainLine.getStyleClass().remove("mainLine");
-
-
                 // Drawing arrowhead
                 //mainLine.getPoints().setAll(x1, y1, x2, y2);
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
@@ -208,7 +228,24 @@ public class Messages extends Group {
                 x = x2 - Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 y = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headReturn.getPoints().addAll(x, y);
-                getChildren().addAll(headReturn);
+                getChildren().setAll(mainLine, headReturn, ReturnButton);
+                break;
+            }
+            // Vytvářecí zpráva
+            case "Create": {
+                getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
+                mainLine.getStyleClass().setAll("mainLine");
+                mainLine.getStyleClass().remove("dashedMainLine");
+                // Drawing arrowhead
+                //mainLine.getPoints().setAll(x1, y1, x2, y2);
+                double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headReturn.getPoints().setAll(x, y, x2, y2);
+                x = x2 - Math.cos(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                y = y2 - Math.sin(theta - ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+                headReturn.getPoints().addAll(x, y);
+                CreateObjectButton.getItems().setAll("<<create>>");
+                getChildren().setAll(mainLine, headReturn, CreateObjectButton);
                 break;
             }
         }

@@ -686,7 +686,9 @@ public class ClassDiagramController{
         for (ClassComponent box : ListofBoxes) {
             box.setLayoutY(box.getLayoutY() + 10);
             box.setLayoutY(box.getLayoutY() - 10);
+
         }
+
     }
 
     public void loadArrow(HelpLoadArrow arrow){

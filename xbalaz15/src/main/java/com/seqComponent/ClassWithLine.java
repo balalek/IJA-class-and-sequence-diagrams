@@ -2,6 +2,7 @@ package com.seqComponent;
 
 import com.component.Arrow;
 import com.google.gson.annotations.Expose;
+import com.javaprojekt.ClassDiagramController;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Group;
@@ -50,6 +51,12 @@ public class ClassWithLine extends Group {
     public void setTimeLineButton(Button timeLineButton) {
         this.timeLineButton = timeLineButton;
     }
+    public Line getLine() {
+        return line;
+    }
+    public void setLine(Line line) {
+        this.line = line;
+    }
 
     // Constructor
     public ClassWithLine(Double x, Double y) {
@@ -97,6 +104,16 @@ public class ClassWithLine extends Group {
         classButton.setId("ID" + ID);
         ID = count ++;
         timeLineButton.setId("ID" + ID);
+        ID = count ++;
+        line.setId("ID" + ID);
         getChildren().setAll(line, classButton, timeLineButton);
+    }
+
+    public void Inconsistencies(){
+        for(String names : ClassDiagramController.d.getListOfClassNames()) {
+            if (!classButton.getItems().contains(names)){
+                classButton.getStyleClass().setAll("inconsitentClass");
+            }
+        }
     }
 }
