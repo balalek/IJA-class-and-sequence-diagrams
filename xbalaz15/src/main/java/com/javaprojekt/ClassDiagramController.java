@@ -868,6 +868,7 @@ public class ClassDiagramController{
      */
     @FXML
     public void Clear(ActionEvent e){
+        Arrow.ListOfArrows.clear();
         listOfNewClassName.clear();
         listOfOldClassName.clear();
         listOfDuplicateOper.clear();
