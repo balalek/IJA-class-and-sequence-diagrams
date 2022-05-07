@@ -52,7 +52,7 @@ public class sqShowHelp {
         RowConstraints row2 = new RowConstraints();
 
         // Set height and width
-        column1.setPrefWidth(810);
+        column1.setPrefWidth(860);
         row2.setPrefHeight(25);
 
         // Positioning in rows and columns
@@ -81,20 +81,23 @@ public class sqShowHelp {
      */
     private static String textBlocks() {
         return  "Note: Clicking with mouse is meant for left mouse button, unless its stated otherwise.\n" +
-                "Usage: To create a class, you must click on button called Add Class\n" +
-                "and then click somewhere on panel. That will create an empty class box with time line and call-box.\n" +
-                "You may select class that is in Class diagram by clicking on it.\n" +
-                "You can move with classes by dragging them with middle mouse button to desired position.\n" +
+                "Usage: To create a class, you must click on button called Add Object. Use Clear to delete everything.\n" +
+                "and then click somewhere on panel. That will create an empty object box with time line and call-box.\n" +
+                "For object name double-click on it, and type name of Class that is created in Class diagram already." +
+                "You can move with objects by dragging them with left mouse button to desired position.\n" +
                 "If you select call-box, you can make it smaller or bigger with keyboard keys: W, S.\n" +
-                "You can also move with call-box using mouse drag. For class to be deleted use key: DELETE. \n" +
+                "You can also move with call-box using mouse drag. For object to be deleted use key: DELETE. \n" +
+                "For object to extinct you must click on object with middle mouse button, and for undo double-middle-click\n" +
                 "Next step is creating messages between call-boxes and time lines/objects and that is achieved by\n" +
                 "clicking right mouse button on them. Default message is Synchronous, if you want to change\n" +
-                "message type, double click on line and pick one of these: Asynchronous, Return, Create.\n" +
-                "For message to be deleted, right click on it.\n" +
-                "If you wish to undo your move, simply click on Undo button.\n" +
-                "For saving to a file and loading from a file, you may use Save and Load buttons.\n" +
-                "And lastly, if you want to create more Sequence diagrams for this class diagram,\n" +
-                "select different tab in tab pane, and if you want to see Class diagram click on Class diagram button.";
-
+                "message type, double click on line and pick one of these: Asynchronous, Return, synchronous\n" +
+                "If you want to create Create message you must create line between call-box and object.\n" +
+                "If you create a message line, you must also write a text to it, by double-clicking on grey rectangle.\n" +
+                "For message to be deleted, right click on it. For saving to a file and loading from a file, you may use Save\n" +
+                "and Load buttons. And lastly, if you want to create more Sequence diagrams for this class diagram,\n" +
+                "select different tab in tab pane, and if you want to see Class diagram click on Class diagram button.\n\n" +
+                "Syntax for text fields -> Object has its name(or doesn't) and name of class of which he is instance of.\n" +
+                "Asynchronous and Synchronous messages can have method name and parameters -> rename(c1, c2)\n" +
+                "Create message must start with <<create>> and whatever after it. Return message has no limitation for syntax.";
     }
 }
