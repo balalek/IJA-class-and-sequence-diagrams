@@ -1,0 +1,77 @@
+[
+  {"class":{
+    "x":950.0,
+    "y":120.0,
+    "Name":"Element",
+    "Attributes":"+ String name",
+    "Operations":"+ Element(String name)\n+ String getName()\n+ void rename(String name)",
+    "ClassType": ""
+  }},
+  {"class": {
+    "x": 950.0,
+    "y": 503.0,
+    "Name": "UMLClassifier",
+    "Attributes": "",
+    "Operations": "+ UMLClassifier(String name)\n+ boolean isUserDefined()",
+    "ClassType": ""
+  }},
+  {"class": {
+    "x": 950.0,
+    "y": 894.0,
+    "Name": "UMLClass",
+    "Attributes": "+ List<UMLAttribute> attributes",
+    "Operations": "+ boolean addAttribute(UMLAttribute attr)\n+ int getAttrPosition(UMLAttribute attr)",
+    "ClassType": ""
+  }},
+  {"class": {
+    "x": 392.0,
+    "y": 503.0,
+    "Name": "UMLAttribute",
+    "Attributes": "+ UMLClassifier type",
+    "Operations": "+ UMLClassifier getType()",
+    "ClassType": ""
+  }},
+  {"class": {
+    "x": 1575.0,
+    "y": 503.0,
+    "Name": "ClassDiagram",
+    "Attributes": "+ List<UMLClassifier> classes",
+    "Operations": "+ UMLClass createClass(String name)\n+ UMLClassifier classifierForName(String name)",
+    "ClassType": ""
+  }},
+  {"messageArrow": {
+    "from": "UMLClass",
+    "to": "UMLClassifier",
+    "arrowType": "generalization"
+  }},
+  {"messageArrow": {
+    "from": "UMLClassifier",
+    "to": "Element",
+    "arrowType": "generalization"
+  }},
+  {"messageArrow": {
+    "from": "ClassDiagram",
+    "to": "Element",
+    "arrowType": "generalization"
+  }},
+  {"messageArrow": {
+    "from": "UMLAttribute",
+    "to": "Element",
+    "arrowType": "generalization"
+  }},
+  {"messageArrow": {
+    "from": "UMLAttribute",
+    "to": "UMLClassifier",
+    "arrowType": "association"
+  }},
+  {"messageArrow": {
+    "from": "UMLClass",
+    "to": "UMLAttribute",
+    "arrowType": "association"
+  }},
+  {"messageArrow": {
+    "from": "ClassDiagram",
+    "to": "UMLClassifier",
+    "arrowType": "association"
+  }}
+]
