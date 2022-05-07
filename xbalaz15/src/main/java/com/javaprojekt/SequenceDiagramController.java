@@ -19,7 +19,6 @@ import javafx.scene.shape.Line;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Controller, který se stará o chod aplikace, přesněji sekvenčního diagramu
@@ -39,6 +38,14 @@ public class SequenceDiagramController{
     static Double x1;
     Double y1;
     Messages arrow;
+
+    // GETry
+    public List<String> getObjectNames() {
+        return ObjectNames;
+    }
+    public List<String> getContent() {
+        return content;
+    }
 
     /**
      * Po zavolání této metody se okno nastaví na sekvenční diagram
@@ -109,10 +116,10 @@ public class SequenceDiagramController{
     /**
      * Double-kliknutím na objektový box jej mohu editovat, dále kliknutím pravým tlačítkem na jednotlivé komponenty
      * třídy ObjectWithLine
-     * @param evt
-     * @param box
-     * @param isTimeBox
-     * @param isTimeLine
+     * @param evt Kliknutí na objekt z třídy ObjectWithLine
+     * @param box Objekt, který může být objektový box, aktivační box, nebo časová osa
+     * @param isTimeBox Jestli box je aktivační box
+     * @param isTimeLine Jestli box je časová osa
      */
     public void handleMouseArrow(MouseEvent evt, ObjectWithLine box, Boolean isTimeBox, Boolean isTimeLine){
         // Kliknutí na objektový box
@@ -128,19 +135,11 @@ public class SequenceDiagramController{
 
                     ClassDiagramController.d.addName("Main");
                     ObjectNames = ClassDiagramController.d.getListOfClassNames();
-
-                    //System.out.println(ObjectNames);
-                    //System.out.println("Vybrana volba");
-                    //System.out.println(box.getNameClass());
                     if(!ClassDiagramController.d.getListOfClassNames().contains(box.getNameClass())){
-                        //System.out.println("NOTContains");
                         box.getClassButton().setStyle("-fx-border-color: red;");
                     }else{
-                        //System.out.println("Contains");
                         box.getClassButton().setStyle("");
                     }
-                    //box.getClassButton().getItems().setAll(FXCollections.observableArrayList(ObjectNames));
-
                 }
             }
         }
@@ -197,49 +196,82 @@ public class SequenceDiagramController{
         }
     }
 
-    private void handleKeyboardTimeLine(KeyEvent e, Button timeBox){
+    /**
+     * Pokud zmáčknem W, zavolá se metoda expand, pokud S, tak se zavolá reduce
+     * @param e Stisknutá klávesa
+     * @param callBox Aktivační box
+     */
+    private void handleKeyboardTimeLine(KeyEvent e, Button callBox){
         KeyCode k = e.getCode();
         switch (k) {
             case W:
-                expand(timeBox);
+                expand(callBox);
                 break;
             case S:
-                reduce(timeBox);
+                reduce(callBox);
                 break;
-
-            //case DELETE -> delete(box, cls);
+                //case DELETE -> delete(box, cls);
         }
     }
-    private void expand(Button timeBox){
-        timeBox.setText(timeBox.getText() + "\n");
+
+    /**
+     * Aktivační box se naplňuje prázdnými řádky, čímž se zvětšují
+     * @param callBox zvětšované tlačítko na časové ose
+     */
+    private void expand(Button callBox){
+        callBox.setText(callBox.getText() + "\n");
     }
-    private void reduce(Button timeBox){
-        timeBox.setText("\n");
+
+    /**
+     * Aktivační box se vyresetuje na původní velikost
+     * @param callBox vyresetované tlačítko na časové ose
+     */
+    private void reduce(Button callBox){
+        callBox.setText("\n");
     }
+
+    /**
+     * Při posouvání aktivačním boxem levým tlačítkem myši se ukládají jeho nové souřadnice
+     * @param e Pousouvání aktivačním boxem levým tlačítkem myši
+     * @param box Aktivační box, který posouváme
+     */
     private void onCallBoxDragged(MouseEvent e, ObjectWithLine box){
         if(e.getButton().equals(MouseButton.PRIMARY)) {
             box.getTimeLineButton().setLayoutY(box.getTimeLineButton().getLayoutY() + e.getY() + box.getTimeLineButton().getTranslateY());
-            //box.setY(box.getTimeLineButton().getLayoutY() + e.getY() + box.getTimeLineButton().getTranslateY());
         }
     }
+
+    /**
+     * Při posouvání obsahem zprávy levým tlačítkem myši se ukládají jeho nové souřadnice
+     * @param e Pousouvání obsahu zprávy levým tlačítkem myši
+     * @param box Obsah zprávy, který posouváme
+     */
     private void onMessageDragged(MouseEvent e, Button box){
-        if(e.getButton().equals(MouseButton.MIDDLE)) {
+        if(e.getButton().equals(MouseButton.PRIMARY)) {
             box.setLayoutX(box.getLayoutX() + e.getX() + box.getTranslateX());
         }
     }
+
+    /**
+     * Při posouvání objektem levým tlačítkem myši se ukládají jeho nové souřadnice
+     * @param e Pousouvání objektem levým tlačítkem myši
+     * @param box Objekt, který posouváme
+     */
     private void onBoxDragged(MouseEvent e, ObjectWithLine box) {
-        if(e.getButton().equals(MouseButton.MIDDLE)) {
-            //box.Inconsistencies();
+        if(e.getButton().equals(MouseButton.PRIMARY)) {
             box.setLayoutX(box.getLayoutX() + e.getX() + box.getClassButton().getTranslateX());
             box.setLayoutY(box.getLayoutY() + e.getY() + box.getClassButton().getTranslateY());
             box.setX(box.getLayoutX() + e.getX() + box.getTranslateX());
             box.setY(box.getLayoutY() + e.getY() + box.getTranslateY());
-            /*Bounds boundsInScene = box.getTimeLineButton().localToScene(box.getTimeLineButton().getBoundsInLocal());
-            System.out.println(boundsInScene);*/
         }
     }
 
-    public void onReturnMessageBoxPressed(MouseEvent e, Button msgBox, Messages arrow){
+    /**
+     * Po double-kliknutí na tlačítko se zprávou vyskočí okno, kde můžeme změnit text
+     * @param e Kliknutí na zprávu
+     * @param arrow Návratová šipka na kterou je daný text zprávy nafixován
+     */
+    public void onReturnMessageBoxPressed(MouseEvent e, Messages arrow){
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2) {
                 String msg = EditMessages.displayReturn(arrow);
@@ -249,7 +281,12 @@ public class SequenceDiagramController{
         }
     }
 
-    public void onAsynOrSynMessageBoxPressed(MouseEvent e, Button msgBox, Messages arrow){
+    /**
+     * Po double-kliknutí na tlačítko se zprávou vyskočí okno, kde můžeme změnit text
+     * @param e Kliknutí na zprávu
+     * @param arrow Asynchronní, nebo synchronní šipka, na kterou je daný text zprávy nafixován
+     */
+    public void onAsynOrSynMessageBoxPressed(MouseEvent e, Messages arrow){
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2) {
                 String msg = EditMessages.displayAsynchOrSynch(arrow);
@@ -260,7 +297,12 @@ public class SequenceDiagramController{
         }
     }
 
-    public void onCreateMessageBoxPressed(MouseEvent e, Button msgBox, Messages arrow){
+    /**
+     * Po double-kliknutí na tlačítko se zprávou vyskočí okno, kde můžeme změnit text
+     * @param e Kliknutí na zprávu
+     * @param arrow Vytvářecí šipka, na kterou je daný text zprávy nafixován
+     */
+    public void onCreateMessageBoxPressed(MouseEvent e, Messages arrow){
         if(e.getButton().equals(MouseButton.PRIMARY)){
             if(e.getClickCount() == 2) {
                 String msg = EditMessages.displayCreate(arrow);
@@ -270,6 +312,15 @@ public class SequenceDiagramController{
         }
     }
 
+    /**
+     * Vytváření zprávy (šipky) mezi call-boxy
+     * @param b1 Počáteční call-box
+     * @param b2 Koncový call-box
+     * @param x1 Počáteční X souřadnice
+     * @param y1 Počáteční a Koncová Y souřadnice
+     * @param x2 Koncová X souřadnice
+     * @return Objekt typu Messages
+     */
     public Messages createMessage(Button b1, Button b2, Double x1, Double y1, Double x2){
         Messages arrow = new Messages(x1, y1, x2);
         arrow.setFrom(b1.getId());
@@ -279,14 +330,22 @@ public class SequenceDiagramController{
         arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
         arrow.getReturnButton().setOnMouseDragged(e -> onMessageDragged(e, arrow.getReturnButton()));
         arrow.getAsynAndSynClassButton().setOnMouseDragged(e -> onMessageDragged(e, arrow.getAsynAndSynClassButton()));
-        arrow.getReturnButton().setOnMousePressed(e -> onReturnMessageBoxPressed(e, arrow.getReturnButton(), arrow));
-        arrow.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, arrow.getAsynAndSynClassButton(), arrow));
+        arrow.getReturnButton().setOnMousePressed(e -> onReturnMessageBoxPressed(e, arrow));
+        arrow.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, arrow));
 
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(arrow);
-        //rootPane.getChildren().addAll(arrow);
         return arrow;
     }
 
+    /**
+     * Vytváření zprávy (šipky) mezi od časové osy do call-boxu
+     * @param l1 Počáteční časová osa
+     * @param b2 Koncový call-box
+     * @param x1 Počáteční X souřadnice
+     * @param y1 Počáteční a Koncová Y souřadnice
+     * @param x2 Koncová X souřadnice
+     * @return Objekt typu Messages
+     */
     public Messages createMessageWithLineFirst(Line l1, Button b2, Double x1, Double y1, Double x2){
         Messages arrow = new Messages(x1, y1, x2);
         arrow.setFrom(l1.getId());
@@ -294,14 +353,23 @@ public class SequenceDiagramController{
         arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
         arrow.getReturnButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getReturnButton())));
         arrow.getAsynAndSynClassButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getAsynAndSynClassButton())));
-        arrow.getReturnButton().setOnMousePressed(e -> onReturnMessageBoxPressed(e, arrow.getReturnButton(), arrow));
-        arrow.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, arrow.getAsynAndSynClassButton(), arrow));
+        arrow.getReturnButton().setOnMousePressed(e -> onReturnMessageBoxPressed(e, arrow));
+        arrow.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, arrow));
 
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(arrow);
         //rootPane.getChildren().addAll(arrow);
         return arrow;
     }
 
+    /**
+     * Vytváření vytvářecí zprávy (šipky) od call-boxu na objekt
+     * @param b1 Počáteční call-box
+     * @param b2 Koncový objekt
+     * @param x1 Počáteční X souřadnice
+     * @param y1 Počáteční a Koncová Y souřadnice
+     * @param x2 Koncová X souřadnice
+     * @return Objekt typu Messages
+     */
     public Messages CreateMessageToObject(Button b1, Button b2, Double x1, Double y1, Double x2){
         Messages arrow = new Messages(x1, y1, x2);
         arrow.setFrom(b1.getId());
@@ -310,14 +378,21 @@ public class SequenceDiagramController{
         arrow.update();
         arrow.setOnMousePressed(e -> handleMouseMessageDeleteOnly(e, arrow));
         arrow.getCreateObjectButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getCreateObjectButton())));
-        arrow.getCreateObjectButton().setOnMousePressed(e -> onCreateMessageBoxPressed(e, arrow.getCreateObjectButton(), arrow));
-        //b2.getItems().setAll(FXCollections.observableArrayList(ObjectNames));
+        arrow.getCreateObjectButton().setOnMousePressed(e -> onCreateMessageBoxPressed(e, arrow));
 
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(arrow);
-        //rootPane.getChildren().addAll(arrow);
         return arrow;
     }
 
+    /**
+     * Vytváření zprávy (šipky) od call-boxu na časovou osu
+     * @param b1 Počáteční objekt
+     * @param l2 Koncová časová osa
+     * @param x1 Počáteční X souřadnice
+     * @param y1 Počáteční a Koncová Y souřadnice
+     * @param x2 Koncová X souřadnice
+     * @return Objekt typu Messages
+     */
     public Messages createMessageToLine(Button b1, Line l2, Double x1, Double y1, Double x2){
         Messages arrow = new Messages(x1, y1, x2);
         arrow.setFrom(b1.getId());
@@ -325,37 +400,41 @@ public class SequenceDiagramController{
         arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
         arrow.getReturnButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getReturnButton())));
         arrow.getAsynAndSynClassButton().setOnMouseDragged((e -> onMessageDragged(e, arrow.getAsynAndSynClassButton())));
-        arrow.getReturnButton().setOnMousePressed(e -> onReturnMessageBoxPressed(e, arrow.getReturnButton(), arrow));
-        arrow.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, arrow.getAsynAndSynClassButton(), arrow));
-
+        arrow.getReturnButton().setOnMousePressed(e -> onReturnMessageBoxPressed(e, arrow));
+        arrow.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, arrow));
 
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(arrow);
-        //rootPane.getChildren().addAll(arrow);
         return arrow;
     }
 
+    /**
+     * Odstraní vytvářecí zprávu - šipku i obsah zprávy po kliknutí pravým tlačítkem myši
+     * U vytvářecí čáry nelze měnit typ zprávy
+     * @param e Kliknutí na objekt z třídy Messages
+     * @param arrow Odstraňovaná zpráva
+     */
     public void handleMouseMessageDeleteOnly(MouseEvent e, Messages arrow){
         if(e.getButton().equals(MouseButton.SECONDARY)) {
             //Arrow.ListOfArrows.remove(arrow);
-            //objectStack.push(arrow);
-            //operationStack.push(operation.REMOVE);
             ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().remove(arrow);
         }
     }
+
+    /**
+     * Odstraní zprávu - šipku i obsah zprávy po kliknutí pravým tlačítkem myši.
+     * Nebo po double-kliku se otevře okno, ve kterém si můžeme vybrat jaký typ zprávy chceme mít
+     * @param e Kliknutí na objekt z třídy Messages
+     * @param arrow Odstraňovaná zpráva, nebo Modifikovaná zpráva
+     */
     public void handleMouseMessage(MouseEvent e, Messages arrow){
         // Odstranění šipky
         if(e.getButton().equals(MouseButton.SECONDARY)) {
             //Arrow.ListOfArrows.remove(arrow);
-            //objectStack.push(arrow);
-            //operationStack.push(operation.REMOVE);
             ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().remove(arrow);
         }
         // Změna šipky (typu zprávy)
         if(e.getButton().equals(MouseButton.PRIMARY)) {
             if (e.getClickCount() == 2) {
-                //objectStack.push(arrow);
-                //operationStack.push(operation.CHANGE);
-                //nameStack.push(arrow.getArrowType());
                 arrowType = EditMessageArrows.display(arrow);
                 arrow.setArrowType(arrowType);
                 arrow.update();
@@ -364,11 +443,37 @@ public class SequenceDiagramController{
         }
     }
 
+    /**
+     * Po stisknutí tlačítka se zavolá metoda, která bude načítat ze souboru
+     * @param event Stisknutí tlačítka Save
+     * @throws IOException
+     */
+    public void SaveJson(ActionEvent event) throws IOException{
+        serializeObject();
+    }
 
+    /**
+     * Po stisknutí tlačítka se zavolá metoda, která bude ukládat do souboru
+     * @param event Stisknutí tlačítka Load
+     * @throws InterruptedException
+     */
+    public void LoadJson(ActionEvent event) throws InterruptedException{
+        deserializeObject();
+    }
 
-    public void SaveJson(ActionEvent event){}
+    /**
+     * TODO
+     */
+    public void deserializeObject(){
 
-    public void LoadJson(ActionEvent event){}
+    }
+
+    /**
+     * TODO
+     */
+    public void serializeObject(){
+
+    }
 
     /**
      * Po stisknutí tlačítka se otevře okno s nápovědou
@@ -379,14 +484,15 @@ public class SequenceDiagramController{
         sqShowHelp.display();
     }
 
-    public void sqDelete(){
-        viewModel.setCurrentView(ViewModel.View.A);
-        //((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().clear();
-    }
-
+    /**
+     * Po stlačení tlačítka Clear metoda odstraní všechny komponenty z obrazovky
+     * @param e Stisknutí tlačítka Clear
+     */
     @FXML
     public void Clear(ActionEvent e){
-
+        ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().clear();
+        getObjectNames().clear();
+        getContent().clear();
+        count = 0;
     }
-
 }

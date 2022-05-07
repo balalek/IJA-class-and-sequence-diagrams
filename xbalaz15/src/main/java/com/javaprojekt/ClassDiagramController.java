@@ -863,7 +863,7 @@ public class ClassDiagramController{
 
     /**
      * Po stlačení tlačítka Clear metoda odstraní všechny komponenty z obrazovky i z paměti
-     * @param e Stisknutí tlačítka
+     * @param e Stisknutí tlačítka Clear
      */
     @FXML
     public void Clear(ActionEvent e){
