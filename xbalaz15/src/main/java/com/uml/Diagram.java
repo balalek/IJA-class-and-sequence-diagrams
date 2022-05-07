@@ -1,15 +1,31 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
 
 import java.util.*;
 
+/**
+ * Třída je nadřazenou sekvenčnímu diagramu a diagramu tříd. Je odvozena od třídy Element (má název).
+ * Obsahuje seznam tříd (instance třídy UMLClass), příp. klasifikátorů pro uživatelsky nedefinované typy (instance třídy UMLClassifier).
+ * Obsahuje i dva seznamy názvů tříd pro jiné učely
+ */
 public class Diagram extends Element {
+
+    // Atributy
     protected List<String> listOfNames = new LinkedList<>();
     protected List<UMLClassifier> listOfClassif = new LinkedList<>();
     protected List<String> listOfClassNames = new LinkedList<>();
 
-    // Getter
+    // GETry
     public List<String> getListOfClassNames() {
         return listOfClassNames;
+    }
+    public List<String> getListOfNames() {
+        return listOfNames;
+    }
+    public List<UMLClassifier> getListOfClassif() {
+        return listOfClassif;
     }
 
     /**
@@ -56,18 +72,38 @@ public class Diagram extends Element {
         }
     }
 
+    /**
+     * Vyhledá v diagramu třídu podle názvu a pokud neexistuje, přidá jí.
+     * Můžeme tak v sekvenčním diagramu kontrolovat, zda existuje třída, z který je vytvořen objekt
+     *
+     * @param name Název třídy.
+     * @return True, pokud byl název třídy přidán do listu a False pokud ne (třeba již jej obsahuje)
+     */
     public boolean addName(String name) {
         if (!listOfClassNames.contains(name)) listOfClassNames.add(name);
         else return false;
         return true;
     }
 
+    /**
+     * Vyhledá v diagramu třídu podle starého názvu a přejmenuje jej.
+     * Můžeme tak v sekvenčním diagramu kontrolovat, zda existuje třída, z který je vytvořen objekt i po přejmenování
+     *
+     * @param oldName Starý název třídy.
+     * @param newName Nový název třídy
+     */
     public void renameName(String oldName, String newName) {
         if (listOfClassNames.contains(oldName)) {
             listOfClassNames.set(listOfClassNames.indexOf(oldName), newName);
         }
     }
 
+    /**
+     * Vyhledá v diagramu třídu podle názvu a odstraní jej.
+     * Můžeme tak v sekvenčním diagramu kontrolovat, zda existuje třída, z který je vytvořen objekt i po odstranění
+     *
+     * @param name Název odstraňované třídy
+     */
     public void deleteName(String name) {
         listOfClassNames.remove(name);
     }

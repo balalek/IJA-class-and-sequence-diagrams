@@ -1,3 +1,6 @@
+/**
+ * @author Josef Kuba
+ */
 package com.seqComponent;
 
 import javafx.geometry.HPos;
@@ -17,17 +20,17 @@ import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Třída pro zobrazení a editaci objektů.
+ * Třída pro zobrazení a editaci objektu a jeho názvu.
  */
 public class EditObjectName {
 
     /**
-     * Tato metoda zobrazí okno pro vytváření a editaci objektů (zobrazí editovatelný aktuální stav)
+     * Tato metoda zobrazí okno pro vytváření a editaci objektu a jeho názvu. (zobrazí editovatelný aktuální stav)
      * a po stisknutí tlačítka vrátí obsah.
      * @param box Odkaz na objekt který editujeme
      * @return Vrací název objektu(pokud nějaký je) a název třídy, kterou instancuje (obsah oken)
      */
-    public static List<String> displayObject(ClassWithLine box){
+    public static List<String> displayObject(ObjectWithLine box){
         List<String> content = new LinkedList<>();
         Stage objectWindow = new Stage();
         objectWindow.initModality(Modality.APPLICATION_MODAL);

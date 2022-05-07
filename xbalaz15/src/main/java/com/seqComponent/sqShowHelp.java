@@ -1,3 +1,6 @@
+/**
+ * @author Josef Kuba
+ */
 package com.seqComponent;
 
 import javafx.geometry.HPos;
@@ -16,8 +19,9 @@ import javafx.stage.Stage;
  * Třída pro vyvolání nápovědy
  */
 public class sqShowHelp {
+
     /**
-     *
+     * Metoda zobrazí nápovědu v novým okně s tlačítkem na ukončení.
      */
     public static void display(){
         Stage helpWindow = new Stage();
@@ -71,6 +75,10 @@ public class sqShowHelp {
     }
 
     // TODO DESTRUCT message
+    /**
+     * Nápověda
+     * @return Text, který se vypíše do okna
+     */
     private static String textBlocks() {
         return  "Note: Clicking with mouse is meant for left mouse button, unless its stated otherwise.\n" +
                 "Usage: To create a class, you must click on button called Add Class\n" +

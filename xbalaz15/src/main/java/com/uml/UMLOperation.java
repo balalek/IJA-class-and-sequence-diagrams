@@ -1,7 +1,9 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
 
 import java.util.*;
-
 
 /**
  * Třída reprezentuje operaci, která má své jméno, návratový typ a seznam argumentů.
@@ -10,6 +12,7 @@ import java.util.*;
  */
 public class UMLOperation extends UMLAttribute{
 
+    // Atribut
     private static List<UMLAttribute> listOfArg = new LinkedList<>();
 
     /**
@@ -38,9 +41,6 @@ public class UMLOperation extends UMLAttribute{
      */
     public static UMLOperation create(String name, UMLClassifier type, List<UMLAttribute> list){
         UMLOperation objOfOper = new UMLOperation(name, type);
-        /*for(UMLAttribute arg : args){
-            listOfArg.add(arg);   
-        }*/
         listOfArg.addAll(list);
         return objOfOper;
     }
@@ -53,9 +53,6 @@ public class UMLOperation extends UMLAttribute{
      */
     public static UMLOperation create(String name, List<UMLAttribute> list){
         UMLOperation objOfOper = new UMLOperation(name);
-        /*for(UMLAttribute arg : args){
-            listOfArg.add(arg);
-        }*/
         listOfArg.addAll(list);
         return objOfOper;
     }

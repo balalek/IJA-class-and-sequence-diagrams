@@ -1,3 +1,6 @@
+/**
+ * @author Martin Baláž
+ */
 package com.component;
 
 import com.uml.UMLClass;
@@ -6,6 +9,8 @@ import com.uml.UMLClass;
  * Třída slouží jako struktura, takže lze z metody vracet dva objekty ve struktuře, a dále s nimi pracovat odděleně
  */
 public final class Structure {
+
+    // Atributy
     private final ClassComponent box;
     private final UMLClass cls;
 

@@ -1,3 +1,6 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
 import java.util.*;
 
@@ -6,6 +9,7 @@ import java.util.*;
  */
 public class UMLClass extends UMLClassifier{
 
+    // Atributy
     private boolean abstractClass;
     private List<UMLAttribute> listOfAttr = new LinkedList<>();
     private List<UMLOperation> listOfOper = new LinkedList<>();

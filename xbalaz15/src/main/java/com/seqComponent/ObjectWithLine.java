@@ -1,22 +1,26 @@
+/**
+ * @author Josef Kuba
+ */
 package com.seqComponent;
 
-import com.component.Arrow;
 import com.google.gson.annotations.Expose;
-import com.javaprojekt.ClassDiagramController;
-import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.control.Button;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
-import javafx.scene.control.MenuButton;
 import javafx.scene.shape.Line;
 
-public class ClassWithLine extends Group {
+/**
+ * Třída reprezentuje instanci třídy z diagramu tříd, časovou osu a aktivační box (call-box).
+ * Obsahuje unikátní ID, jméno objektu, jméno třídy, velikost call-boxu a souřadnice call-boxu a objektu(x,y).
+ * Používá se pro reprezentaci instanci třídy z diagramu tříd a názvu objektu a názvu třídy.
+ */
+public class ObjectWithLine extends Group {
 
+    // Atributy
     @Expose
     public Double x;
     @Expose
@@ -34,7 +38,7 @@ public class ClassWithLine extends Group {
     private static int count = 1;
     private int ID;
 
-    // Getters and setter
+    // GETry a SETry
     public Double getX() {
         return x;
     }
@@ -88,11 +92,11 @@ public class ClassWithLine extends Group {
     }
 
     /**
-     * Konstruktor
-     * @param x
-     * @param y
+     * Konstruktor pro vytváření grafického objektu se časovou osou a call-boxu
+     * @param x X souřadnice objektu
+     * @param y Y souřadnice objektu
      */
-    public ClassWithLine(Double x, Double y) {
+    public ObjectWithLine(Double x, Double y) {
         ID = count++;
         this.x = x;
         this.y = y;
@@ -124,18 +128,19 @@ public class ClassWithLine extends Group {
         Update();
     }
 
+    /**
+     * Nastavení css stylů
+     */
     public void Styling(){
         classButton.getStyleClass().setAll("sqClassBox");
         line.getStyleClass().setAll("sqLifeLine");
         timeLineButton.getStyleClass().setAll("sqTimeLineButton");
     }
 
+    /**
+     * Metoda aktualizuje obsah objektu, který upravujeme (vykreslený obsah)
+     */
     public void Update(){
-        /*classButton.setId("ID" + ID);
-        ID = count ++;
-        timeLineButton.setId("ID" + ID);
-        ID = count ++;
-        line.setId("ID" + ID);*/
         setId("ID" + ID);
 
         Label myLabel = new Label();
@@ -146,12 +151,4 @@ public class ClassWithLine extends Group {
 
         getChildren().setAll(line, classButton, timeLineButton);
     }
-
-    /*public void Inconsistencies(){
-        for(String names : ClassDiagramController.d.getListOfClassNames()) {
-            if (!classButton.getItems().contains(names)){
-                classButton.getStyleClass().setAll("inconsitentClass");
-            }
-        }
-    }*/
 }

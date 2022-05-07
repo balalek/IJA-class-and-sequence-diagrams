@@ -1,3 +1,6 @@
+/**
+ * @author Martin Baláž
+ */
 package com.component;
 
 import com.google.gson.annotations.Expose;
@@ -106,7 +109,12 @@ public class ClassComponent extends Button {
     public void setOperationProperty(String operationProperty) {
         this.operationProperty.set(operationProperty);
     }
-
+    public static int getCount() {
+        return count;
+    }
+    public static void setCount(int count) {
+        ClassComponent.count = count;
+    }
     public String getAttributes() {
         return Attributes;
     }
@@ -116,17 +124,15 @@ public class ClassComponent extends Button {
     public void setNameProperty(String nameProperty) {
         this.nameProperty.set(nameProperty);
     }
-
     public Label getOpLabel() {
         return opLabel;
     }
-
     public void setOpLabel(Label opLabel) {
         this.opLabel = opLabel;
     }
 
     /**
-     * Konstruktor
+     * Konstruktor pro vytvoření grafické třídy
      * @param x X souřadnice třídy
      * @param y Y souřadnice třídy
      */
@@ -134,6 +140,7 @@ public class ClassComponent extends Button {
         ID = count++;
         this.x = x;
         this.y = y;
+
         // Pozice tlačítka
         setLayoutX(this.x);
         setLayoutY(this.y);
@@ -145,8 +152,8 @@ public class ClassComponent extends Button {
         // Vytvoření Gridpanu
         GridPane classContent = new GridPane();
         classContent.autosize();
+
         // Vytvoření a aktualizace obsahu
-        //classNameUpdate(classContent);
         classType(classContent);
     }
 
@@ -171,7 +178,7 @@ public class ClassComponent extends Button {
         setLayoutX(this.x);
         setLayoutY(this.y);
 
-        // Store radio button
+        // Uložení rádiového tlačítka
         switch (this.ClassType) {
             case "":
                 setNormal(true);
@@ -197,7 +204,6 @@ public class ClassComponent extends Button {
         // Vytvoření Gridpanu
         GridPane classContent = new GridPane();
         classContent.autosize();
-        // Content create and update
         classType(classContent);
     }
 
@@ -206,7 +212,6 @@ public class ClassComponent extends Button {
      * @param classContent Odkaz na objekt který upravujeme
      */
     public void classType(GridPane classContent){
-
         Label myLabel = new Label();
         classTypeProperty.setValue(ClassType);
         myLabel.textProperty().bind(classTypeProperty);
@@ -224,13 +229,12 @@ public class ClassComponent extends Button {
      * @param classContent Odkaz na objekt který upravujeme
      */
     public void classNameUpdate(GridPane classContent){
-
         if(Name.equals("")) {
             setName("Class" + ID);
             ClassDiagramController.d.addName(getName());
         }
 
-        // Upravovatelný nápis v boxu
+        // Aktualizovatelný nápis v boxu
         Label myLabel = new Label();
         nameProperty.setValue(getName());
         myLabel.textProperty().bind(nameProperty);
@@ -277,7 +281,7 @@ public class ClassComponent extends Button {
     public void classOperationsUpdate(GridPane classContent) {
         if (Operations.equals("")) setOperations("");
 
-        // Upravovatelný nápis v boxu
+        // Aktualizovatelný nápis v boxu
         operationProperty.setValue(Operations);
         opLabel.textProperty().bind(operationProperty);
         opLabel.setPadding(new Insets(8, 0, 8, 0));

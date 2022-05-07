@@ -100,12 +100,17 @@
                               <Font size="15.0" />
                           </font>
                       </Button>
-                  <Button mnemonicParsing="false" onAction="#InsertClass" text="Add class" GridPane.halignment="CENTER" GridPane.rowIndex="6">
+                  <Button mnemonicParsing="false" onAction="#InsertObject" text="Add object" GridPane.halignment="CENTER" GridPane.rowIndex="5">
                      <font>
                         <Font size="15.0" />
                      </font>
                   </Button>
                   <Button mnemonicParsing="false" onAction="#Help" text="Help" GridPane.halignment="CENTER" GridPane.rowIndex="10">
+                     <font>
+                        <Font size="15.0" />
+                     </font>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#Clear" text="Clear" GridPane.halignment="CENTER" GridPane.rowIndex="9">
                      <font>
                         <Font size="15.0" />
                      </font>
