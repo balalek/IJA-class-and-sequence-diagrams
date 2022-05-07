@@ -525,8 +525,8 @@ public class ClassDiagramController{
     }
 
     /**
-     * TODO
-     * @param arrow
+     * Tato funkce modře vyznačí třídu, ze které vychází generalizace a má společnou metodu s ze které dědí.
+     * @param arrow Šipka, která propojuje třídy.
      */
     public void Highlight(Arrow arrow){
         if(!Objects.equals(arrow.getArrowType(), "generalization")) {
@@ -689,7 +689,8 @@ public class ClassDiagramController{
     }
 
     /**
-     * TODO
+     * Pokud byl vybrán cílový soubor uloží Třídy a šipky do zvoleného json souboru
+     * (Volá funkce AddArrowsToJson a AddClassesToJson)
      * @throws IOException
      */
     public void serializeObject() throws IOException {
@@ -709,9 +710,9 @@ public class ClassDiagramController{
     }
 
     /**
-     * TODO
-     * @param List
-     * @param box
+     * Tato funkce uloží data třídy do json struktury, zabalí je a přidá do listu
+     * @param List List do kterého se třídy přidávají
+     * @param box Třída kterou budeme ukládat
      */
     public void AddClassesToJson(JSONArray List, ClassComponent box){
         JSONObject obj = new JSONObject();
@@ -727,9 +728,9 @@ public class ClassDiagramController{
     }
 
     /**
-     * TODO
-     * @param List
-     * @param arrow
+     * Tato funkce uloží data šipky do json struktury, zabalí je a přidá do listu
+     * @param List List do kterého se třídy přidávají
+     * @param arrow Šipka kterou budeme ukládat
      */
     public void AddArrowsToJson(JSONArray List, Arrow arrow){
         JSONObject obj = new JSONObject();
@@ -752,7 +753,7 @@ public class ClassDiagramController{
     }
 
     /**
-     * TODO
+     * Funkce načte z vybraného souboru třídy a šipky
      */
     public void deserializeObject(){
         FileChooser fileChooser = new FileChooser();
@@ -780,8 +781,8 @@ public class ClassDiagramController{
     }
 
     /**
-     * TODO
-     * @param emp
+     * Parsování tříd a jejich zobrazení
+     * @param emp JSONObject který se bude parsovat
      */
     private void parseEmpObj(JSONObject emp) {
         if(emp.get("class") != null){
