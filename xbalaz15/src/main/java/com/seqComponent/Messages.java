@@ -1,6 +1,7 @@
 package com.seqComponent;
 
 import com.component.Arrow;
+import com.component.ClassComponent;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
@@ -10,6 +11,7 @@ import javafx.scene.control.Label;
 import javafx.scene.shape.Polyline;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 public class Messages extends Group {
     private final double ARROWHEAD_ANGLE = Math.toRadians(20);
@@ -38,7 +40,7 @@ public class Messages extends Group {
     private SimpleDoubleProperty y2 = new SimpleDoubleProperty();
     private String from;
     private String to;
-    public static List<Arrow> ListOfArrows = new LinkedList<>();
+    public static List<Messages> ListOfArrows = new LinkedList<>();
 
 
     // Getters and setters
@@ -159,10 +161,35 @@ public class Messages extends Group {
     public void setReturnProperty(String returnProperty) {
         this.returnProperty.set(returnProperty);
     }
+    public Polyline getMainLine() {
+        return mainLine;
+    }
+    public Polyline getHeadSynch() {
+        return headSynch;
+    }
+    public Polyline getHeadSynch2() {
+        return headSynch2;
+    }
+    public Polyline getHeadAsynch() {
+        return headAsynch;
+    }
+    public Polyline getHeadAsynch2() {
+        return headAsynch2;
+    }
+    public Polyline getHeadReturn() {
+        return headReturn;
+    }
+    public Polyline getHeadReturn2() {
+        return headReturn2;
+    }
+
+    public static List<Messages> getListOfArrows() {
+        return ListOfArrows;
+    }
 
     // Konstruktor
     public Messages(double x1, double y1, double x2) {
-        //ListOfArrows.add(this);
+        ListOfArrows.add(this);
         setX1(x1);
         setY1(y1);
         setX2(x2);
@@ -313,5 +340,90 @@ public class Messages extends Group {
                 x1 + Math.cos(theta),
                 y1 + Math.sin(theta)
         };
+    }
+
+    /**
+     * Tato funkce kontroluje zda existuje operace napsaná nad šipkou (a počet argumentů).
+     * Pokud neexistuje, obarví šipku a rámeček zprávy červeně jinak černě.
+     */
+    public void CheckArrowMessage(){
+        Messages arrow = this;
+        if(Objects.equals(arrow.getArrowType(), "Synchronous") || Objects.equals(arrow.getArrowType(), "Asynchronous")){
+            //System.out.println(arrow.getAsOrSynMessage());
+            //System.out.println(ClassComponent.getListofBoxes());
+            List<String> AllOperations = new LinkedList<>();
+            for (ClassComponent box: ClassComponent.getListofBoxes()) {
+                if(!Objects.equals(box.getOperations(), "")){
+                    String  Operations[] = box.getOperations().split("\n");
+                    //AllOperations.add(Operations);
+                    for (String oper: Operations) {
+                        if(oper.indexOf(" ", oper.indexOf(" ") + 1) < oper.indexOf("("))
+                        {
+                            //Normální metoda
+                            //System.out.println(oper.split(" ", 3)[2]);
+                            oper = (oper.split(" ", 3)[2]);
+
+                        }else{
+                            //Konstruktor
+                            //System.out.println(oper.split(" ", 2)[1]);
+                            oper = (oper.split(" ", 2)[1]);
+                        }
+                        int count = 0;
+                        for (int i = 0; i < oper.length(); i++) {
+
+                            char temp = oper.charAt(i);
+                            if (temp == ',')
+                                count++;
+                        }
+                        if(!oper.contains("()")) count++;
+                        oper = oper.replaceFirst("\\(.*\\)", String.format("(%d)", count));
+                        AllOperations.add(oper);
+                    }
+                }
+
+            }
+            //System.out.println(AllOperations);
+            String message = arrow.getAsOrSynMessage();
+            int count = 0;
+            for (int i = 0; i < message.length(); i++) {
+
+                char temp = message.charAt(i);
+                if (temp == ',')
+                    count++;
+            }
+            if(!message.contains("()")) count++;
+            message = message.replaceFirst("\\(.*\\)", String.format("(%d)", count));
+            //System.out.println(message);
+            if(!AllOperations.contains(message)){
+                arrow.getAsynAndSynClassButton().setStyle("-fx-border-color: red;");
+                arrow.getMainLine().setStyle("-fx-stroke-width: 2px; -fx-stroke: red");
+
+                if(Objects.equals(arrow.getArrowType(), "Synchronous")){
+                    arrow.getHeadSynch().setStyle("-fx-stroke-width: 2px; -fx-stroke: red; -fx-fill: red;");
+                }else{ //asynchr
+                    arrow.getHeadAsynch().setStyle("-fx-stroke-width: 2px; -fx-stroke: red");
+                    arrow.getHeadAsynch2().setStyle("-fx-stroke-width: 2px; -fx-stroke: red");
+                }
+
+
+                //System.out.println("Neplatna funkce");
+            }else{
+                arrow.getAsynAndSynClassButton().setStyle("");
+                arrow.getMainLine().setStyle("");
+                arrow.getHeadAsynch().setStyle("");
+                arrow.getHeadAsynch2().setStyle("");
+                arrow.getHeadSynch().setStyle("");
+                arrow.getHeadSynch2().setStyle("");
+                //System.out.println("Platna funkce");
+            }
+        }else{
+            arrow.getAsynAndSynClassButton().setStyle("");
+            arrow.getMainLine().setStyle("");
+            arrow.getHeadAsynch().setStyle("");
+            arrow.getHeadAsynch2().setStyle("");
+            arrow.getHeadSynch().setStyle("");
+            arrow.getHeadSynch2().setStyle("");
+            //System.out.println("Platna funkce");
+        }
     }
 }

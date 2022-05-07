@@ -15,6 +15,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuButton;
 import javafx.scene.shape.Line;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class ClassWithLine extends Group {
 
     @Expose
@@ -33,6 +36,7 @@ public class ClassWithLine extends Group {
     public ObservableList<Messages> edges = FXCollections.observableArrayList();
     private static int count = 1;
     private int ID;
+    public static List<ClassWithLine> ListClassWithLine = new LinkedList<>();
 
     // Getters and setter
     public Double getX() {
@@ -87,6 +91,10 @@ public class ClassWithLine extends Group {
         this.nameAndObjectProperty.set(nameAndObjectProperty);
     }
 
+    public static List<ClassWithLine> getListClassWithLine() {
+        return ListClassWithLine;
+    }
+
     /**
      * Konstruktor
      * @param x
@@ -97,7 +105,7 @@ public class ClassWithLine extends Group {
         this.x = x;
         this.y = y;
         //classButton.setText(className);
-
+        ListClassWithLine.add(this);
         classButton.setLayoutX(x);
         classButton.setLayoutY(y);
 

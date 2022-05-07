@@ -46,6 +46,7 @@ public class ClassComponent extends Button {
     private int ID;
     public ObservableList<Arrow> edges = FXCollections.observableArrayList();
     private Label opLabel = new Label();
+    public static List<ClassComponent> ListofBoxes = new LinkedList<>();
 
 
     // GETry a SETry
@@ -123,6 +124,10 @@ public class ClassComponent extends Button {
 
     public void setOpLabel(Label opLabel) {
         this.opLabel = opLabel;
+    }
+
+    public static List<ClassComponent> getListofBoxes() {
+        return ListofBoxes;
     }
 
     /**

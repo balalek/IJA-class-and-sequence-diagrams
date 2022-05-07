@@ -1,5 +1,6 @@
 package com.javaprojekt;
 
+import com.component.ClassComponent;
 import com.component.EditClassComponent;
 import com.seqComponent.*;
 import javafx.event.ActionEvent;
@@ -16,6 +17,7 @@ import javafx.scene.shape.Line;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 
 
 public class SequenceDiagramController{
@@ -102,7 +104,16 @@ public class SequenceDiagramController{
 
                     ClassDiagramController.d.addName("Main");
                     ObjectNames = ClassDiagramController.d.getListOfClassNames();
-                    System.out.println(ObjectNames);
+                    //System.out.println(ObjectNames);
+                    //System.out.println("Vybrana volba");
+                    //System.out.println(box.getNameClass());
+                    if(!ClassDiagramController.d.getListOfClassNames().contains(box.getNameClass())){
+                        //System.out.println("NOTContains");
+                        box.getClassButton().setStyle("-fx-border-color: red;");
+                    }else{
+                        //System.out.println("Contains");
+                        box.getClassButton().setStyle("");
+                    }
                     //box.getClassButton().getItems().setAll(FXCollections.observableArrayList(ObjectNames));
                 }
             }
@@ -222,6 +233,7 @@ public class SequenceDiagramController{
                 String msg = EditMessages.displayAsynchOrSynch(arrow);
                 arrow.setAsOrSynMessage(msg);
                 arrow.setAsOrSynProperty(arrow.getAsOrSynMessage());
+                arrow.CheckArrowMessage();
             }
         }
     }
@@ -323,9 +335,11 @@ public class SequenceDiagramController{
                 arrowType = EditMessageArrows.display(arrow);
                 arrow.setArrowType(arrowType);
                 arrow.update();
+                arrow.CheckArrowMessage();
             }
         }
     }
+
 
 
     public void SaveJson(ActionEvent event){}

@@ -3,6 +3,8 @@ package com.javaprojekt;
 import com.component.*;
 import com.component.ClassComponent;
 import com.google.gson.*;
+import com.seqComponent.ClassWithLine;
+import com.seqComponent.Messages;
 import com.uml.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -33,7 +35,7 @@ public class ClassDiagramController{
     private ViewModel viewModel;
     @FXML
     private AnchorPane rootPane;
-    private static List<ClassComponent> ListofBoxes = new LinkedList<>();
+
     private static List<String> ListofBoxNames = new LinkedList<>();
     private List<Object> content = new LinkedList<>();
     private List<String> duplicateAttr = new LinkedList<>();
@@ -70,7 +72,7 @@ public class ClassDiagramController{
 
     private Structure createClassBox(MouseEvent mouseEvent){
         ClassComponent box = new ClassComponent(mouseEvent.getX(), mouseEvent.getY());
-        ListofBoxes.add(box);
+        ClassComponent.getListofBoxes().add(box);
         ListofBoxNames.add(box.getName());
         UMLClass cls = d.createClass(box.getName());
 
@@ -495,7 +497,7 @@ public class ClassDiagramController{
                 if(operationStack.peekFirst() == operation.CREATE) {
                     if (objectStack.peekFirst() instanceof ClassComponent) {
                         ClassComponent tmp = (ClassComponent) objectStack.peekFirst();
-                        ListofBoxes.remove(tmp);
+                        ClassComponent.getListofBoxes().remove(tmp);
                         ListofBoxNames.remove(tmp.getName());
                         d.deleteName(tmp.getName());
                     }
@@ -575,7 +577,7 @@ public class ClassDiagramController{
         box.setLayoutX(box.getLayoutX()+10);
     }*/
     public void delete(ClassComponent box, UMLClass cls){
-        ListofBoxes.remove(box);
+        ClassComponent.getListofBoxes().remove(box);
         ListofBoxNames.remove(box.getName());
         d.deleteName(box.getName());
         //System.out.println(cls.getAttributes());
@@ -596,6 +598,20 @@ public class ClassDiagramController{
     @FXML
     public void SwitchToSeqDiagram(ActionEvent event) throws IOException {
         viewModel.setCurrentView(ViewModel.View.B);
+        for (ClassWithLine tmp:
+                ClassWithLine.getListClassWithLine()) {
+            if(!d.getListOfClassNames().contains(tmp.getNameClass())){
+                tmp.getClassButton().setStyle("-fx-border-color: red;");
+                //System.out.println("Zacervenat");
+            }else{
+                tmp.getClassButton().setStyle("");
+                //System.out.println("Zcervenani odstranit");
+            }
+        }
+        for (Messages arrow:
+             Messages.getListOfArrows()) {
+             arrow.CheckArrowMessage();
+        }
     }
 
     public void setViewModel(ViewModel viewModel) {
@@ -612,7 +628,7 @@ public class ClassDiagramController{
         JSONArray List = new JSONArray();
 
         Arrow.getListOfArrows().forEach(arrow -> AddArrowsToJson(List, (Arrow) arrow));
-        ListofBoxes.forEach(ClassBox -> AddClassesToJson(List, (ClassComponent) ClassBox));
+        ClassComponent.getListofBoxes().forEach(ClassBox -> AddClassesToJson(List, (ClassComponent) ClassBox));
 
         System.out.println(List);
         FileChooser fileChooser = new FileChooser();
@@ -693,7 +709,7 @@ public class ClassDiagramController{
 
     @FXML
     public void refresh(ActionEvent e) {
-        for (ClassComponent box : ListofBoxes) {
+        for (ClassComponent box : ClassComponent.getListofBoxes()) {
             box.setLayoutY(box.getLayoutY() + 10);
             box.setLayoutY(box.getLayoutY() - 10);
 
@@ -705,9 +721,9 @@ public class ClassDiagramController{
     public void loadArrow(HelpLoadArrow arrow){
         if(ListofBoxNames.contains(arrow.getFrom()) && ListofBoxNames.contains(arrow.getTo())) {
             int index = ListofBoxNames.indexOf(arrow.getFrom());
-            ClassComponent b1 = ListofBoxes.get(index);
+            ClassComponent b1 = ClassComponent.getListofBoxes().get(index);
             int index2 = ListofBoxNames.indexOf(arrow.getTo());
-            ClassComponent b2 = ListofBoxes.get(index2);
+            ClassComponent b2 = ClassComponent.getListofBoxes().get(index2);
             Arrow finalArrow = new Arrow(b1, b2, arrow.getArrowType());
             finalArrow.x1Property().bind(b1.layoutXProperty());
             finalArrow.y1Property().bind(b1.layoutYProperty());
@@ -725,7 +741,7 @@ public class ClassDiagramController{
 
     private Structure loadClassBox(ClassComponent loadedBox){
         ClassComponent box = new ClassComponent(loadedBox.getX(), loadedBox.getY(), loadedBox.getName(), loadedBox.getAttributes(), loadedBox.getOperations(), loadedBox.getClassType());
-        ListofBoxes.add(box);
+        ClassComponent.getListofBoxes().add(box);
         ListofBoxNames.add(box.getName());
         UMLClass cls = d.createClass(box.getName());
         d.addName(box.getName());
