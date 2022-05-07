@@ -1,7 +1,11 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
 
 public class Relation extends Element{
-    
+
+    // Atributy
     private UMLClass from;
     private UMLClass to;
 
@@ -17,18 +21,30 @@ public class Relation extends Element{
         this.to = to;
     }
 
+    /**
+     * Šipka agregace
+     */
     public void Aggregation(){
         System.out.print("Agregace");
     }
 
+    /**
+     * Šipka asociace
+     */
     public void Association(){
         System.out.print("Association");
     }
 
+    /**
+     * šipka kompozice
+     */
     public void Composition(){
         System.out.print("Composition");
     }
 
+    /**
+     * šipka generalizace
+     */
     public void Generalization(){
         System.out.print("Generalization");
     }

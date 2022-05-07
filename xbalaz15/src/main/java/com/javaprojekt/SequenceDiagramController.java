@@ -1,7 +1,9 @@
+/**
+ * @author Martin Baláž
+ * @author Josef Kuba
+ */
 package com.javaprojekt;
 
-import com.component.ClassComponent;
-import com.component.EditClassComponent;
 import com.seqComponent.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,16 +21,18 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
-
+/**
+ * Controller, který se stará o chod aplikace, přesněji sekvenčního diagramu
+ */
 public class SequenceDiagramController{
 
-    // Attributes
+    // Atributy
+    @FXML
+    public TabPane tabPane;
     private ViewModel viewModel ;
     private String arrowType;
     private List<String> ObjectNames = new LinkedList<>();
     private List<String> content = new LinkedList<>();
-    @FXML
-    private TabPane tabPane;
     private static int count = 0;
     Button firstBox;
     Line firstLine;
@@ -36,7 +40,10 @@ public class SequenceDiagramController{
     Double y1;
     Messages arrow;
 
-    // Getters and setters
+    /**
+     * Po zavolání této metody se okno nastaví na sekvenční diagram
+     * @param viewModel Okno, které se má zobrazit
+     */
     public void setViewModel(ViewModel viewModel) {
         this.viewModel = viewModel;
     }
@@ -51,46 +58,63 @@ public class SequenceDiagramController{
         viewModel.setCurrentView(ViewModel.View.A);
     }
 
+    /**
+     * Vytvoří se event handler, pokud kliknu na pracovní plochu
+     * @param event Stisknutí tlačítka Add Class
+     */
     @FXML
-    public void InsertClass(ActionEvent event){
+    public void InsertObject(ActionEvent event){
         tabPane.getSelectionModel().getSelectedItem().getContent().setOnMousePressed(this::onTabPanePressed);
     }
 
+    /**
+     * Na místo kliknutí se vytvoří tlačítko, které představuje objekt, čárkovanou čáru, která představuje časovou osu a na ní aktivační box
+     * @param mouseEvent Kliknutí na pracovní ploše
+     */
     public void onTabPanePressed(MouseEvent mouseEvent) {
         if (mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
-            ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().add(createClassBox(mouseEvent));
-            //objectStack.push(rootPane.getChildren().get(tabPane.getChildren().size() - 1));
-            //operationStack.push(operation.CREATE);
+            ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().add(createObjectWithLine(mouseEvent));
             tabPane.getSelectionModel().getSelectedItem().getContent().setOnMousePressed(null);
         }
     }
 
-    public ClassWithLine createClassBox(MouseEvent mouseEvent){
-        ClassWithLine box = new ClassWithLine(mouseEvent.getX(), mouseEvent.getY());
+    /**
+     * Vytvoření tlačítka na místo kliknutí, které představuje objekt a zajištění jeho editaci
+     * Vytvoření časové osy s posouvacím aktivačním boxem
+     * @param mouseEvent Místo kliknutí, slouží ke získání souřadnicí místa kliknutí
+     * @return Vrací objekt třídy ObjectWithLine
+     */
+    public ObjectWithLine createObjectWithLine(MouseEvent mouseEvent){
+        ObjectWithLine box = new ObjectWithLine(mouseEvent.getX(), mouseEvent.getY());
         //ListofBoxes.add(box);
         //ListofBoxNames.add(box.getName());
-        //UMLClass cls = d.createClass(box.getName());
-        //ObjectNames = ClassDiagramController.d.getListOfClassNames();
-        //box.getClassButton().getItems().addAll(FXCollections.observableArrayList(ObjectNames));
-        //box.setOnDragDetected(e -> onBoxDragDetected(e, box));
-        //box.setOnKeyPressed(e -> handleKeyboard(e, box));
-        //box.getClassButton().setOnMousePressed(e -> handleMouse(e, box.getClassButton()));
-        //box.getTimeLineButton().setOnMousePressed(e -> handleMouseArrow(e, box));
-        //box.getClassButton().setOnMousePressed(e -> handleMouseArrow(e, box));
         box.getClassButton().setOnMouseDragged(e -> onBoxDragged(e, box));
         box.getTimeLineButton().setOnMouseDragged(e -> onCallBoxDragged(e, box));
         box.getTimeLineButton().setOnKeyPressed(e -> handleKeyboardTimeLine(e, box.getTimeLineButton()));
-        box.setOnMouseEntered(e -> onTimeLineHover(e, box));
+        box.setOnMouseEntered(e -> onObjectWithLineHover(e, box));
         return box;
     }
 
-    public void onTimeLineHover(MouseEvent evt, ClassWithLine timeBox){
-        timeBox.getTimeLineButton().setOnMousePressed(e -> handleMouseArrow(e, timeBox, true, false));
-        timeBox.getClassButton().setOnMousePressed(e -> handleMouseArrow(e, timeBox, false, false));
-        timeBox.getLine().setOnMousePressed(e -> handleMouseArrow(e, timeBox, false, true));
+    /**
+     * Pokud najedu na objekt třídy ObjectWithLine, mohu si vybrat na který komponent kliknu
+     * @param evt Místo kliknutí
+     * @param box Objekt s čárou a aktivačním boxem
+     */
+    public void onObjectWithLineHover(MouseEvent evt, ObjectWithLine box){
+        box.getTimeLineButton().setOnMousePressed(e -> handleMouseArrow(e, box, true, false));
+        box.getClassButton().setOnMousePressed(e -> handleMouseArrow(e, box, false, false));
+        box.getLine().setOnMousePressed(e -> handleMouseArrow(e, box, false, true));
     }
 
-    public void handleMouseArrow(MouseEvent evt, ClassWithLine box, Boolean isTimeBox, Boolean isTimeLine){
+    /**
+     * Double-kliknutím na objektový box jej mohu editovat, dále kliknutím pravým tlačítkem na jednotlivé komponenty
+     * třídy ObjectWithLine
+     * @param evt
+     * @param box
+     * @param isTimeBox
+     * @param isTimeLine
+     */
+    public void handleMouseArrow(MouseEvent evt, ObjectWithLine box, Boolean isTimeBox, Boolean isTimeLine){
         // Kliknutí na objektový box
         if (evt.getButton().equals(MouseButton.PRIMARY)) {
             if(evt.getClickCount() == 2) {
@@ -104,6 +128,7 @@ public class SequenceDiagramController{
 
                     ClassDiagramController.d.addName("Main");
                     ObjectNames = ClassDiagramController.d.getListOfClassNames();
+
                     //System.out.println(ObjectNames);
                     //System.out.println("Vybrana volba");
                     //System.out.println(box.getNameClass());
@@ -115,10 +140,10 @@ public class SequenceDiagramController{
                         box.getClassButton().setStyle("");
                     }
                     //box.getClassButton().getItems().setAll(FXCollections.observableArrayList(ObjectNames));
+
                 }
             }
         }
-
         // Vytvoření zprávy mezi objekty, čárami a aktivačními boxy
         if(evt.getButton().equals(MouseButton.SECONDARY)){
             count++;
@@ -158,9 +183,6 @@ public class SequenceDiagramController{
                         arrow = CreateMessageToObject(firstBox, box.getClassButton(), x1, y1, x2);
                     }
 
-                    //objectStack.push(rootPane.getChildren().get(rootPane.getChildren().size() - 1));
-                    //operationStack.push(operation.CREATE);
-
                 // Z čáry na call-box
                 } else if(firstLine != box.getLine() && firstLine != null){
                     if(isTimeBox) {
@@ -194,7 +216,7 @@ public class SequenceDiagramController{
     private void reduce(Button timeBox){
         timeBox.setText("\n");
     }
-    private void onCallBoxDragged(MouseEvent e, ClassWithLine box){
+    private void onCallBoxDragged(MouseEvent e, ObjectWithLine box){
         if(e.getButton().equals(MouseButton.PRIMARY)) {
             box.getTimeLineButton().setLayoutY(box.getTimeLineButton().getLayoutY() + e.getY() + box.getTimeLineButton().getTranslateY());
             //box.setY(box.getTimeLineButton().getLayoutY() + e.getY() + box.getTimeLineButton().getTranslateY());
@@ -205,7 +227,7 @@ public class SequenceDiagramController{
             box.setLayoutX(box.getLayoutX() + e.getX() + box.getTranslateX());
         }
     }
-    private void onBoxDragged(MouseEvent e, ClassWithLine box) {
+    private void onBoxDragged(MouseEvent e, ObjectWithLine box) {
         if(e.getButton().equals(MouseButton.MIDDLE)) {
             //box.Inconsistencies();
             box.setLayoutX(box.getLayoutX() + e.getX() + box.getClassButton().getTranslateX());
@@ -252,6 +274,8 @@ public class SequenceDiagramController{
         Messages arrow = new Messages(x1, y1, x2);
         arrow.setFrom(b1.getId());
         arrow.setTo(b2.getId());
+        System.out.println(arrow.getFrom());
+        System.out.println(arrow.getTo());
         arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
         arrow.getReturnButton().setOnMouseDragged(e -> onMessageDragged(e, arrow.getReturnButton()));
         arrow.getAsynAndSynClassButton().setOnMouseDragged(e -> onMessageDragged(e, arrow.getAsynAndSynClassButton()));
@@ -353,6 +377,16 @@ public class SequenceDiagramController{
     @FXML
     public void Help(ActionEvent event){
         sqShowHelp.display();
+    }
+
+    public void sqDelete(){
+        viewModel.setCurrentView(ViewModel.View.A);
+        //((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().clear();
+    }
+
+    @FXML
+    public void Clear(ActionEvent e){
+
     }
 
 }

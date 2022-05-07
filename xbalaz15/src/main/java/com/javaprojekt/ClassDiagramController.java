@@ -1,16 +1,18 @@
+/**
+ * @author Martin Baláž
+ * @author Josef Kuba
+ */
 package com.javaprojekt;
 
 import com.component.*;
 import com.component.ClassComponent;
 import com.google.gson.*;
-import com.seqComponent.ClassWithLine;
+import com.seqComponent.ObjectWithLine;
 import com.seqComponent.Messages;
 import com.uml.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.input.*;
 import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
@@ -26,16 +28,18 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.*;
 
-
+/**
+ * Controller, který se stará o chod aplikace, přesněji diagramu tříd
+ */
 public class ClassDiagramController{
 
-    private Stage stage;
-    private Scene scene;
-    private Parent root;
-    private ViewModel viewModel;
+    // Atributy
     @FXML
     private AnchorPane rootPane;
 
+    private Stage stage;
+    private ViewModel viewModel;
+    private static List<ClassComponent> ListofBoxes = new LinkedList<>();
     private static List<String> ListofBoxNames = new LinkedList<>();
     private List<Object> content = new LinkedList<>();
     private List<String> duplicateAttr = new LinkedList<>();
@@ -55,12 +59,28 @@ public class ClassDiagramController{
     ClassComponent firstBox;
     Arrow arrow;
     public static final ClassDiagram d = new ClassDiagram("Class Diagram");
-    //public UMLClass cls;
 
+    /**
+     * Po zavolání této metody se okno nastaví na diagram tříd
+     * @param viewModel Okno, které se má zobrazit
+     */
+    public void setViewModel(ViewModel viewModel) {
+        this.viewModel = viewModel ;
+    }
+
+    /**
+     * Vytvoří se event handler, pokud kliknu na pracovní plochu
+     * @param event Stisknutí tlačítka InsertClass
+     */
+    @FXML
     public void InsertClass(ActionEvent event) {
         rootPane.setOnMousePressed(this::onGraphPressed);
     }
 
+    /**
+     * Na místo kliknutí se vytvoří tlačítko, které představuje třídu
+     * @param mouseEvent Kliknutí na pracovní ploše
+     */
     public void onGraphPressed(MouseEvent mouseEvent){
         if(mouseEvent.getButton().equals(MouseButton.PRIMARY)) {
             rootPane.getChildren().add(createClassBox(mouseEvent).getBox());
@@ -70,6 +90,11 @@ public class ClassDiagramController{
         }
     }
 
+    /**
+     * Vytvoření tlačítka na místo kliknutí, které představuje třídu a zajištění jeho editaci
+     * @param mouseEvent Místo kliknutí, slouží ke získání souřadnicí místa kliknutí
+     * @return Vrací objekt třídy Structure, ve které je uložena daná třída graficky a kódově
+     */
     private Structure createClassBox(MouseEvent mouseEvent){
         ClassComponent box = new ClassComponent(mouseEvent.getX(), mouseEvent.getY());
         ClassComponent.getListofBoxes().add(box);
@@ -85,6 +110,11 @@ public class ClassDiagramController{
         return structure;
     }
 
+    /**
+     * Jakmile se začne posouvat s tlačítkem, uloží se původní pozice pro operaci undo
+     * @param e Kliknutí a posunutí třídou
+     * @param box Třída, ktera je posouvána
+     */
     private void onBoxDragDetected(MouseEvent e, ClassComponent box) {
         if(e.getButton().equals(MouseButton.PRIMARY)) {
             box.toFront();
@@ -94,6 +124,12 @@ public class ClassDiagramController{
             operationStack.push(operation.DRAG);
         }
     }
+
+    /**
+     * Při posouvání třídou levým tlačítkem myši se ukládají její nové souřadnice
+     * @param e Pousouvání třídou levým tlačítkem myši
+     * @param box Třída, ktera je posouvána
+     */
     private void onBoxDragged(MouseEvent e, ClassComponent box) {
         if(e.getButton().equals(MouseButton.PRIMARY)) {
             box.setLayoutX(box.getLayoutX() + e.getX() + box.getTranslateX());
@@ -103,7 +139,15 @@ public class ClassDiagramController{
         }
     }
 
-    // Update content of class
+    /**
+     * Po double kliknutí levým tlačítkem myši se otevře okno, ve kterém se modifikuje obsah třídy (název, atributy, operace a typ třídy),
+     * po stisknutí tlačítka confirm se obsah uloží do labelů uvnitř tlačítka a obsah se parsuje a kontroluje zda je zapsaný
+     * správným formátem (syntaxí). Po zadání nepodporovaného textu, je třída červeně ohraničena a čeká na svou opravu.
+     * Po stisknutí pravého tlačítka na dvě různé třídy se mezi nimi vytvoří defaultní vztah a to je asociace
+     * @param evt Kliknutí na třídu
+     * @param box Modifikovatelná třída
+     * @param cls Třída uložená v diagramu
+     */
     public void handleMouse(MouseEvent evt, ClassComponent box, UMLClass cls){
         d.addName("Main");
         //System.out.println(evt.getX() + "\n" + evt.getY());
@@ -215,7 +259,6 @@ public class ClassDiagramController{
                             break;
                         }
                         // Jestli okno atributů je prázdné, je to v pořádku
-                        //content.get(1)
                     } else if (box.getAttributes().isEmpty()){
                         box.getStyleClass().remove("redBox");
                         break;
@@ -362,9 +405,7 @@ public class ClassDiagramController{
                                 if (d.findClassifier(beforeArg[1]) != null) {
                                     String storedClassifier = d.findClassifier(beforeArg[1]).getName();
                                     if ((beforeArg[1].matches("([void]|[i|I]nt|[s|S]tring|[B|b]oolean|[b|B]ool|[d|D]ouble|[f|F]loat|[L|l]ong|[s|S]hort|[b|B]yte|[c|C]har|" + storedClassifier + ")")) && !emptyTextBox) {
-                                        //if(){};
                                         box.getStyleClass().remove("redBox");
-                                        //UMLAttribute attr = new UMLAttribute(name[0], d.classifierForName(Strings[1]));
                                         UMLOperation op = UMLOperation.create(beforeArg[2], d.classifierForName(beforeArg[1]), listOfAttrForOper);
                                         if (!listOfDuplicateOper.contains(op)) {
                                             listOfDuplicateOper.add(op);
@@ -405,21 +446,20 @@ public class ClassDiagramController{
                     }
                     //listOfDuplicateOper.clear();
                 }
-                //System.out.println(cls.getOperations());
+
                 listOfAttrForOper.clear();
                 listOfDuplicateAttr.clear();
                 box.setOperationProperty(box.getOperations());
 
-                // Rename name in backend
+                // Přejmenování třídy v programové části
                 listOfNewClassName.add(cls.getName());
                 cls.rename(box.getName());
                 listOfNewClassName.add(cls.getName());
                 d.renameClass(oldName, cls.getName());
                 d.renameName(oldName, cls.getName());
-                // TODO nahradit klasifikator novym v seznamu klasifikatorů
             }
         }
-        // Create arrow between two classes
+        // Vytvoření vztahu mezi dvěmi třídami
         if(evt.getButton().equals(MouseButton.SECONDARY)){
             count++;
             if(count == 1){
@@ -435,6 +475,12 @@ public class ClassDiagramController{
         }
     }
 
+    /**
+     * Vytvoření šipky mezi dvěmi třídami a automatické nastavování souřadnic na hranu třídy při pohybu tříd
+     * @param b1 Třída od které šípka vychází
+     * @param b2 Třída do které šipka směruje
+     * @return Výsledná šipka
+     */
     public Arrow createArrow(ClassComponent b1, ClassComponent b2){
         Arrow arrow = new Arrow(b1, b2);
         arrow.x1Property().bind(b1.layoutXProperty());
@@ -451,6 +497,12 @@ public class ClassDiagramController{
         return arrow;
     }
 
+    /**
+     * Po kliknutí na šipku levým double klikem se objeví okno s nabídkou jiných typů vztahu (šipek).
+     * Po stisknutí daného typu se šipka vizuálně změní. Pokud klikneme pravým tlačítkem tak se šipka odstraní.
+     * @param e Kliknutí myší
+     * @param arrow Vybraná šipka
+     */
     private void handleMouseArrow(MouseEvent e, Arrow arrow) {
         if(e.getButton().equals(MouseButton.SECONDARY)) {
             Arrow.ListOfArrows.remove(arrow);
@@ -467,11 +519,15 @@ public class ClassDiagramController{
                 arrowType = EditArrowComponent.display(arrow);
                 arrow.setArrowType(arrowType);
                 Highlight(arrow);
-
                 arrow.update();
             }
         }
     }
+
+    /**
+     * TODO
+     * @param arrow
+     */
     public void Highlight(Arrow arrow){
         if(!Objects.equals(arrow.getArrowType(), "generalization")) {
             arrow.getFromBox().getOpLabel().setStyle("");
@@ -491,6 +547,9 @@ public class ClassDiagramController{
         else from.getOpLabel().setStyle("");
     }
 
+    /**
+     * Po stisknutí tlačítka Undo se ze zásobníku popne předchozí stav a aplikuje se
+     */
     public void Undo(){
         if(!rootPane.getChildren().isEmpty()){
             if(!objectStack.isEmpty() && !operationStack.isEmpty()) {
@@ -556,37 +615,30 @@ public class ClassDiagramController{
         }
     }
 
+    /**
+     * Po vybrání třídy a stisknutí tlačítka Delete se zavolá metoda delete()
+     * @param evt Stisknutá klávesa na klávesnici
+     * @param box Vybraná třída v grafické části
+     * @param cls Vybraná třída v programové části
+     */
     public void handleKeyboard(KeyEvent evt, ClassComponent box, UMLClass cls){
-        KeyCode k = evt.getCode();
-        switch (k) {
-            case DELETE:
-                delete(box, cls);
-                break;
-        }
+        if (evt.getCode() == KeyCode.DELETE) delete(box, cls);
     }
-    /*public void moveUp(ClassComponent box){
-        box.setLayoutY(box.getLayoutY()-10);
-    }
-    public void moveDown(ClassComponent box){
-        box.setLayoutY(box.getLayoutY()+10);
-    }
-    public void moveLeft(ClassComponent box){
-        box.setLayoutX(box.getLayoutX()-10);
-    }
-    public void moveRight(ClassComponent box){
-        box.setLayoutX(box.getLayoutX()+10);
-    }*/
+
+    /**
+     * Po zavolání této metody se předaná třída smaže
+     * @param box Mazaná třída v grafické části
+     * @param cls Mazaná třída v programové části
+     */
     public void delete(ClassComponent box, UMLClass cls){
         ClassComponent.getListofBoxes().remove(box);
         ListofBoxNames.remove(box.getName());
         d.deleteName(box.getName());
-        //System.out.println(cls.getAttributes());
-        //System.out.println("Klasifikator s nazvem " + cls.getName() + " je v diagramu " + d.findClassifier(cls.getName()));
         d.removeClass(box.getName(), cls);
-        //System.out.println("Klasifikator s nazvem " + box.getName() + " neni v diagramu " + d.findClassifier(box.getName()));
         objectStack.push(box);
         operationStack.push(operation.REMOVE);
         rootPane.getChildren().remove(box);
+        // Smažou se i čáry připojené na třídu
         for(Arrow arrow : box.edges) {
             Arrow.ListOfArrows.remove(arrow);
             objectStack.push(arrow);
@@ -595,11 +647,16 @@ public class ClassDiagramController{
         }
     }
 
+    /**
+     * Po stisknutí tlačítka Sequence diagram se změní okno na sekvenční diagram
+     * @param event Stisknutí tlačítka
+     * @throws IOException
+     */
     @FXML
     public void SwitchToSeqDiagram(ActionEvent event) throws IOException {
         viewModel.setCurrentView(ViewModel.View.B);
-        for (ClassWithLine tmp:
-                ClassWithLine.getListClassWithLine()) {
+        for (ObjectWithLine tmp:
+                ObjectWithLine.getListObjectWithLine()) {
             if(!d.getListOfClassNames().contains(tmp.getNameClass())){
                 tmp.getClassButton().setStyle("-fx-border-color: red;");
                 //System.out.println("Zacervenat");
@@ -614,16 +671,27 @@ public class ClassDiagramController{
         }
     }
 
-    public void setViewModel(ViewModel viewModel) {
-        this.viewModel = viewModel ;
-    }
+    /**
+     * Zobrazí nápovědu, jak ovládat daigram tříd
+     * @param event Stisknutí tlačítka Help
+     */
+    @FXML
+    public void showHelp(ActionEvent event){ShowHelp.display();}
 
-    public void showHelp(ActionEvent event){
-        ShowHelp.display();
-    }
+    /**
+     * Po stisknutí tlačítka se zavolá metoda, která bude načítat ze souboru
+      * @param event Stisknutí tlačítka Save
+     * @throws IOException
+     */
+    @FXML
     public void SaveJson(ActionEvent event) throws IOException {
         serializeObject();
     }
+
+    /**
+     * TODO
+     * @throws IOException
+     */
     public void serializeObject() throws IOException {
         JSONArray List = new JSONArray();
 
@@ -639,6 +707,12 @@ public class ClassDiagramController{
             writer.close();
         }else System.out.println("Nebyla vybrana cesta");
     }
+
+    /**
+     * TODO
+     * @param List
+     * @param box
+     */
     public void AddClassesToJson(JSONArray List, ClassComponent box){
         JSONObject obj = new JSONObject();
         obj.put("x", box.x);
@@ -651,6 +725,12 @@ public class ClassDiagramController{
         packaging.put("class", obj);
         List.add(0, packaging);
     }
+
+    /**
+     * TODO
+     * @param List
+     * @param arrow
+     */
     public void AddArrowsToJson(JSONArray List, Arrow arrow){
         JSONObject obj = new JSONObject();
         obj.put("from", arrow.getFrom());
@@ -660,10 +740,20 @@ public class ClassDiagramController{
         packaging.put("messageArrow", obj);
         List.add(0, packaging);
     }
+
+    /**
+     * Po stisknutí tlačítka se zavolá metoda, která bude ukládat do souboru
+     * @param event Stisknutí tlačítka Load
+     * @throws InterruptedException
+     */
+    @FXML
     public void LoadJson(ActionEvent event) throws InterruptedException {
         deserializeObject();
     }
 
+    /**
+     * TODO
+     */
     public void deserializeObject(){
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
@@ -688,6 +778,11 @@ public class ClassDiagramController{
         }else System.out.println("Nebyla vybrana cesta");
 
     }
+
+    /**
+     * TODO
+     * @param emp
+     */
     private void parseEmpObj(JSONObject emp) {
         if(emp.get("class") != null){
             JSONObject empObj = (JSONObject) emp.get("class");
@@ -707,17 +802,23 @@ public class ClassDiagramController{
         }
     }
 
+    /**
+     * Tlačítko refresh slouží k aktualizaci šipek po načtení diagramu tříd ze souboru
+     * @param e Stisknutí tlačítka Refresh
+     */
     @FXML
     public void refresh(ActionEvent e) {
         for (ClassComponent box : ClassComponent.getListofBoxes()) {
             box.setLayoutY(box.getLayoutY() + 10);
             box.setLayoutY(box.getLayoutY() - 10);
-
         }
         Arrow.getListOfArrows().forEach(arrow1 -> Highlight((Arrow) arrow1));
-
     }
 
+    /**
+     * Slouží ke správnému načtení šipek z JSON souboru, metoda převzatá a upravená z createArrow
+     * @param arrow Šipka typu speciální třídy vytvořené kvůli správnému načítání šipek
+     */
     public void loadArrow(HelpLoadArrow arrow){
         if(ListofBoxNames.contains(arrow.getFrom()) && ListofBoxNames.contains(arrow.getTo())) {
             int index = ListofBoxNames.indexOf(arrow.getFrom());
@@ -739,6 +840,11 @@ public class ClassDiagramController{
         }
     }
 
+    /**
+     * Slouží ke správnému načtení tříd z JSON souboru, metoda převzatá a upravená z createClassBox
+     * @param loadedBox Načítaná třída
+     * @return Struktura s grafickou a programovou třídou
+     */
     private Structure loadClassBox(ClassComponent loadedBox){
         ClassComponent box = new ClassComponent(loadedBox.getX(), loadedBox.getY(), loadedBox.getName(), loadedBox.getAttributes(), loadedBox.getOperations(), loadedBox.getClassType());
         ClassComponent.getListofBoxes().add(box);
@@ -761,7 +867,24 @@ public class ClassDiagramController{
      */
     @FXML
     public void Clear(ActionEvent e){
-
+        rootPane.getChildren().clear();
+        listOfNewClassName.clear();
+        listOfOldClassName.clear();
+        listOfDuplicateOper.clear();
+        listOfAttrForOper.clear();
+        listOfDuplicateAttr.clear();
+        ListofBoxes.clear();
+        ListofBoxNames.clear();
+        objectStack.clear();
+        operationStack.clear();
+        nameStack.clear();
+        coorX.clear();
+        coorY.clear();
+        content.clear();
+        d.getListOfClassNames().clear();
+        d.getListOfClassif().clear();
+        d.getListOfNames().clear();
+        // Třídy budou pojmenovány opět od 1
+        ClassComponent.setCount(1);
     }
-
 }

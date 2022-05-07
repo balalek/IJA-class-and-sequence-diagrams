@@ -1,6 +1,7 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
-
-import java.util.List;
 
 /**
  * Třída reprezentuje diagram tříd. Je odvozen od třídy Element (má název). Obsahuje seznam tříd (instance třídy UMLClass) 
@@ -50,7 +51,6 @@ public class ClassDiagram extends Diagram{
      */
     public UMLClass removeClass(String name, UMLClass object){
         if(listOfNames.contains(name) && listOfClassif.contains(object)) {
-            // Opravdu to chceš udělat? TODO
             listOfNames.remove(name);
             listOfClassif.remove(object);
             return null;

@@ -1,3 +1,6 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
 
 /**
@@ -6,6 +9,7 @@ package com.uml;
  */
 public class UMLAttribute extends Element{
 
+    // Atribut
     private UMLClassifier type;
 
     /**

@@ -1,10 +1,14 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
 
 /**
  * Třída reprezentuje pojmenovaný element (thing), který může být součástí jakékoliv části v diagramu.
  */
 public class Element {
-    
+
+    // Atribut
     private String name;
 
     /**

@@ -1,3 +1,6 @@
+/**
+ * @author Josef Kuba
+ */
 package com.seqComponent;
 
 import javafx.geometry.HPos;
@@ -12,7 +15,17 @@ import javafx.scene.layout.RowConstraints;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
+/**
+ * Třída pro zobrazení a editaci obsahu zpráv.
+ */
 public class EditMessages {
+
+    /**
+     * Tato metoda zobrazí okno pro editaci obsahu vytvářecí zprávy (zobrazí editovatelný aktuální stav)
+     * a po stisknutí tlačítka vrátí obsah.
+     * @param createMessage Odkaz na zprávu kterou editujeme
+     * @return Vrací zprávu
+     */
     public static String displayCreate(Messages createMessage){
         String returnCreate;
         Stage classWindow = new Stage();
@@ -78,6 +91,12 @@ public class EditMessages {
         return returnCreate;
     }
 
+    /**
+     * Tato metoda zobrazí okno pro editaci obsahu asynchronní a synchronní zprávy (zobrazí editovatelný aktuální stav)
+     * a po stisknutí tlačítka vrátí obsah.
+     * @param asOrSynMessage Odkaz na zprávu kterou editujeme
+     * @return Vrací zprávu
+     */
     public static String displayAsynchOrSynch(Messages asOrSynMessage){
         String returnAsynchOrSynch;
         Stage classWindow = new Stage();
@@ -143,7 +162,12 @@ public class EditMessages {
         return returnAsynchOrSynch;
     }
 
-
+    /**
+     * Tato metoda zobrazí okno pro editaci obsahu vracející zprávy (zobrazí editovatelný aktuální stav)
+     * a po stisknutí tlačítka vrátí obsah.
+     * @param returnMessage Odkaz na zprávu kterou editujeme
+     * @return Vrací zprávu
+     */
     public static String displayReturn(Messages returnMessage){
         String returnReturn;
         Stage classWindow = new Stage();

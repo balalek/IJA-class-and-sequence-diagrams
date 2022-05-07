@@ -1,3 +1,6 @@
+/**
+ * @author Martin Baláž
+ */
 package com.component;
 
 import javafx.geometry.HPos;

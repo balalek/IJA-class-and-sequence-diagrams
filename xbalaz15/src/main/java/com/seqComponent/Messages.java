@@ -1,3 +1,6 @@
+/**
+ * @author Josef Kuba
+ */
 package com.seqComponent;
 
 import com.component.Arrow;
@@ -13,10 +16,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Třída reprezentuje zprávy (šipky) mezi call-boxy, časovými osami a objekty. Třída rozšiřuje třídu Group.
+ * Má id počátečního a cílového objektu, typ zprávy (asynchronní, synchronní, vytvářecí, vracející), souřadnice počátku a konce.
+ * Lze využít na vyznačení průběhu zpráv v sekvenčním diagramu.
+ */
 public class Messages extends Group {
+
+    // Atributy
     private final double ARROWHEAD_ANGLE = Math.toRadians(20);
     private final double ARROWHEAD_LENGTH = 25;
-    // Attributes
     private Polyline mainLine = new Polyline();
     private Polyline headSynch = new Polyline();
     private Polyline headSynch2 = new Polyline();
@@ -42,8 +51,7 @@ public class Messages extends Group {
     private String to;
     public static List<Messages> ListOfArrows = new LinkedList<>();
 
-
-    // Getters and setters
+    // GETry a SETry
     public double getX1() {
         return x1.get();
     }
@@ -187,7 +195,12 @@ public class Messages extends Group {
         return ListOfArrows;
     }
 
-    // Konstruktor
+    /**
+     * Kontruktor pro vytvoření zprávy (šipky) a napozicování obsahu zprávy
+     * @param x1 X souřadnice začátku čáry
+     * @param y1 Y souřadnice začátku i konce čáry
+     * @param x2 X souřadnice konce čáry
+     */
     public Messages(double x1, double y1, double x2) {
         ListOfArrows.add(this);
         setX1(x1);
@@ -200,7 +213,7 @@ public class Messages extends Group {
         AsynAndSynClassButton.setLayoutX(((x2 + x1) / 2));
         // Trochu nad čáru
         AsynAndSynClassButton.setLayoutY(y1 - 15);
-        // Appear in the cursor spike
+        // Vykreslí se tak aby získané souřadnice byly ve středu
         AsynAndSynClassButton.translateXProperty().bind(AsynAndSynClassButton.widthProperty().divide(-2));
         AsynAndSynClassButton.translateYProperty().bind(AsynAndSynClassButton.heightProperty().divide(-2));
 
@@ -219,6 +232,9 @@ public class Messages extends Group {
         update();
     }
 
+    /**
+     * Nastavení css stylů
+     */
     public void arrowHeadAndBoxStyles() {
         mainLine.getStyleClass().setAll("mainLine");
         AsynAndSynClassButton.getStyleClass().setAll("comboBox");
@@ -229,6 +245,9 @@ public class Messages extends Group {
         headReturn.getStyleClass().setAll("dashedLineArrow");
     }
 
+    /**
+     * Vykreslí danou šipku a obsah zprávy uprostřed šipky při vytvoření na místa, na které se kliklo
+     */
     public void update() {
         mainLine.getPoints().setAll(getX1(), getY1(), getX2(), getY2());
         double[] start = scale(getX1(), getY1(), getX2(), getY2());
@@ -240,14 +259,14 @@ public class Messages extends Group {
         double theta = Math.atan2(y2 - y1, x2 - x1);
         toBack();
 
-        // Draw line with arrowhead by arrow type
+        // Kreslení čáry s hlavičkou podle typu šipky
         switch (getArrowType()) {
             // Asynchronní zpráva
             case "Asynchronous": {
                 getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
                 mainLine.getStyleClass().setAll("mainLine");
                 mainLine.getStyleClass().remove("dashedMainLine");
-                // Drawing arrowhead
+                // Kreslení hlavičky
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headAsynch.getPoints().setAll(x, y, x2, y2);
@@ -269,8 +288,7 @@ public class Messages extends Group {
                 getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
                 mainLine.getStyleClass().setAll("mainLine");
                 mainLine.getStyleClass().remove("dashedMainLine");
-                // Drawing arrowhead
-                //mainLine.getPoints().setAll(x1, y1, x2, y2);
+                // Kreslení hlavičky
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headSynch.getPoints().setAll(x, y, x2, y2);
@@ -291,8 +309,7 @@ public class Messages extends Group {
                 getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
                 mainLine.getStyleClass().setAll("dashedMainLine");
                 mainLine.getStyleClass().remove("mainLine");
-                // Drawing arrowhead
-                //mainLine.getPoints().setAll(x1, y1, x2, y2);
+                // Kreslení hlavičky
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headReturn.getPoints().setAll(x, y, x2, y2);
@@ -313,8 +330,7 @@ public class Messages extends Group {
                 getChildren().removeAll(headAsynch, headReturn, headSynch, AsynAndSynClassButton, CreateObjectButton, ReturnButton);
                 mainLine.getStyleClass().setAll("mainLine");
                 mainLine.getStyleClass().remove("dashedMainLine");
-                // Drawing arrowhead
-                //mainLine.getPoints().setAll(x1, y1, x2, y2);
+                // Kreslení hlavičky
                 double x = x2 - Math.cos(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 double y = y2 - Math.sin(theta + ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
                 headReturn.getPoints().setAll(x, y, x2, y2);
@@ -333,7 +349,14 @@ public class Messages extends Group {
         }
     }
 
-
+    /**
+     * Metoda scale se používá k získání souřadnic (x,y) kde šipka začíná a končí
+     * @param x1 X souřadnice začátku
+     * @param y1 Y souřadnice začátku
+     * @param x2 X souřadnice konce
+     * @param y2 Y souřadnice konce
+     * @return Vrací souřadnice kde šipka začíná a končí
+     */
     private double[] scale ( double x1, double y1, double x2, double y2){
         double theta = Math.atan2(y2 - y1, x2 - x1);
         return new double[]{

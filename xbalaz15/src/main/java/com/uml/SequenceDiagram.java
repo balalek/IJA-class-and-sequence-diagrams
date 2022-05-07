@@ -1,6 +1,7 @@
+/**
+ * @author Josef Kuba
+ */
 package com.uml;
-
-import java.util.List;
 
 public class SequenceDiagram extends Diagram{
     

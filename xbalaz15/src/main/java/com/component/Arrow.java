@@ -1,3 +1,6 @@
+/**
+ * @author Martin Baláž
+ */
 package com.component;
 
 import javafx.beans.property.SimpleDoubleProperty;
@@ -12,8 +15,9 @@ import java.util.List;
  * a cílové třídy, typ vstahu (asociace, agregace, kompozice a generalizace), souřadnice počátku a konce.
  * Lze využít na vyznačení vztahů v diagramu tříd.
  */
-
 public class Arrow extends Group {
+
+    // Atributy
     private Polyline mainLine = new Polyline();
     private Polyline headInher = new Polyline();
     private Polyline headInher2 = new Polyline();
@@ -43,28 +47,24 @@ public class Arrow extends Group {
     public void setArrowType(String arrowType) {
         this.arrowType = arrowType;
     }
-
     public SimpleDoubleProperty x1Property() {
         return x1;
     }
     public void setX1(double x1) {
         this.x1.set(x1);
     }
-
     public SimpleDoubleProperty y1Property() {
         return y1;
     }
     public void setY1(double y1) {
         this.y1.set(y1);
     }
-
     public SimpleDoubleProperty x2Property() {
         return x2;
     }
     public void setX2(double x2) {
         this.x2.set(x2);
     }
-
     public SimpleDoubleProperty y2Property() {
         return y2;
     }
@@ -86,11 +86,9 @@ public class Arrow extends Group {
     public String getTo() {
         return to;
     }
-
     public ClassComponent getFromBox() {
         return FromBox;
     }
-
     public ClassComponent getToBox() {
         return ToBox;
     }

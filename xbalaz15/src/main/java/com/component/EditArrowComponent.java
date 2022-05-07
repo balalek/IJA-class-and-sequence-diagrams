@@ -1,3 +1,6 @@
+/**
+ * @author Martin Baláž
+ */
 package com.component;
 
 import javafx.geometry.HPos;
@@ -12,7 +15,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 /**
- * Třída pro změnu typu šipky.
+ * Třída pro změnu vztahu (typu šipky).
  */
 public class EditArrowComponent {
 

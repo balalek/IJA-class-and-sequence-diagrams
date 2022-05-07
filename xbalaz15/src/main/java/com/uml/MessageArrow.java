@@ -1,3 +1,6 @@
+/**
+ * @author Josef Kuba
+ */
 package com.uml;
 
 /**
@@ -9,6 +12,7 @@ package com.uml;
 
 public class MessageArrow extends Element{
 
+    // Atributy
     private arrType arrowType;
     private String message;
     private UMLClass from;
@@ -22,7 +26,6 @@ public class MessageArrow extends Element{
      * @param from Kdo zprávu poslal
      * @param to Komu zprávu poslal
      */
-
     public MessageArrow(String name, arrType arrowType, UMLClass from, UMLClass to, String message)
     {
         super(name);
@@ -31,7 +34,5 @@ public class MessageArrow extends Element{
         this.message = message;
         this.arrowType = arrowType;
     }
-
-
 
 }

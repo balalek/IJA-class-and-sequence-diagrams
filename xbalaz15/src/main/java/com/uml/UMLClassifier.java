@@ -1,9 +1,14 @@
+/**
+ * @author Martin Baláž
+ */
 package com.uml;
 
 /**
  * Třída reprezentuje klasifikátor v diagramu. Odvozené třídy reprezentují konkrétní podoby klasifikátoru (třída, rozhraní, atribut, apod.)
  */
 public class UMLClassifier extends Element{
+
+    // Atribut
     private boolean isUserDefined = true;
 
     /**
