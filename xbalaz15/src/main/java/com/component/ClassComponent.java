@@ -131,7 +131,9 @@ public class ClassComponent extends Button {
     public void setOpLabel(Label opLabel) {
         this.opLabel = opLabel;
     }
-
+    public ObservableList<Arrow> getEdges() {
+        return edges;
+    }
     public static List<ClassComponent> getListofBoxes() {
         return ListofBoxes;
     }

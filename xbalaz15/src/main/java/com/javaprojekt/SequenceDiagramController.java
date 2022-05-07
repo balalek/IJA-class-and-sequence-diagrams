@@ -96,6 +96,7 @@ public class SequenceDiagramController{
         //ListofBoxes.add(box);
         //ListofBoxNames.add(box.getName());
         box.getClassButton().setOnMouseDragged(e -> onBoxDragged(e, box));
+        box.setOnKeyPressed(e -> handleKeyboard(e, box));
         box.getTimeLineButton().setOnMouseDragged(e -> onCallBoxDragged(e, box));
         box.getTimeLineButton().setOnKeyPressed(e -> handleKeyboardTimeLine(e, box.getTimeLineButton()));
         box.setOnMouseEntered(e -> onObjectWithLineHover(e, box));
@@ -441,6 +442,23 @@ public class SequenceDiagramController{
                 arrow.CheckArrowMessage();
             }
         }
+    }
+
+    /**
+     * Po vybrání objektu a stisknutí tlačítka Delete se zavolá metoda delete()
+     * @param e Stisknutá klávesa na klávesnici
+     * @param box Vybraný objekt v grafické části
+     */
+    public void handleKeyboard(KeyEvent e, ObjectWithLine box){
+        if (e.getCode() == KeyCode.DELETE) delete(box);
+    }
+
+    /**
+     * Po zavolání této metody se předaný objekt smaže
+     * @param box Mazaná třída v grafické části
+     */
+    public void delete(ObjectWithLine box){
+        ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().remove(box);
     }
 
     /**

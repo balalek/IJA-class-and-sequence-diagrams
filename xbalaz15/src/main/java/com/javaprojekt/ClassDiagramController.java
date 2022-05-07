@@ -868,12 +868,15 @@ public class ClassDiagramController{
      */
     @FXML
     public void Clear(ActionEvent e){
-        rootPane.getChildren().clear();
         listOfNewClassName.clear();
         listOfOldClassName.clear();
         listOfDuplicateOper.clear();
         listOfAttrForOper.clear();
         listOfDuplicateAttr.clear();
+        // Smažou se i čáry připojené na třídu
+        for(ClassComponent box : ListofBoxes) {
+            box.edges.clear();
+        }
         ListofBoxes.clear();
         ListofBoxNames.clear();
         objectStack.clear();
@@ -887,5 +890,6 @@ public class ClassDiagramController{
         d.getListOfNames().clear();
         // Třídy budou pojmenovány opět od 1
         ClassComponent.setCount(1);
+        rootPane.getChildren().clear();
     }
 }
