@@ -6,7 +6,8 @@ Cílem projektu je načítat, modifikovat a ukládat 1 diagram tříd a k němu 
 
 Aplikace se momentálně překládá a spouští v prostředí IntelliJ IDEA pomocí maven makra "javafx:run".
 Pro vyčistění adresářové struktury slouží příkaz clean z maven Lifecyclu.
-Vytvoření a spouštění výsledného jar souboru momentálně není možné.
+Vytvořený výsledný jar soubor není spustitelný.
+Javadoc a výsledný jar je vygenerován příkazem mvn clean install.
 
-Verze:	Java SDK 17
+Verze:	Java SDK 11
 	JavaFX 17
