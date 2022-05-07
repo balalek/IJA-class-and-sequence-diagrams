@@ -690,7 +690,7 @@ public class ClassDiagramController{
 
     /**
      * Pokud byl vybrán cílový soubor uloží Třídy a šipky do zvoleného json souboru
-     * (Volá funkce AddArrowsToJson a AddClassesToJson)
+     * (Volá metody AddArrowsToJson a AddClassesToJson)
      * @throws IOException
      */
     public void serializeObject() throws IOException {
@@ -710,7 +710,7 @@ public class ClassDiagramController{
     }
 
     /**
-     * Tato funkce uloží data třídy do json struktury, zabalí je a přidá do listu
+     * Tato Metoda uloží data třídy do json struktury, zabalí je a přidá do listu
      * @param List List do kterého se třídy přidávají
      * @param box Třída kterou budeme ukládat
      */
@@ -728,7 +728,7 @@ public class ClassDiagramController{
     }
 
     /**
-     * Tato funkce uloží data šipky do json struktury, zabalí je a přidá do listu
+     * Tato Metoda uloží data šipky do json struktury, zabalí je a přidá do listu
      * @param List List do kterého se třídy přidávají
      * @param arrow Šipka kterou budeme ukládat
      */
@@ -753,7 +753,7 @@ public class ClassDiagramController{
     }
 
     /**
-     * Funkce načte z vybraného souboru třídy a šipky
+     * Metoda načte z vybraného souboru třídy a šipky
      */
     public void deserializeObject(){
         FileChooser fileChooser = new FileChooser();
