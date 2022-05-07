@@ -195,6 +195,11 @@ public class SequenceDiagramController{
                 count = 0;
             }
         }
+        // Zruší se objekt (objeví se na konci časové osy křížek)
+        if(evt.getButton().equals(MouseButton.MIDDLE)){
+            if(evt.getClickCount() == 1) box.setDestroyObject();
+            else if(evt.getClickCount() == 2) box.deleteDestroyObject();
+        }
     }
 
     /**
@@ -211,7 +216,6 @@ public class SequenceDiagramController{
             case S:
                 reduce(callBox);
                 break;
-                //case DELETE -> delete(box, cls);
         }
     }
 

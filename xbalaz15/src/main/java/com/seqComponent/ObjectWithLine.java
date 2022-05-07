@@ -12,6 +12,7 @@ import javafx.scene.Group;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Polyline;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -33,6 +34,8 @@ public class ObjectWithLine extends Group {
     @Expose
     public String nameClass = "";
     private SimpleStringProperty nameAndObjectProperty = new SimpleStringProperty();
+    private Polyline destroyLine1 = new Polyline();
+    private Polyline destroyLine2 = new Polyline();
     private Button classButton = new Button();
     private Button timeLineButton = new Button();
     private Line line = new Line();
@@ -158,5 +161,38 @@ public class ObjectWithLine extends Group {
         classButton.setGraphic(myLabel);
 
         getChildren().setAll(line, classButton, timeLineButton);
+    }
+
+    /**
+     * Objeví se křížek na konci časové osy, což signalizuje zánik objektu
+     */
+    public void setDestroyObject(){
+        Double X1 = getLine().getEndX();
+        Double Y1 = getLine().getEndY();
+        Double ARROWHEAD_ANGLE = Math.toRadians(45);
+        Double ARROWHEAD_LENGTH = 25.0;
+        getChildren().removeAll(destroyLine1, destroyLine2);
+        // Drawing arrowhead
+        double x = X1 - Math.cos(ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        double y = Y1 - Math.sin(ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        destroyLine1.getPoints().setAll(x, y, X1, Y1);
+        x = X1 - Math.cos(- ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        y = Y1 - Math.sin(- ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        destroyLine1.getPoints().addAll(x, y);
+
+        double x1 = X1 + Math.cos(ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        double y1 = Y1 + Math.sin(ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        destroyLine2.getPoints().setAll(x1, y1, X1, Y1);
+        x1 = X1 + Math.cos(- ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        y1 = Y1 + Math.sin(- ARROWHEAD_ANGLE) * ARROWHEAD_LENGTH;
+        destroyLine2.getPoints().addAll(x1, y1);
+        getChildren().addAll(destroyLine1, destroyLine2);
+    }
+
+    /**
+     * Odstraní se křížek, který signalizuje zánik objektu
+     */
+    public void deleteDestroyObject(){
+        getChildren().removeAll(destroyLine1, destroyLine2);
     }
 }
