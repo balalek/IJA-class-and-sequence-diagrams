@@ -108,8 +108,6 @@ public class SequenceDiagramController{
      */
     public ObjectWithLine createObjectWithLine(MouseEvent mouseEvent){
         ObjectWithLine box = new ObjectWithLine(mouseEvent.getX(), mouseEvent.getY());
-        //ListofBoxes.add(box);
-        //ListofBoxNames.add(box.getName());
         box.getClassButton().setOnMouseDragged(e -> onBoxDragged(e, box));
         box.setOnKeyPressed(e -> handleKeyboard(e, box));
         box.getTimeLineButton().setOnMouseDragged(e -> onCallBoxDragged(e, box));
@@ -241,7 +239,6 @@ public class SequenceDiagramController{
     private void expand(ObjectWithLine callBox){
         callBox.getTimeLineButton().setText(callBox.getTimeLineButton().getText() + "\n");
         callBox.setHeight(callBox.getTimeLineButton().getText().length());
-        //System.out.println(callBox.getText().length());
     }
 
     /**
@@ -284,9 +281,8 @@ public class SequenceDiagramController{
         if(e.getButton().equals(MouseButton.PRIMARY)) {
             box.setLayoutX(box.getLayoutX() + e.getX() + box.getClassButton().getTranslateX());
             box.setLayoutY(box.getLayoutY() + e.getY() + box.getClassButton().getTranslateY());
-            box.setX(box.getLayoutX() + e.getX() + box.getTranslateX());
-            box.setY(box.getLayoutY() + e.getY() + box.getTranslateY());
-            System.out.println(box.getLayoutX() + "y: " + box.getLayoutY());
+            box.setX(e.getSceneX()-159);
+            box.setY(e.getSceneY()-30);
         }
     }
 
@@ -513,7 +509,6 @@ public class SequenceDiagramController{
                 }catch (IndexOutOfBoundsException exception)
                 {
                     System.out.println("Index chyba");
-                    //ListofBoxNames.clear();
                 }
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -540,11 +535,7 @@ public class SequenceDiagramController{
             Gson gson = new GsonBuilder()
                     .excludeFieldsWithoutExposeAnnotation()
                     .create();
-            System.out.println("hoveen");
-            System.out.println(empObj.toString());
             Messages arrow = gson.fromJson(empObj.toString(), Messages.class);
-
-
             loadMessage(arrow);
         }
     }
@@ -556,8 +547,6 @@ public class SequenceDiagramController{
      */
     public ObjectWithLine loadObjectWithLine(ObjectWithLine object){
         ObjectWithLine box = new ObjectWithLine(object.getX(), object.getY(), object.getDestroyed(), object.getNameObject(), object.getNameClass(), object.getyOfCallBox(), object.getHeight());
-        //ListofBoxes.add(box);
-        //ListofBoxNames.add(box.getName());
         box.getClassButton().setOnMouseDragged(e -> onBoxDragged(e, box));
         box.setOnKeyPressed(e -> handleKeyboard(e, box));
         box.getTimeLineButton().setOnMouseDragged(e -> onCallBoxDragged(e, box));
@@ -573,7 +562,6 @@ public class SequenceDiagramController{
      */
     public void loadMessage(Messages message){
         if(message.getArrowType().equals("Create")) {
-            System.out.println("cuss");
             Messages messages = new Messages(message.getX1(), message.getY1(), message.getX2(),message.getArrowType(), message.getMsg());
 
             messages.setOnMousePressed(e -> handleMouseMessageDeleteOnly(e, messages));
@@ -583,7 +571,6 @@ public class SequenceDiagramController{
             ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(messages);
         } else {
             Messages messages = new Messages(message.getX1(), message.getY1(), message.getX2(),message.getArrowType(), message.getMsg());
-
             messages.setOnMousePressed(e -> handleMouseMessage(e, messages));
             messages.getReturnButton().setOnMouseDragged((e -> onMessageDragged(e, messages.getReturnButton())));
             messages.getAsynAndSynClassButton().setOnMouseDragged((e -> onMessageDragged(e, messages.getAsynAndSynClassButton())));
@@ -614,7 +601,6 @@ public class SequenceDiagramController{
         Messages.getListOfArrows().forEach(arrow -> AddMessagesToJson(List, (Messages) arrow));
         ObjectWithLine.getListObjectWithLine().forEach(ClassBox -> AddObjectsToJson(List, (ObjectWithLine) ClassBox));
 
-        System.out.println(List);
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
         if(selectedFile != null){

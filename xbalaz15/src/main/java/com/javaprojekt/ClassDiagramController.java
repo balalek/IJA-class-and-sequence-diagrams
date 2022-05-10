@@ -150,7 +150,6 @@ public class ClassDiagramController{
      */
     public void handleMouse(MouseEvent evt, ClassComponent box, UMLClass cls){
         d.addName("Main");
-        //System.out.println(evt.getX() + "\n" + evt.getY());
         if(evt.getButton().equals(MouseButton.PRIMARY)){
             if(evt.getClickCount() == 2){
                 String oldName = box.getName();
@@ -300,7 +299,6 @@ public class ClassDiagramController{
                     if(bracket) break;
                     // Jestli okno metod je prázdné, je to v pořádku
                     else if (box.getOperations().isEmpty() && !emptyTextBox) {
-                        System.out.println("jsi tu?");
                         box.getStyleClass().remove("redBox");
                         break;
                     }
@@ -409,7 +407,6 @@ public class ClassDiagramController{
                                         UMLOperation op = UMLOperation.create(beforeArg[2], d.classifierForName(beforeArg[1]), listOfAttrForOper);
                                         if (!listOfDuplicateOper.contains(op)) {
                                             listOfDuplicateOper.add(op);
-                                            System.out.println(listOfDuplicateOper.toString());
                                         } else System.out.println("broken");
                                         cls.addOperation(op);
                                     } else {
@@ -423,7 +420,6 @@ public class ClassDiagramController{
                                         UMLOperation op = UMLOperation.create(beforeArg[2], d.classifierForName(beforeArg[1]), listOfAttrForOper);
                                         if (!listOfDuplicateOper.contains(op)) {
                                             listOfDuplicateOper.add(op);
-                                            System.out.println(listOfDuplicateOper.toString());
                                         } else System.out.println("broken");
                                         cls.addOperation(op);
                                     } else {
@@ -444,7 +440,6 @@ public class ClassDiagramController{
                             break;
                         }
                     }
-                    //listOfDuplicateOper.clear();
                 }
 
                 listOfAttrForOper.clear();
@@ -570,16 +565,6 @@ public class ClassDiagramController{
                     rootPane.getChildren().add((Node) objectStack.pop());
                     operationStack.pop();
                 }else if(operationStack.peekFirst() == operation.RENAME){
-                    //System.out.println("cuss");
-                    //stackOfOldClassName.push(box.getName());
-                    //ClassComponent tmp = (ClassComponent) objectStack.peekFirst();
-                    /*System.out.println(listOfOldClassName);
-                    System.out.println(tmp.getName());
-                    if(listOfNewClassName.contains(tmp.getName())) {
-                        int index = listOfNewClassName.indexOf(tmp.getName());
-                        d.renameName(listOfOldClassName.get(index), tmp.getName());
-                        System.out.println("cuss");
-                    }*/
                     ClassComponent box = (ClassComponent) objectStack.pop();
                     box.setName(nameStack.pop());
                     box.setNameProperty(box.getName());
@@ -659,10 +644,8 @@ public class ClassDiagramController{
                 ObjectWithLine.getListObjectWithLine()) {
             if(!d.getListOfClassNames().contains(tmp.getNameClass())){
                 tmp.getClassButton().setStyle("-fx-border-color: red;");
-                //System.out.println("Zacervenat");
             }else{
                 tmp.getClassButton().setStyle("");
-                //System.out.println("Zcervenani odstranit");
             }
         }
         for (Messages arrow:
@@ -699,7 +682,6 @@ public class ClassDiagramController{
         Arrow.getListOfArrows().forEach(arrow -> AddArrowsToJson(List, (Arrow) arrow));
         ClassComponent.getListofBoxes().forEach(ClassBox -> AddClassesToJson(List, (ClassComponent) ClassBox));
 
-        System.out.println(List);
         FileChooser fileChooser = new FileChooser();
         File selectedFile = fileChooser.showOpenDialog(stage);
         if(selectedFile != null){
