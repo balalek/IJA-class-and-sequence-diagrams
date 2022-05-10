@@ -13,7 +13,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polyline;
-
 import java.util.LinkedList;
 import java.util.List;
 
@@ -30,9 +29,15 @@ public class ObjectWithLine extends Group {
     @Expose
     public Double y;
     @Expose
+    public Boolean isDestroyed = false;
+    @Expose
     public String nameObject = "";
     @Expose
     public String nameClass = "";
+    @Expose
+    public Double yOfCallBox;
+    @Expose
+    public Integer height;
     private SimpleStringProperty nameAndObjectProperty = new SimpleStringProperty();
     private Polyline destroyLine1 = new Polyline();
     private Polyline destroyLine2 = new Polyline();
@@ -57,6 +62,24 @@ public class ObjectWithLine extends Group {
     }
     public void setY(Double y) {
         this.y = y;
+    }
+    public Integer getHeight() {
+        return height;
+    }
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+    public Double getyOfCallBox() {
+        return yOfCallBox;
+    }
+    public void setyOfCallBox(Double yOfCallBox) {
+        this.yOfCallBox = yOfCallBox;
+    }
+    public Boolean getDestroyed() {
+        return isDestroyed;
+    }
+    public void setDestroyed(Boolean destroyed) {
+        isDestroyed = destroyed;
     }
     public Button getClassButton() {
         return classButton;
@@ -97,7 +120,6 @@ public class ObjectWithLine extends Group {
     public void setNameAndObjectProperty(String nameAndObjectProperty) {
         this.nameAndObjectProperty.set(nameAndObjectProperty);
     }
-
     public static List<ObjectWithLine> getListObjectWithLine() {
         return ListObjectWithLine;
     }
@@ -111,6 +133,7 @@ public class ObjectWithLine extends Group {
         ID = count++;
         this.x = x;
         this.y = y;
+        this.height = 0;
         //classButton.setText(className);
         ListObjectWithLine.add(this);
         classButton.setLayoutX(x);
@@ -127,6 +150,49 @@ public class ObjectWithLine extends Group {
         timeLineButton.translateXProperty().bind(timeLineButton.widthProperty().divide(-2));
         timeLineButton.translateYProperty().bind(timeLineButton.heightProperty().divide(-2));
 
+        Double x1 = classButton.getLayoutX();
+        Double y1 = classButton.getLayoutY();
+        line.setStartX(x1);
+        line.setStartY(y1);
+        line.setEndX(x1);
+        line.setEndY(y1 + 600);
+
+        Styling();
+        Update();
+    }
+
+    /**
+     * Konstruktor pro načítání grafického objektu se časovou osou a call-boxu
+     * @param x X souřadnice objektu
+     * @param y Y souřadnice objektu
+     */
+    public ObjectWithLine(Double x, Double y, Boolean isDestroyed, String nameObject, String nameClass, Double yOfCallBox, Integer height) {
+        ID = count++;
+        this.x = x;
+        this.y = y;
+        this.isDestroyed = isDestroyed;
+        this.nameObject = nameObject;
+        this.nameClass = nameClass;
+        this.yOfCallBox = yOfCallBox;
+        this.height = height;
+        //classButton.setText(className);
+        ListObjectWithLine.add(this);
+        classButton.setLayoutX(x);
+        classButton.setLayoutY(y);
+
+        // Při posunu, je kurzor vždy umístěn uprostřed
+        classButton.translateXProperty().bind(classButton.widthProperty().divide(-2));
+        classButton.translateYProperty().bind(classButton.heightProperty().divide(-2));
+
+        timeLineButton.setLayoutX(classButton.getLayoutX());
+        timeLineButton.setLayoutY(classButton.getLayoutY() + yOfCallBox);
+
+        // Při posunu, je kurzor vždy umístěn uprostřed
+        timeLineButton.translateXProperty().bind(timeLineButton.widthProperty().divide(-2));
+        timeLineButton.translateYProperty().bind(timeLineButton.heightProperty().divide(-2));
+        timeLineButton.setText("\n");
+        for(int i = 0; i < height; i++) timeLineButton.setText(timeLineButton.getText() + "\n");
+
 
         Double x1 = classButton.getLayoutX();
         Double y1 = classButton.getLayoutY();
@@ -137,6 +203,7 @@ public class ObjectWithLine extends Group {
 
         Styling();
         Update();
+        if(isDestroyed) setDestroyObject();
     }
 
     /**

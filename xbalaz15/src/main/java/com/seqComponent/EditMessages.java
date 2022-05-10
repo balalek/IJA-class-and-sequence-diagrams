@@ -36,7 +36,7 @@ public class EditMessages {
         GridPane layout = new GridPane();
         Button confirm = new Button("Confirm");
         Label name = new Label("Enter create message:");
-        TextField createText = new TextField(createMessage.getCreateMessage());
+        TextField createText = new TextField(createMessage.getMsg());
 
         // Velikost fontu
         confirm.setStyle("-fx-font-size:15");

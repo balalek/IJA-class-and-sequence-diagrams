@@ -32,5 +32,15 @@
     "from": "Hokuse pokuse",
     "to": "Třída jak Brno",
     "arrowType": "generalization"
+  }},
+  {"message":{
+    "x1":130.0,
+    "y1":66.0,
+    "x2":390.0
+  }},
+  {"message":{
+    "x1":130.0,
+    "y1":660.0,
+    "x2":390.0
   }}
 ]

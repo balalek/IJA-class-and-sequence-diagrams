@@ -3,9 +3,8 @@
  */
 package com.seqComponent;
 
-import com.component.Arrow;
 import com.component.ClassComponent;
-import javafx.beans.property.SimpleDoubleProperty;
+import com.google.gson.annotations.Expose;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.scene.Group;
@@ -33,60 +32,68 @@ public class Messages extends Group {
     private Polyline headAsynch2 = new Polyline();
     private Polyline headReturn = new Polyline();
     private Polyline headReturn2 = new Polyline();
-    private String createMessage = "<<create>>";
+    //@Expose
+    public String createMessage = "<<create>>";
     private String asOrSynMessage = "";
     private String returnMessage = "";
+    @Expose
+    public String msg = "";
+    public StringProperty property = new SimpleStringProperty();
     private StringProperty createProperty = new SimpleStringProperty();
     private StringProperty asOrSynProperty = new SimpleStringProperty();
     private StringProperty returnProperty = new SimpleStringProperty();
     private Button CreateObjectButton = new Button();
     private Button AsynAndSynClassButton = new Button();
     private Button ReturnButton = new Button();
-    private String arrowType = "Synchronous";
-    private SimpleDoubleProperty x1 = new SimpleDoubleProperty();
-    private SimpleDoubleProperty y1 = new SimpleDoubleProperty();
-    private SimpleDoubleProperty x2 = new SimpleDoubleProperty();
-    private SimpleDoubleProperty y2 = new SimpleDoubleProperty();
+    @Expose
+    public Double x1;
+    @Expose
+    public Double y1;
+    @Expose
+    public Double x2;
+    @Expose
+    public String arrowType = "Synchronous";
+    private Double y2;
     private String from;
     private String to;
     public static List<Messages> ListOfArrows = new LinkedList<>();
 
     // GETry a SETry
     public double getX1() {
-        return x1.get();
+        return x1;
     }
-    public SimpleDoubleProperty x1Property() {
+    public Double x1Property() {
         return x1;
     }
     public void setX1(double x1) {
-        this.x1.set(x1);
+        this.x1 = x1;
     }
     public double getY1() {
-        return y1.get();
+        return y1;
     }
-    public SimpleDoubleProperty y1Property() {
+    public Double y1Property() {
         return y1;
     }
     public void setY1(double y1) {
-        this.y1.set(y1);
+        this.y1 = y1;
     }
     public double getX2() {
-        return x2.get();
+        return x2;
     }
-    public SimpleDoubleProperty x2Property() {
+    public Double x2Property() {
         return x2;
     }
     public void setX2(double x2) {
-        this.x2.set(x2);
+        this.x2 = x2;
     }
     public double getY2() {
-        return y2.get();
+        return y2;
     }
-    public SimpleDoubleProperty y2Property() {
+    public Double y2Property() {
         return y2;
     }
     public void setY2(double y2) {
-        this.y2.set(y2);
+        this.y2 = y2;
     }
     public String getFrom() {
         return from;
@@ -169,6 +176,12 @@ public class Messages extends Group {
     public void setReturnProperty(String returnProperty) {
         this.returnProperty.set(returnProperty);
     }
+    public String getMsg() {
+        return msg;
+    }
+    public void setMsg(String msg) {
+        this.msg = msg;
+    }
     public Polyline getMainLine() {
         return mainLine;
     }
@@ -203,10 +216,49 @@ public class Messages extends Group {
      */
     public Messages(double x1, double y1, double x2) {
         ListOfArrows.add(this);
-        setX1(x1);
-        setY1(y1);
-        setX2(x2);
-        setY2(y1);
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y1;
+        mainLine.getPoints().setAll(getX1(), getY1(), getX2(), getY2());
+
+        // Jaktaž prostředek čáry
+        AsynAndSynClassButton.setLayoutX(((x2 + x1) / 2));
+        // Trochu nad čáru
+        AsynAndSynClassButton.setLayoutY(y1 - 15);
+        // Vykreslí se tak aby získané souřadnice byly ve středu
+        AsynAndSynClassButton.translateXProperty().bind(AsynAndSynClassButton.widthProperty().divide(-2));
+        AsynAndSynClassButton.translateYProperty().bind(AsynAndSynClassButton.heightProperty().divide(-2));
+
+        CreateObjectButton.setLayoutX(((x2 + x1) / 2));
+        CreateObjectButton.setLayoutY(y1 - 15);
+        CreateObjectButton.translateXProperty().bind(CreateObjectButton.widthProperty().divide(-2));
+        CreateObjectButton.translateYProperty().bind(CreateObjectButton.heightProperty().divide(-2));
+
+        ReturnButton.setLayoutX(((x2 + x1) / 2));
+        ReturnButton.setLayoutY(y1 - 15);
+        ReturnButton.translateXProperty().bind(ReturnButton.widthProperty().divide(-2));
+        ReturnButton.translateYProperty().bind(ReturnButton.heightProperty().divide(-2));
+
+        toFront();
+        arrowHeadAndBoxStyles();
+        update();
+    }
+
+    /**
+     * Kontruktor pro načtení zprávy (šipky) a napozicování obsahu zprávy
+     * @param x1 X souřadnice začátku čáry
+     * @param y1 Y souřadnice začátku i konce čáry
+     * @param x2 X souřadnice konce čáry
+     */
+    public Messages(double x1, double y1, double x2, String arrowType, String msg) {
+        ListOfArrows.add(this);
+        this.arrowType = arrowType;
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y1;
+        this.msg = msg;
         mainLine.getPoints().setAll(getX1(), getY1(), getX2(), getY2());
 
         // Jaktaž prostředek čáry
@@ -256,6 +308,12 @@ public class Messages extends Group {
         double y1 = start[1];
         double x2 = end[0];
         double y2 = end[1];
+
+        /*this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;*/
+
         double theta = Math.atan2(y2 - y1, x2 - x1);
         toBack();
 
@@ -276,7 +334,8 @@ public class Messages extends Group {
 
                 // Aktualizovatelný nápis v boxu
                 Label myLabel = new Label();
-                asOrSynProperty.setValue(asOrSynMessage);
+                msg = asOrSynMessage;
+                asOrSynProperty.setValue(msg);
                 myLabel.textProperty().bind(asOrSynProperty);
                 AsynAndSynClassButton.setGraphic(myLabel);
 
@@ -297,7 +356,8 @@ public class Messages extends Group {
                 headSynch.getPoints().addAll(x, y);
 
                 Label myLabel = new Label();
-                asOrSynProperty.setValue(asOrSynMessage);
+                msg = asOrSynMessage;
+                asOrSynProperty.setValue(msg);
                 myLabel.textProperty().bind(asOrSynProperty);
                 AsynAndSynClassButton.setGraphic(myLabel);
 
@@ -318,7 +378,8 @@ public class Messages extends Group {
                 headReturn.getPoints().addAll(x, y);
 
                 Label myLabel = new Label();
-                returnProperty.setValue(returnMessage);
+                msg = returnMessage;
+                returnProperty.setValue(msg);
                 myLabel.textProperty().bind(returnProperty);
                 ReturnButton.setGraphic(myLabel);
 
@@ -339,7 +400,10 @@ public class Messages extends Group {
                 headReturn.getPoints().addAll(x, y);
 
                 Label myLabel = new Label();
-                createProperty.setValue(createMessage);
+                //msg = createMessage
+                if(msg.contains("<<create>>")) msg = getMsg();
+                else msg = createMessage + getMsg();
+                createProperty.setValue(msg);
                 myLabel.textProperty().bind(createProperty);
                 CreateObjectButton.setGraphic(myLabel);
 
@@ -372,23 +436,18 @@ public class Messages extends Group {
     public void CheckArrowMessage(){
         Messages arrow = this;
         if(Objects.equals(arrow.getArrowType(), "Synchronous") || Objects.equals(arrow.getArrowType(), "Asynchronous")){
-            //System.out.println(arrow.getAsOrSynMessage());
-            //System.out.println(ClassComponent.getListofBoxes());
             List<String> AllOperations = new LinkedList<>();
             for (ClassComponent box: ClassComponent.getListofBoxes()) {
                 if(!Objects.equals(box.getOperations(), "")){
                     String  Operations[] = box.getOperations().split("\n");
-                    //AllOperations.add(Operations);
                     for (String oper: Operations) {
                         if(oper.indexOf(" ", oper.indexOf(" ") + 1) < oper.indexOf("("))
                         {
                             //Normální metoda
-                            //System.out.println(oper.split(" ", 3)[2]);
                             oper = (oper.split(" ", 3)[2]);
 
                         }else{
                             //Konstruktor
-                            //System.out.println(oper.split(" ", 2)[1]);
                             oper = (oper.split(" ", 2)[1]);
                         }
                         int count = 0;
@@ -405,7 +464,6 @@ public class Messages extends Group {
                 }
 
             }
-            //System.out.println(AllOperations);
             String message = arrow.getAsOrSynMessage();
             int count = 0;
             for (int i = 0; i < message.length(); i++) {
@@ -416,7 +474,6 @@ public class Messages extends Group {
             }
             if(!message.contains("()")) count++;
             message = message.replaceFirst("\\(.*\\)", String.format("(%d)", count));
-            //System.out.println(message);
             if(!AllOperations.contains(message)){
                 arrow.getAsynAndSynClassButton().setStyle("-fx-border-color: red;");
                 arrow.getMainLine().setStyle("-fx-stroke-width: 2px; -fx-stroke: red");
@@ -427,9 +484,6 @@ public class Messages extends Group {
                     arrow.getHeadAsynch().setStyle("-fx-stroke-width: 2px; -fx-stroke: red");
                     arrow.getHeadAsynch2().setStyle("-fx-stroke-width: 2px; -fx-stroke: red");
                 }
-
-
-                //System.out.println("Neplatna funkce");
             }else{
                 arrow.getAsynAndSynClassButton().setStyle("");
                 arrow.getMainLine().setStyle("");
@@ -437,7 +491,6 @@ public class Messages extends Group {
                 arrow.getHeadAsynch2().setStyle("");
                 arrow.getHeadSynch().setStyle("");
                 arrow.getHeadSynch2().setStyle("");
-                //System.out.println("Platna funkce");
             }
         }else{
             arrow.getAsynAndSynClassButton().setStyle("");
@@ -446,7 +499,6 @@ public class Messages extends Group {
             arrow.getHeadAsynch2().setStyle("");
             arrow.getHeadSynch().setStyle("");
             arrow.getHeadSynch2().setStyle("");
-            //System.out.println("Platna funkce");
         }
     }
 }

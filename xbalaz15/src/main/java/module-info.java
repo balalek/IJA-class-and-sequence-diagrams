@@ -16,5 +16,6 @@ module com.javaprojekt {
     exports com.javaprojekt;
     exports com.uml;
     exports com.component;
+    exports com.seqComponent;
     opens com.component to javafx.fxml;
 }

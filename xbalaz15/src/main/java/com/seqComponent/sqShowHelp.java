@@ -83,7 +83,7 @@ public class sqShowHelp {
         return  "Note: Clicking with mouse is meant for left mouse button, unless its stated otherwise.\n" +
                 "Usage: To create a class, you must click on button called Add Object. Use Clear to delete everything.\n" +
                 "and then click somewhere on panel. That will create an empty object box with time line and call-box.\n" +
-                "For object name double-click on it, and type name of Class that is created in Class diagram already." +
+                "For object name double-click on it, and type name of Class that is created in Class diagram already.\n" +
                 "You can move with objects by dragging them with left mouse button to desired position.\n" +
                 "If you select call-box, you can make it smaller or bigger with keyboard keys: W, S.\n" +
                 "You can also move with call-box using mouse drag. For object to be deleted use key: DELETE. \n" +

@@ -4,6 +4,10 @@
  */
 package com.javaprojekt;
 
+import com.component.Arrow;
+import com.component.ClassComponent;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.seqComponent.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -16,7 +20,17 @@ import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Line;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.Reader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -28,6 +42,7 @@ public class SequenceDiagramController{
     // Atributy
     @FXML
     public TabPane tabPane;
+    private Stage stage;
     private ViewModel viewModel ;
     private String arrowType;
     private List<String> ObjectNames = new LinkedList<>();
@@ -98,7 +113,7 @@ public class SequenceDiagramController{
         box.getClassButton().setOnMouseDragged(e -> onBoxDragged(e, box));
         box.setOnKeyPressed(e -> handleKeyboard(e, box));
         box.getTimeLineButton().setOnMouseDragged(e -> onCallBoxDragged(e, box));
-        box.getTimeLineButton().setOnKeyPressed(e -> handleKeyboardTimeLine(e, box.getTimeLineButton()));
+        box.getTimeLineButton().setOnKeyPressed(e -> handleKeyboardTimeLine(e, box));
         box.setOnMouseEntered(e -> onObjectWithLineHover(e, box));
         return box;
     }
@@ -207,7 +222,7 @@ public class SequenceDiagramController{
      * @param e Stisknutá klávesa
      * @param callBox Aktivační box
      */
-    private void handleKeyboardTimeLine(KeyEvent e, Button callBox){
+    private void handleKeyboardTimeLine(KeyEvent e, ObjectWithLine callBox){
         KeyCode k = e.getCode();
         switch (k) {
             case W:
@@ -223,16 +238,19 @@ public class SequenceDiagramController{
      * Aktivační box se naplňuje prázdnými řádky, čímž se zvětšují
      * @param callBox zvětšované tlačítko na časové ose
      */
-    private void expand(Button callBox){
-        callBox.setText(callBox.getText() + "\n");
+    private void expand(ObjectWithLine callBox){
+        callBox.getTimeLineButton().setText(callBox.getTimeLineButton().getText() + "\n");
+        callBox.setHeight(callBox.getTimeLineButton().getText().length());
+        //System.out.println(callBox.getText().length());
     }
 
     /**
      * Aktivační box se vyresetuje na původní velikost
      * @param callBox vyresetované tlačítko na časové ose
      */
-    private void reduce(Button callBox){
-        callBox.setText("\n");
+    private void reduce(ObjectWithLine callBox){
+        callBox.getTimeLineButton().setText("\n");
+        callBox.setHeight(1);
     }
 
     /**
@@ -268,6 +286,7 @@ public class SequenceDiagramController{
             box.setLayoutY(box.getLayoutY() + e.getY() + box.getClassButton().getTranslateY());
             box.setX(box.getLayoutX() + e.getX() + box.getTranslateX());
             box.setY(box.getLayoutY() + e.getY() + box.getTranslateY());
+            System.out.println(box.getLayoutX() + "y: " + box.getLayoutY());
         }
     }
 
@@ -313,6 +332,7 @@ public class SequenceDiagramController{
                 String msg = EditMessages.displayCreate(arrow);
                 arrow.setCreateMessage(msg);
                 arrow.setCreateProperty(arrow.getCreateMessage());
+                arrow.setMsg(msg);
             }
         }
     }
@@ -330,8 +350,6 @@ public class SequenceDiagramController{
         Messages arrow = new Messages(x1, y1, x2);
         arrow.setFrom(b1.getId());
         arrow.setTo(b2.getId());
-        System.out.println(arrow.getFrom());
-        System.out.println(arrow.getTo());
         arrow.setOnMousePressed(e -> handleMouseMessage(e, arrow));
         arrow.getReturnButton().setOnMouseDragged(e -> onMessageDragged(e, arrow.getReturnButton()));
         arrow.getAsynAndSynClassButton().setOnMouseDragged(e -> onMessageDragged(e, arrow.getAsynAndSynClassButton()));
@@ -362,7 +380,6 @@ public class SequenceDiagramController{
         arrow.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, arrow));
 
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(arrow);
-        //rootPane.getChildren().addAll(arrow);
         return arrow;
     }
 
@@ -466,15 +483,6 @@ public class SequenceDiagramController{
     }
 
     /**
-     * Po stisknutí tlačítka se zavolá metoda, která bude načítat ze souboru
-     * @param event Stisknutí tlačítka Save
-     * @throws IOException
-     */
-    public void SaveJson(ActionEvent event) throws IOException{
-        serializeObject();
-    }
-
-    /**
      * Po stisknutí tlačítka se zavolá metoda, která bude ukládat do souboru
      * @param event Stisknutí tlačítka Load
      * @throws InterruptedException
@@ -484,17 +492,163 @@ public class SequenceDiagramController{
     }
 
     /**
-     * TODO
+     * Metoda načte z vybraného souboru třídy a šipky
      */
     public void deserializeObject(){
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if(selectedFile != null) {
+            try {
+                // Parse Json file
+                JSONParser jsonP = new JSONParser();
+                Reader reader = Files.newBufferedReader(Paths.get(selectedFile.getAbsolutePath()));
+                Object obj = jsonP.parse(reader);
+                JSONArray empList = (JSONArray) obj;
+                // Iterate over emp array
+                try{
+                    empList.forEach(emp -> parseEmpObj((JSONObject) emp));
+                }catch (IndexOutOfBoundsException exception)
+                {
+                    System.out.println("Index chyba");
+                    //ListofBoxNames.clear();
+                }
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        }else System.out.println("Nebyla vybrana cesta");
 
     }
 
     /**
-     * TODO
+     * Parsování tříd a jejich zobrazení
+     * @param emp JSONObject který se bude parsovat
      */
-    public void serializeObject(){
+    private void parseEmpObj(JSONObject emp) {
+        if(emp.get("object") != null){
+            JSONObject empObj = (JSONObject) emp.get("object");
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+            ObjectWithLine loadedObject = gson.fromJson(empObj.toString(), ObjectWithLine.class);
+            ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(loadObjectWithLine(loadedObject));
+        }else if(emp.get("message") != null)
+        {
+            JSONObject empObj = (JSONObject) emp.get("message");
+            Gson gson = new GsonBuilder()
+                    .excludeFieldsWithoutExposeAnnotation()
+                    .create();
+            System.out.println("hoveen");
+            System.out.println(empObj.toString());
+            Messages arrow = gson.fromJson(empObj.toString(), Messages.class);
 
+
+            loadMessage(arrow);
+        }
+    }
+
+    /**
+     * Slouží ke správnému načtení objektů z JSON souboru, metoda převzatá a upravená z createObjectWithLine
+     * @param object Načítaný objekt
+     * @return Vrací objekt třídy ObjectWithLine
+     */
+    public ObjectWithLine loadObjectWithLine(ObjectWithLine object){
+        ObjectWithLine box = new ObjectWithLine(object.getX(), object.getY(), object.getDestroyed(), object.getNameObject(), object.getNameClass(), object.getyOfCallBox(), object.getHeight());
+        //ListofBoxes.add(box);
+        //ListofBoxNames.add(box.getName());
+        box.getClassButton().setOnMouseDragged(e -> onBoxDragged(e, box));
+        box.setOnKeyPressed(e -> handleKeyboard(e, box));
+        box.getTimeLineButton().setOnMouseDragged(e -> onCallBoxDragged(e, box));
+        box.getTimeLineButton().setOnKeyPressed(e -> handleKeyboardTimeLine(e, box));
+        box.setOnMouseEntered(e -> onObjectWithLineHover(e, box));
+        return box;
+    }
+
+    /**
+     * Slouží ke správnému načtení šipek z JSON souboru, metoda převzatá a upravená z createMessage
+     * @param message Načítaná šipka
+     * @return Vrací šipku třídy Messages
+     */
+    public void loadMessage(Messages message){
+        if(message.getArrowType().equals("Create")) {
+            System.out.println("cuss");
+            Messages messages = new Messages(message.getX1(), message.getY1(), message.getX2(),message.getArrowType(), message.getMsg());
+            //arrow.setFrom(b1.getId());
+            //arrow.setTo(b2.getId());
+
+            messages.setOnMousePressed(e -> handleMouseMessageDeleteOnly(e, messages));
+            messages.getCreateObjectButton().setOnMouseDragged((e -> onMessageDragged(e, messages.getCreateObjectButton())));
+            messages.getCreateObjectButton().setOnMousePressed(e -> onCreateMessageBoxPressed(e, messages));
+
+            ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(messages);
+        } else {
+
+        }
+    }
+
+    /**
+     * Po stisknutí tlačítka se zavolá metoda, která bude načítat ze souboru
+     * @param event Stisknutí tlačítka Save
+     * @throws IOException
+     */
+    public void SaveJson(ActionEvent event) throws IOException{
+        serializeObject();
+    }
+
+    /**
+     * Pokud byl vybrán cílový soubor uloží objekty a šipky do zvoleného json souboru
+     * (Volá metody AddMessagesToJson a AddObjectsToJson)
+     * @throws IOException
+     */
+    public void serializeObject() throws IOException {
+        JSONArray List = new JSONArray();
+
+        Messages.getListOfArrows().forEach(arrow -> AddMessagesToJson(List, (Messages) arrow));
+        ObjectWithLine.getListObjectWithLine().forEach(ClassBox -> AddObjectsToJson(List, (ObjectWithLine) ClassBox));
+
+        System.out.println(List);
+        FileChooser fileChooser = new FileChooser();
+        File selectedFile = fileChooser.showOpenDialog(stage);
+        if(selectedFile != null){
+            FileWriter writer = new FileWriter(selectedFile, false);
+            writer.write(List.toJSONString());
+            writer.close();
+        }else System.out.println("Nebyla vybrana cesta");
+    }
+
+    /**
+     * Tato Metoda uloží data objektu do json struktury, zabalí je a přidá do listu
+     * @param List List do kterého se třídy přidávají
+     * @param box Třída kterou budeme ukládat
+     */
+    public void AddObjectsToJson(JSONArray List, ObjectWithLine box){
+        JSONObject obj = new JSONObject();
+        obj.put("x", box.x);
+        obj.put("y", box.y);
+        obj.put("isDestroyed", box.getDestroyed());
+        obj.put("nameObject", box.nameObject);
+        obj.put("nameClass", box.nameClass);
+        obj.put("yOfCallBox", box.getTimeLineButton().getLayoutY() - box.getClassButton().getLayoutY());
+        obj.put("height", box.getHeight() -1);
+        JSONObject packaging = new JSONObject();
+        packaging.put("object", obj);
+        List.add(0, packaging);
+    }
+
+    /**
+     * Tato Metoda uloží data šipky do json struktury, zabalí je a přidá do listu
+     * @param List List do kterého se třídy přidávají
+     * @param arrow Šipka kterou budeme ukládat
+     */
+    public void AddMessagesToJson(JSONArray List, Messages arrow){
+        JSONObject obj = new JSONObject();
+        obj.put("x1", arrow.getX1());
+        obj.put("y1", arrow.getY1());
+        obj.put("x2", arrow.getX2());
+        obj.put("arrowType", arrow.getArrowType());
+        obj.put("msg", arrow.getCreateMessage());
+        JSONObject packaging = new JSONObject();
+        packaging.put("message", obj);
+        List.add(0, packaging);
     }
 
     /**
@@ -513,6 +667,7 @@ public class SequenceDiagramController{
     @FXML
     public void Clear(ActionEvent e){
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().clear();
+        ObjectWithLine.getListObjectWithLine().clear();
         getObjectNames().clear();
         getContent().clear();
         count = 0;

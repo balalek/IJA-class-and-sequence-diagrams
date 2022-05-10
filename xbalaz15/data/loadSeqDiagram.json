@@ -1,0 +1,52 @@
+[
+  {"object":{
+    "x": 125.0,
+    "y": 65.0,
+    "isDestroyed": false,
+    "nameObject": "",
+    "nameClass": "Main",
+    "yOfCallBox": 300.0,
+    "height": 33
+  }},
+  {"object":{
+    "x":394.0,
+    "y":66.0,
+    "isDestroyed": false,
+    "nameObject": "",
+    "nameClass": "ClassDiagram",
+    "yOfCallBox": 100.0,
+    "height": 5
+  }},
+  {"object":{
+    "x":664.0,
+    "y":137.0,
+    "isDestroyed": false,
+    "nameObject": "c1",
+    "nameClass": "UMLClass",
+    "yOfCallBox": 350.0,
+    "height": 4
+  }},
+  {"object":{
+    "x":843.0,
+    "y":413.0,
+    "isDestroyed": false,
+    "nameObject": "a1",
+    "nameClass": "UMLAttribute",
+    "yOfCallBox": 175.0,
+    "height": 4
+  }},
+  {"message":{
+    "x1":130.0,
+    "y1":66.0,
+    "x2":390.0,
+    "arrowType": "Create",
+    "msg": "ahoj"
+  }},
+  {"message":{
+    "x1":130.0,
+    "y1":660.0,
+    "x2":390.0,
+    "arrowType": "Create",
+    "msg": "já jsem zde"
+  }}
+]
