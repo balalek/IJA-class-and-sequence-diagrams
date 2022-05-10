@@ -107,7 +107,7 @@ public class EditMessages {
         GridPane layout = new GridPane();
         Button confirm = new Button("Confirm");
         Label name = new Label("Enter A/Synchronous message:");
-        TextField asynOrSynText = new TextField(asOrSynMessage.getAsOrSynMessage());
+        TextField asynOrSynText = new TextField(asOrSynMessage.getMsg());
 
         // Velikost fontu
         confirm.setStyle("-fx-font-size:15");
@@ -178,7 +178,7 @@ public class EditMessages {
         GridPane layout = new GridPane();
         Button confirm = new Button("Confirm");
         Label name = new Label("Enter Return message:");
-        TextField returnText = new TextField(returnMessage.getReturnMessage());
+        TextField returnText = new TextField(returnMessage.getMsg());
 
         // Velikost fontu
         confirm.setStyle("-fx-font-size:15");

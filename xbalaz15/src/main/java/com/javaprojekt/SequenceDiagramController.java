@@ -301,6 +301,7 @@ public class SequenceDiagramController{
                 String msg = EditMessages.displayReturn(arrow);
                 arrow.setReturnMessage(msg);
                 arrow.setReturnProperty(arrow.getReturnMessage());
+                arrow.setMsg(msg);
             }
         }
     }
@@ -317,6 +318,7 @@ public class SequenceDiagramController{
                 arrow.setAsOrSynMessage(msg);
                 arrow.setAsOrSynProperty(arrow.getAsOrSynMessage());
                 arrow.CheckArrowMessage();
+                arrow.setMsg(msg);
             }
         }
     }
@@ -437,7 +439,7 @@ public class SequenceDiagramController{
      */
     public void handleMouseMessageDeleteOnly(MouseEvent e, Messages arrow){
         if(e.getButton().equals(MouseButton.SECONDARY)) {
-            //Arrow.ListOfArrows.remove(arrow);
+            Messages.getListOfArrows().remove(arrow);
             ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().remove(arrow);
         }
     }
@@ -451,7 +453,7 @@ public class SequenceDiagramController{
     public void handleMouseMessage(MouseEvent e, Messages arrow){
         // Odstranění šipky
         if(e.getButton().equals(MouseButton.SECONDARY)) {
-            //Arrow.ListOfArrows.remove(arrow);
+            Messages.getListOfArrows().remove(arrow);
             ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().remove(arrow);
         }
         // Změna šipky (typu zprávy)
@@ -480,6 +482,7 @@ public class SequenceDiagramController{
      */
     public void delete(ObjectWithLine box){
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().remove(box);
+        ObjectWithLine.getListObjectWithLine().remove(box);
     }
 
     /**
@@ -572,8 +575,6 @@ public class SequenceDiagramController{
         if(message.getArrowType().equals("Create")) {
             System.out.println("cuss");
             Messages messages = new Messages(message.getX1(), message.getY1(), message.getX2(),message.getArrowType(), message.getMsg());
-            //arrow.setFrom(b1.getId());
-            //arrow.setTo(b2.getId());
 
             messages.setOnMousePressed(e -> handleMouseMessageDeleteOnly(e, messages));
             messages.getCreateObjectButton().setOnMouseDragged((e -> onMessageDragged(e, messages.getCreateObjectButton())));
@@ -581,7 +582,15 @@ public class SequenceDiagramController{
 
             ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(messages);
         } else {
+            Messages messages = new Messages(message.getX1(), message.getY1(), message.getX2(),message.getArrowType(), message.getMsg());
 
+            messages.setOnMousePressed(e -> handleMouseMessage(e, messages));
+            messages.getReturnButton().setOnMouseDragged((e -> onMessageDragged(e, messages.getReturnButton())));
+            messages.getAsynAndSynClassButton().setOnMouseDragged((e -> onMessageDragged(e, messages.getAsynAndSynClassButton())));
+            messages.getReturnButton().setOnMousePressed(e -> onReturnMessageBoxPressed(e, messages));
+            messages.getAsynAndSynClassButton().setOnMousePressed(e -> onAsynOrSynMessageBoxPressed(e, messages));
+
+            ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().addAll(messages);
         }
     }
 
@@ -645,7 +654,7 @@ public class SequenceDiagramController{
         obj.put("y1", arrow.getY1());
         obj.put("x2", arrow.getX2());
         obj.put("arrowType", arrow.getArrowType());
-        obj.put("msg", arrow.getCreateMessage());
+        obj.put("msg", arrow.getMsg());
         JSONObject packaging = new JSONObject();
         packaging.put("message", obj);
         List.add(0, packaging);
@@ -668,6 +677,7 @@ public class SequenceDiagramController{
     public void Clear(ActionEvent e){
         ((AnchorPane)tabPane.getSelectionModel().getSelectedItem().getContent()).getChildren().clear();
         ObjectWithLine.getListObjectWithLine().clear();
+        Messages.getListOfArrows().clear();
         getObjectNames().clear();
         getContent().clear();
         count = 0;

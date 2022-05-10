@@ -356,7 +356,7 @@ public class Messages extends Group {
                 headSynch.getPoints().addAll(x, y);
 
                 Label myLabel = new Label();
-                msg = asOrSynMessage;
+                msg = asOrSynMessage + getMsg();
                 asOrSynProperty.setValue(msg);
                 myLabel.textProperty().bind(asOrSynProperty);
                 AsynAndSynClassButton.setGraphic(myLabel);
@@ -378,7 +378,7 @@ public class Messages extends Group {
                 headReturn.getPoints().addAll(x, y);
 
                 Label myLabel = new Label();
-                msg = returnMessage;
+                msg = returnMessage + getMsg();
                 returnProperty.setValue(msg);
                 myLabel.textProperty().bind(returnProperty);
                 ReturnButton.setGraphic(myLabel);
