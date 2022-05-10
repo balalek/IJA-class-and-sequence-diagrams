@@ -644,12 +644,12 @@ public class ClassDiagramController{
                 ObjectWithLine.getListObjectWithLine()) {
             if(!d.getListOfClassNames().contains(tmp.getNameClass())){
                 tmp.getClassButton().setStyle("-fx-border-color: red;");
+                if(Objects.equals(tmp.getNameClass(), "Main")) tmp.getClassButton().setStyle("");
             }else{
                 tmp.getClassButton().setStyle("");
             }
         }
-        for (Messages arrow:
-             Messages.getListOfArrows()) {
+        for (Messages arrow: Messages.getListOfArrows()) {
              arrow.CheckArrowMessage();
         }
     }

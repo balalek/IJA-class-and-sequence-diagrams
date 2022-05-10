@@ -436,6 +436,9 @@ public class Messages extends Group {
     public void CheckArrowMessage(){
         Messages arrow = this;
         if(Objects.equals(arrow.getArrowType(), "Synchronous") || Objects.equals(arrow.getArrowType(), "Asynchronous")){
+            if(Objects.equals(arrow.getAsOrSynMessage(), "")){
+                arrow.setAsOrSynMessage(arrow.getMsg());
+            }
             List<String> AllOperations = new LinkedList<>();
             for (ClassComponent box: ClassComponent.getListofBoxes()) {
                 if(!Objects.equals(box.getOperations(), "")){
@@ -474,6 +477,11 @@ public class Messages extends Group {
             }
             if(!message.contains("()")) count++;
             message = message.replaceFirst("\\(.*\\)", String.format("(%d)", count));
+            System.out.println("AllOperations: " + AllOperations);
+            System.out.println("Puvodni zpava syn: " + "\"" + arrow.getAsOrSynMessage() + "\"");
+            System.out.println("Zkompilovana zprava: " + message);
+            System.out.println(arrow.getMsg());
+
             if(!AllOperations.contains(message)){
                 arrow.getAsynAndSynClassButton().setStyle("-fx-border-color: red;");
                 arrow.getMainLine().setStyle("-fx-stroke-width: 2px; -fx-stroke: red");
